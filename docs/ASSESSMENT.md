@@ -196,16 +196,15 @@ In AWS terms that is two small Lambdas behind SQS rather than one large one. A n
 
 ### 8.4 Cost model
 
-Per review, extraction is roughly 1,200 input tokens (recipe about 600, prompt template about 400, review about 150) and roughly 300 output tokens for the JSON plus minimal reasoning. List prices as of September 2026; verify before quoting.
+Per review, extraction is roughly 1,200 input tokens (recipe about 600, prompt template about 400, review about 150) and roughly 300 output tokens for the JSON plus minimal reasoning. List prices verified September 2026.
 
 | Model | Price per 1M tokens, in / out | Per review | Per 1M reviews | With prompt caching on the recipe prefix |
 |---|---|---|---|---|
 | gpt-5-nano | $0.05 / $0.40 | $0.00018 | $180 | $150 |
-| gpt-4o-mini | $0.15 / $0.60 | $0.00036 | $360 | $300 |
 | gpt-5-mini | $0.25 / $2.00 | $0.00090 | $900 | $800 |
 | gpt-4.1-mini | $0.40 / $1.60 | $0.00096 | $960 | $830 |
 
-The Batch API halves any of these for backfill work.
+The Batch API halves any of these for backfill work. Two caveats on the numbers: a regional-processing uplift applies to some models released after March 2026, and the `gpt-4o-mini` the README claims this pipeline uses has been superseded by the 4.1 line, so it is left out of the table.
 
 **Sizing.** At AllRecipes scale, roughly 100,000 recipes with about 20 modification reviews each, the corpus is about 2 million reviews. A one-time backfill is about $360 on gpt-5-nano or $1,900 on gpt-4.1-mini, and half that through Batch. Steady state depends on review arrival rate; at 10,000 new reviews a day it is about $2 a day on nano.
 

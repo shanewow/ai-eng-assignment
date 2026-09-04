@@ -1,0 +1,121 @@
+{
+  "url": "https://www.allrecipes.com/recipe/20144/banana-banana-bread/",
+  "scraped_at": "2026-09-03T13:31:20.401881",
+  "recipe_id": "20144",
+  "title": "Banana Banana Bread",
+  "description": "This banana bread recipe makes an incredibly moist, delicious loaf with very ripe bananas for loads of banana flavor. It tastes even better toasted!",
+  "rating": {
+    "value": "4.7",
+    "count": "17395"
+  },
+  "preptime": "PT15M",
+  "cooktime": "PT60M",
+  "totaltime": "PT75M",
+  "servings": "12",
+  "ingredients": [
+    "2 cups all-purpose flour",
+    "1 teaspoon baking soda",
+    "0.25 teaspoon salt",
+    "0.75 cup brown sugar",
+    "0.5 cup butter",
+    "2 eggs, beaten",
+    "2.3333332538605 cups mashed overripe bananas"
+  ],
+  "instructions": [
+    "Gather all ingredients. Preheat the oven to 350 degrees F (175 degrees C). Lightly grease a 9x5-inch loaf pan.",
+    "Combine flour, baking soda, and salt in a large bowl. Beat brown sugar and butter with an electric mixer in a separate large bowl until smooth. Stir in eggs and mashed bananas until well blended. Stir banana mixture into flour mixture until just combined.",
+    "Pour batter into the prepared loaf pan.",
+    "Bake in the preheated oven until a toothpick inserted into the center comes out clean, about 60 minutes.",
+    "Let bread cool in pan for 10 minutes, then turn out onto a wire rack to cool completely.",
+    "Enjoy!"
+  ],
+  "nutrition": {
+    "@type": "NutritionInformation",
+    "calories": "231 kcal",
+    "carbohydrateContent": "35 g",
+    "cholesterolContent": "51 mg",
+    "fiberContent": "2 g",
+    "proteinContent": "4 g",
+    "saturatedFatContent": "5 g",
+    "sodiumContent": "226 mg",
+    "sugarContent": "16 g",
+    "fatContent": "9 g",
+    "unsaturatedFatContent": "0 g"
+  },
+  "author": "[{'@type': 'Person', 'name': 'Shelley Albeluhn'}]",
+  "categories": [
+    "Breakfast",
+    "Brunch"
+  ],
+  "keywords": [
+    "publisher-tested"
+  ],
+  "featured_tweaks": [
+    {
+      "text": "I didn't have enough bananas for 2 ⅓ cups so I took a chance at using 1 cup of almond banana milk and 1 cup of mashed (I used a potato ricer) over ripe bananas and it turned out AMAZING 🤩🤩🤩🤩🤩",
+      "rating": 5,
+      "has_modification": true,
+      "is_featured": true
+    },
+    {
+      "text": "Disappointing and I made 3 loaves! I added a tad extra brown sugar (yes, I pack it) along with 1 T cinnamon and 1.5 t vanilla, plus chopped walnuts. I am eating some right now and it just isn't great. It's also not sweet enough. I used very overripe bananas, so that is not the issue with the lack of sweetness/flavor.I made this because I misplaced my recipe binder with the oldie but goodies from my grandmother.",
+      "rating": 2,
+      "has_modification": true,
+      "is_featured": true
+    },
+    {
+      "text": "Easy to make and delicious. I used honey for the sweetener and the sweetness was perfect.",
+      "rating": 5,
+      "has_modification": true,
+      "is_featured": true
+    },
+    {
+      "text": "This was very tasty. It only went for 45 minutes in the oven so it would’ve been very overcooked at 60 minutes. Check it at 45 and see how your oven does. I used three ripe bananas.",
+      "rating": 5,
+      "has_modification": true,
+      "is_featured": true
+    }
+  ],
+  "reviews": [
+    {
+      "text": "I didn't have enough bananas for 2 ⅓ cups so I took a chance at using 1 cup of almond banana milk and 1 cup of mashed (I used a potato ricer) over ripe bananas and it turned out AMAZING 🤩🤩🤩🤩🤩",
+      "rating": 5,
+      "has_modification": true
+    },
+    {
+      "text": "So Awesome.Great.",
+      "rating": 5
+    },
+    {
+      "text": "Disappointing and I made 3 loaves! I added a tad extra brown sugar (yes, I pack it) along with 1 T cinnamon and 1.5 t vanilla, plus chopped walnuts. I am eating some right now and it just isn't great. It's also not sweet enough. I used very overripe bananas, so that is not the issue with the lack of sweetness/flavor.I made this because I misplaced my recipe binder with the oldie but goodies from my grandmother.",
+      "rating": 2,
+      "has_modification": true
+    },
+    {
+      "text": "I’ve made this recipe multiple times, and it always tastes phenomenal!",
+      "rating": 5
+    },
+    {
+      "text": "I had 6 overripe bananas and remembered Banana Banana bread recipe so it had to be done, came out great!",
+      "rating": 5
+    },
+    {
+      "text": "Moist banana banana bread just love it! I've done it with white flour before and decided to try it with 💯 percent whole wheat flour half brown,half cane sugar which is in the photo thank you so much for the recipe 😊 the best banana bread recipe ever!",
+      "rating": 5
+    },
+    {
+      "text": "Easy to make and delicious. I used honey for the sweetener and the sweetness was perfect.",
+      "rating": 5,
+      "has_modification": true
+    },
+    {
+      "text": "This was very tasty. It only went for 45 minutes in the oven so it would’ve been very overcooked at 60 minutes. Check it at 45 and see how your oven does. I used three ripe bananas.",
+      "rating": 5,
+      "has_modification": true
+    },
+    {
+      "text": "Tastes elite. Perfectly sweet, not too sweet. The recipe did make me over bake it a bit. I took it out 15 mins early and it still got burnt a bit, but the inside is still soft. Easy to make too",
+      "rating": 5
+    }
+  ]
+}

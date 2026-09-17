@@ -1,6 +1,6 @@
 # Agent trajectory
 
-Claude Code session transcript, exported 2026-09-17 15:37 from `0437d864-e727-4a34-ae38-a1b0eadac16a.jsonl`.
+Claude Code session transcript, exported 2026-09-17 15:50 from `0437d864-e727-4a34-ae38-a1b0eadac16a.jsonl`.
 The session was started fresh inside this repository; the first message is the kickoff prompt.
 Tool inputs and results are truncated for readability. The export itself and its commit happened after the last entry.
 
@@ -2981,5 +2981,826 @@ def main() -> int:
         f"Claude Code session transcript, exported {datetime.now().strftime('%Y-%m-%d %H:%M')} from `{src.name}`.",
         "The session was started fresh inside this repository; the first message is the kickoff prom
 … [2326 more characters]
+```
+
+*Tool result:*
+
+```
+wrote AGENT_TRAJECTORY.md (124 KB, 2 user turns)
+0
+0
+# Agent trajectory
+
+Claude Code session transcript, exported 2026-09-17 15:37 from `0437d864-e727-4a34-ae38-a1b0eadac16a.jsonl`.
+The session was started fresh inside this repository; the first message is the kickoff prompt.
+Tool inputs and results are truncated for readability. The export itself and its commit happened after the last entry.
+
+---
+
+## Turn 1 — User 19:04:18
+
+You are the lead engineer on a take-home for Casper Studios. Read ~/.claude/plans/casper-recipe-pipeline.md first and follow it. The LOCKED DECISIONS section at the top is settled — build to it, do not re-open those ques
+```
+
+<details><summary>Assistant thinking</summary>
+
+
+
+</details>
+
+**Tool: Bash** — Commit trajectory and exporter, show final log and test status
+
+```bash
+git add scripts/export_trajectory.py AGENT_TRAJECTORY.md && git commit -q -m "docs: add the coding-agent trajectory and its exporter
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>" && git status --short && git log --oneline f0c2688..HEAD && uv run pytest -q 2>&1 | tail -1
+```
+
+*Tool result:*
+
+```
+c1028a3 docs: add the coding-agent trajectory and its exporter
+d9f7ea9 docs: fill the assessment report and rewrite the README
+2be2b75 fix: tolerate model field misuse, anchor-less adds, and inserts after edits
+e788aef chore: regenerate the inherited baseline outputs with a seeded RNG
+0b13033 feat: ranked composition with conflict alternatives and honest run status
+1832352 feat: multi-modification extraction with strict schema and apply flags
+9acf1b8 feat: exact-first matcher with per-edit status in the apply layer
+51904e3 eval: add scoring harness, cached LLM client and the inherited baseline
+27f68ed eval: add 28 labelled modification cases
+b1cd724 refactor: freeze the inherited pipeline as llm_pipeline.legacy
+e05ceb8 test: pin apply-layer defects D1, D2, D3 as failing tests
+8a76e97 chore: package llm_pipeline and add pytest as a dev dependency
+33 passed in 0.05s
+```
+
+**Tool: Write** `/Users/shane/.claude/projects/-Users-shane-git-ai-eng-assignment/memory/casper-takehome-status.md`
+
+```
+---
+name: casper-takehome-status
+description: State of Shane's Casper Studios recipe-pipeline take-home after the 2026-09-17 build session, and what remains before submission
+metadata:
+  type: project
+---
+
+Build finished 2026-09-17 on `main` (12 commits after f0c2688, nothing pushed). Plan lives at `~/.claude/plans/casper-recipe-pipeline.md`; report is `docs/ASSESSMENT.md` (all sections filled). Default model chosen by eval: gpt-5-mini (gpt-5-nano never set an apply flag false).
+
+Remaining before submission: Shane reviews `eval/cases.json` labels by hand (report section 5.7/6.1 states they were reviewed), records the video from `~/.claude/plans/casper-video-script.md` (commands changed: `uv run python -m eval.run_eval --legacy`, `python -m llm_pipeline run --all`, `python -m llm_pipeline show <file>`), pushes to `origin` (shanewow/ai-eng-assignment) and shares with Casper.
+
+**Why:** the session ended with everything committed locally; the user asked to be consulted before any push.
+**How to apply:** do not push or re-run the eval without asking; re-runs are free from the committed cache unless the prompt version or model changes.
+```
+
+*Tool result:*
+
+```
+File created successfully at: /Users/shane/.claude/projects/-Users-shane-git-ai-eng-assignment/memory/casper-takehome-status.md
+```
+
+**Tool: Bash** — Add memory index entry
+
+```bash
+cd /Users/shane/.claude/projects/-Users-shane-git-ai-eng-assignment/memory && { [ -f MEMORY.md ] || printf '' > MEMORY.md; } && grep -q casper-takehome-status MEMORY.md || echo "- [Casper take-home status](casper-takehome-status.md) — build done 2026-09-17, unpushed; label review, video, push remain" >> MEMORY.md; cat MEMORY.md
+```
+
+*Tool result:*
+
+```
+- [Casper take-home status](casper-takehome-status.md) — build done 2026-09-17, unpushed; label review, video, push remain
+Shell cwd was reset to /Users/shane/git/ai-eng-assignment
+```
+
+### Assistant 19:37:49
+
+Everything is built, measured, documented and committed locally. Nothing is pushed.
+
+**What the eval says** (28 labelled cases, results in `eval/results/`, all reproducible offline from the committed cache):
+
+| Metric | Inherited (gpt-3.5) | Rewrite (gpt-5-nano) | Rewrite (gpt-5-mini) | Rewrite (gpt-4.1-mini) |
+|---|---:|---:|---:|---:|
+| Modification delivered to output | 57% | 100% | 93% | 93% |
+| False-apply (intent / circumstance) | 65% | 100% | 24% | 29% |
+| Silent no-op rate | 3% | 0% | 0% | 0% |
+| Wrong-line rate | 7% | 6% | 3% | 0% |
+
+Two findings worth knowing before the video. The inherited pipeline invented an edit for the "I followed it EXACTLY" control. gpt-5-nano never set an apply flag to false in 17 chances, so the plan's cheapest-model default was wrong and gpt-5-mini is now the default. The one rewrite-side residual is the two-star banana bread review, which both good models apply; section 9 proposes a rating floor and explains why I did not add it after seeing the case.
+
+**What was built**, in 12 small commits: failing tests first, the inherited code frozen as `llm_pipeline.legacy`, labelled cases, the harness and baseline, then the matcher, extraction, composition and CLI, then the fixes the eval runs exposed, docs, and the trajectory last. Full run: 4 recipes enhanced, 3 no-tweaks, 0 failed. The soup output shows three reviewers disagreeing on one line with the two losers attached as alternatives.
+
+**Three things are yours to do:**
+
+1. **Review the labels in `eval/cases.json`.** The report says the labels were model-drafted and reviewed by hand. I drafted them and revised eleven during the build. That review pass has not happened yet, and the report's claim depends on it. The `optional` flags mark the twelve I judged genuinely ambiguous.
+2. **Time log.** Section 10 reports about 2.5 to 3 hours total, with 1.5 to 2 hours for the September diagnosis and write-up per your note, and about 45 minutes of build plus 20 of docs from commit timestamps. Adjust if your diagnosis time was different.
+3. **Video script commands changed.** The three placeholders are now `uv run python -m eval.run_eval --legacy`, `uv run python -m eval.run_eval --compare eval/results/*.json`, and `uv run python -m llm_pipeline show data/enhanced/enhanced_77935_creamy-sweet-potato-with-ginger-soup.json`. The repro script still opens the video unchanged.
+
+Stopping here as instructed. Say the word and I push to `origin`.
+
+## Turn 3 — User 19:38:18
+
+<command-name>/goal</command-name>
+            <command-message>goal</command-message>
+            <command-args>complete the assessment requirements and lets create an integration test that we can use to record broll footage of the app that I can talk over and edit clips of myself talking over.</command-args>
+
+## Turn 4 — User 19:38:18
+
+<local-command-stdout>Goal set: complete the assessment requirements and lets create an integration test that we can use to record broll footage of the app that I can talk over and edit clips of myself talking over.</local-command-stdout>
+
+## Turn 5 — User 19:38:18
+
+A session-scoped Stop hook is now active with condition: "complete the assessment requirements and lets create an integration test that we can use to record broll footage of the app that I can talk over and edit clips of myself talking over.". Briefly acknowledge the goal, then immediately start (or continue) working toward it — treat the condition itself as your directive and do not pause to ask the user what to do. The hook will block stopping until the condition holds. It auto-clears once the condition is met — do not tell the user to run `/goal clear` after success; that's only for clearing a goal early.
+
+<details><summary>Assistant thinking</summary>
+
+
+
+</details>
+
+### Assistant 19:38:49
+
+Goal acknowledged: finish the remaining assessment items and add an integration test that doubles as the b-roll recording of the app. Plan: a scene-driven demo script that runs the video's commands with pauses and typed-out commands, and a pytest that runs the same scenes offline from the committed cache and asserts the key outputs, so the demo can't rot.
+
+**Tool: Bash** — Add results-dir option, write the b-roll scene script and the integration test, run it
+
+```bash
+git ls-files .env.example && python3 - <<'EOF'
+from pathlib import Path
+p=Path('eval/run_eval.py'); s=p.read_text()
+s=s.replace('''    parser.add_argument("--verbose", "-v", action="store_true", help="print every edit outcome")''','''    parser.add_argument("--verbose", "-v", action="store_true", help="print every edit outcome")
+    parser.add_argument("--results-dir", type=Path, default=RESULTS, help="where to write the result JSON")''')
+s=s.replace('''    RESULTS.mkdir(parents=True, exist_ok=True)
+    stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    out = RESULTS / f"{adapter.name}-{adapter.model}-{stamp}.json"''','''    args.results_dir.mkdir(parents=True, exist_ok=True)
+    stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    out = args.results_dir / f"{adapter.name}-{adapter.model}-{stamp}.json"''')
+s=s.replace('''    print(f"wrote {out.relative_to(ROOT)}")''','''    print(f"wrote {out.relative_to(ROOT) if out.is_relative_to(ROOT) else out}")''')
+p.write_text(s)
+EOF
+cat > scripts/broll.py <<'EOF'
+"""Scripted terminal demo of the pipeline, for recording b-roll.
+
+Runs the commands from the video, one scene at a time: prints a title card,
+types the command, runs it, then pauses. Every model response it needs is in
+the committed cache, so it runs offline and gives the same output each time.
+
+    uv run python scripts/broll.py                 # all scenes, pause between them
+    uv run python scripts/broll.py --scene 4       # one scene, for a retake
+    uv run python scripts/broll.py --list
+    uv run python scripts/broll.py --fast --no-pause --output-dir /tmp/x   # what the integration test runs
+
+Recording tips: 100 columns, a large font, `clear` is done for you. After
+recording, `git checkout data/enhanced` restores the committed outputs
+(the run rewrites their created_at stamps).
+"""
+
+from __future__ import annotations
+
+import argparse
+import os
+import shlex
+import subprocess
+import sys
+import time
+from dataclasses import dataclass
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+SOUP = "data/enhanced/enhanced_77935_creamy-sweet-potato-with-ginger-soup.json"
+COOKIES = "data/enhanced/enhanced_10813_best-chocolate-chip-cookies.json"
+BASELINE_NIKUJAGA = "data/enhanced/baseline/enhanced_144299_nikujaga-(japanese-style-meat-.json"
+
+BOLD, DIM, CYAN, RESET = "\033[1m", "\033[2m", "\033[36m", "\033[0m"
+
+
+@dataclass
+class Scene:
+    title: str
+    caption: str
+    command: list[str]
+    expect: list[str]  # substrings the integration
+… [7810 more characters]
+```
+
+*Tool result:*
+
+```
+.env.example
+______________________ test_run_summary_has_three_states _______________________
+
+played = {'1  It fails on its own examples': (0, "=============================================================================...sults0'], expect=['Modification delivered (in output) | 57%', 'False-apply rate (intent / circumstance) | 65%'])), ...}
+
+    def test_run_summary_has_three_states(played):
+        _, text, _ = played["7  Run every recipe"]
+        assert "enhanced " in text and "no_tweaks " in text
+>       assert "failed" in text.splitlines()[-1]
+E       AssertionError: assert 'failed' in 'INFO    saved /private/var/folders/ph/5gccmmk15rx5232swh15lzfc0000gn/T/pytest-of-shane/pytest-0/enhanced0/pipeline_summary_report.json'
+
+tests/test_integration.py:54: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_integration.py::test_every_scene_exits_zero - AssertionErro...
+FAILED tests/test_integration.py::test_run_summary_has_three_states - Asserti...
+2 failed, 2 passed in 173.20s (0:02:53)
+```
+
+<details><summary>Assistant thinking</summary>
+
+
+
+</details>
+
+<details><summary>Assistant thinking</summary>
+
+Confirmed the OpenAI key is in the gitignored `.env`, verified Sept 3, and today's spend was under 15 cents with results now cached for reproduction. The test failure was scene 3's suite recursively re-running the integration test (causing the 173s runtime); I'll fix that, then build the b-roll video and narration script.
+
+</details>
+
+**Tool: Bash** — Fix scene recursion, rerun integration test, check video tooling
+
+```bash
+python3 - <<'EOF'
+from pathlib import Path
+p=Path('scripts/broll.py'); s=p.read_text()
+s=s.replace('''            ["uv", "run", "pytest", "-q"],
+            ["passed"],''','''            ["uv", "run", "pytest", "-q", "--ignore=tests/test_integration.py"],
+            ["33 passed"],''')
+p.write_text(s)
+p=Path('tests/test_integration.py'); s=p.read_text()
+s=s.replace('''    assert "enhanced " in text and "no_tweaks " in text
+    assert "failed" in text.splitlines()[-1]''','''    assert "enhanced " in text and "no_tweaks " in text
+    assert any(line.endswith("0 failed") for line in text.splitlines())''')
+p.write_text(s)
+EOF
+time uv run pytest -q tests/test_integration.py 2>&1 | tail -3; which ffmpeg asciinema agg; uv run python -c "import PIL; print('PIL', PIL.__version__)" 2>&1 | tail -1; ls /System/Library/Fonts/Menlo.ttc /System/Library/Fonts/SFNSMono.ttf 2>&1
+```
+
+*Tool result:*
+
+```
+....                                                                     [100%]
+4 passed in 1.69s
+uv run pytest -q tests/test_integration.py 2>&1  1.46s user 0.31s system 83% cpu 2.124 total
+tail -3  0.00s user 0.00s system 0% cpu 2.124 total
+/opt/homebrew/bin/ffmpeg
+asciinema not found
+agg not found
+ModuleNotFoundError: No module named 'PIL'
+/System/Library/Fonts/Menlo.ttc
+/System/Library/Fonts/SFNSMono.ttf
+```
+
+<details><summary>Assistant thinking</summary>
+
+
+
+</details>
+
+<details><summary>Assistant thinking</summary>
+
+I'll add pillow as a dev dependency, build the frame renderer for MP4 output via ffmpeg, write the narration script, and update gitignore for video files—then chain the render after installing dependencies.
+
+</details>
+
+**Tool: Bash** — Install pillow, write the MP4 renderer, gitignore videos, test-render one short scene
+
+```bash
+uv add --dev pillow -q 2>&1 | tail -2; python3 - <<'EOF'
+from pathlib import Path
+p=Path('scripts/broll.py'); s=p.read_text()
+s=s.replace('''def run_scene(scene: Scene, *, typing: float, pause: float | None, clear: bool) -> tuple[int, str]:
+    if clear:
+        os.system("clear")
+    print(f"{BOLD}{CYAN}{scene.title}{RESET}")
+    print(f"{DIM}{scene.caption}{RESET}\\n")
+    time.sleep(0.6 if typing else 0)
+    type_out(f"$ {shlex.join(scene.command)}", typing)
+    proc = subprocess.run(scene.command, cwd=ROOT, text=True, capture_output=True)
+    output = proc.stdout + proc.stderr
+    print(output, end="")''','''def run_scene(scene: Scene, *, typing: float, pause: float | None, clear: bool, quiet: bool = False) -> tuple[int, str]:
+    if clear:
+        os.system("clear")
+    if not quiet:
+        print(f"{BOLD}{CYAN}{scene.title}{RESET}")
+        print(f"{DIM}{scene.caption}{RESET}\\n")
+        time.sleep(0.6 if typing else 0)
+        type_out(f"$ {shlex.join(scene.command)}", typing)
+    proc = subprocess.run(scene.command, cwd=ROOT, text=True, capture_output=True)
+    output = proc.stdout + proc.stderr
+    if not quiet:
+        print(output, end="")''')
+p.write_text(s)
+EOF
+mkdir -p video && grep -q "^video/\*.mp4" .gitignore || printf '\n# Rendered b-roll (attach to the submission, do not commit)\nvideo/*.mp4\nvideo/*.json\n' >> .gitignore
+cat > scripts/render_broll.py <<'EOF'
+"""Render the b-roll scenes to MP4 with no screen recorder.
+
+Each scene from scripts/broll.py is captured once (offline, from the cache),
+then replayed as a simulated terminal: title card, the command typed out,
+the output streamed, then a hold so a voice-over fits. Frames are drawn with
+Pillow and piped to ffmpeg.
+
+    uv run python scripts/render_broll.py                 # video/scene-NN.mp4 + video/broll-full.mp4
+    uv run python scripts/render_broll.py --scene 8 --hold 40
+    uv run python scripts/render_broll.py --fps 30 --size 1920x1080
+
+Edit HOLD_SECONDS to change how long each scene sits on its final frame.
+The result is silent; record narration separately and cut to it.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import re
+import shlex
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+from PIL import Image, ImageDraw, ImageFont
+
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "scripts"))
+import broll  # noqa: E402
+
+FONT = "/System/Library/Fonts/Menlo.ttc"
+HOLD_SECONDS = {1: 32, 2: 12, 3: 8, 4: 20, 5
+… [6645 more characters]
+```
+
+*Tool result:*
+
+```
+terminal 140x33 at 1920x1080, 15 fps
+scene-02.mp4    20.4s  2  What the inherited pipeline wrote
+uv run python scripts/render_broll.py --scene 2 --hold 3 2>&1  5.35s user 1.32s system 142% cpu 4.698 total
+tail -3  0.00s user 0.00s system 0% cpu 4.697 total
+total 424
+drwxr-xr-x@  4 shane  staff     128 Sep 17 15:44 .
+drwxr-xr-x@ 22 shane  staff     704 Sep 17 15:44 ..
+-rw-r--r--@  1 shane  staff  149418 Sep 17 15:44 scene-02.mp4
+-rw-r--r--@  1 shane  staff     145 Sep 17 15:44 scenes.json
+20.400000
+```
+
+<details><summary>Assistant thinking</summary>
+
+
+
+</details>
+
+<details><summary>Assistant thinking</summary>
+
+The renderer is working (20s clip, 150KB). Next I'll fix a fragile part of the typing animation, check a frame for legibility, and write the narration script before doing the full render.
+
+</details>
+
+**Tool: Bash** — Fix typing animation and extract a frame for inspection
+
+```bash
+python3 - <<'EOF'
+from pathlib import Path
+p=Path('scripts/render_broll.py'); s=p.read_text()
+s=s.replace('''    command = f"$ {shlex.join(scene.command)}"
+    typed = ""
+    for ch in command:
+        typed += ch
+        term.lines = term.lines[: 3] + []
+        term.write(typed, GREEN if ch == command[-1] else GREEN)
+        # keep the prompt line as a single (wrapped) entry set
+        enc.hold(term.frame(cursor=True), TYPE_DELAY)''','''    command = f"$ {shlex.join(scene.command)}"
+    base = len(term.lines)
+    typed = ""
+    for ch in command:
+        typed += ch
+        del term.lines[base:]
+        term.write(typed, GREEN)
+        enc.hold(term.frame(cursor=True), TYPE_DELAY)''')
+p.write_text(s)
+EOF
+uv run python scripts/render_broll.py --scene 2 --hold 1 >/dev/null && ffmpeg -y -loglevel error -sseof -0.5 -i video/scene-02.mp4 -frames:v 1 /tmp/claude-501/-Users-shane-git-ai-eng-assignment/0437d864-e727-4a34-ae38-a1b0eadac16a/scratchpad/frame.png && echo frame ok
+```
+
+*Tool result:*
+
+```
+frame ok
+```
+
+**Tool: Read** `/tmp/claude-501/-Users-shane-git-ai-eng-assignment/0437d864-e727-4a34-ae38-a1b0eadac16a/scratchpad/frame.png`
+
+*Tool result:*
+
+```
+
+```
+
+<details><summary>Assistant thinking</summary>
+
+
+
+</details>
+
+<details><summary>Assistant thinking</summary>
+
+I'll switch scene 2 to use the cookies file (which has the merged-sugar corruption) instead of nikujaga, and swap the quoted one-liner for a small print script, then write the narration script and render everything.
+
+</details>
+
+**Tool: Bash** — Inspect seeded baseline files, add print script, switch scene 2 to the cookies file
+
+```bash
+python3 -c "
+import json
+for f in ['enhanced_10813_best-chocolate-chip-cookies','enhanced_77935_creamy-sweet-potato-with-ginge','enhanced_20144_banana-banana-bread']:
+    d=json.load(open(f'data/enhanced/baseline/{f}.json')); print('==',d['title']); print('\n'.join(d['ingredients']))
+" && cat > scripts/print_ingredients.py <<'EOF'
+"""Print the title and ingredient list of a recipe or enhanced-recipe JSON file.
+
+    uv run python scripts/print_ingredients.py data/enhanced/baseline/enhanced_10813_best-chocolate-chip-cookies.json
+"""
+
+import json
+import sys
+
+data = json.load(open(sys.argv[1], encoding="utf-8"))
+print(data["title"])
+print()
+for i, line in enumerate(data["ingredients"]):
+    print(f"  I{i:<2} {line}")
+EOF
+python3 - <<'EOF'
+from pathlib import Path
+p=Path('scripts/broll.py'); s=p.read_text()
+old=s[s.index('        Scene(\n            "2  What the inherited pipeline wrote"'):s.index('        Scene(\n            "3  The tests')]
+new='''        Scene(
+            "2  What the inherited pipeline wrote",
+            "The cookies after the inherited run: both sugars merged into one line, the brown sugar line untouched.",
+            ["uv", "run", "python", "scripts/print_ingredients.py", BASELINE_COOKIES],
+            ["1 cup white sugar, 1/2 cup packed brown sugar", "1 cup packed brown sugar"],
+        ),
+'''
+s=s.replace(old,new)
+s=s.replace('BASELINE_NIKUJAGA = "data/enhanced/baseline/enhanced_144299_nikujaga-(japanese-style-meat-.json"','BASELINE_COOKIES = "data/enhanced/baseline/enhanced_10813_best-chocolate-chip-cookies.json"')
+p.write_text(s)
+EOF
+grep -n "BASELINE_" scripts/broll.py | head; uv run python scripts/broll.py --scene 2 --fast --no-pause --no-clear | tail -14
+```
+
+*Tool result:*
+
+```
+== Best Chocolate Chip Cookies (Community Enhanced)
+1 cup butter, softened
+1 cup white sugar, 1/2 cup packed brown sugar
+1 cup packed brown sugar
+2 eggs
+2 teaspoons vanilla extract
+1 teaspoon baking soda
+2 teaspoons hot water
+0.5 teaspoon salt
+2.5 cups all-purpose flour
+2 cups semisweet chocolate chips
+1 cup chopped walnuts
+== Creamy Sweet Potato With Ginger Soup (Community Enhanced)
+2 tablespoons olive oil
+1 large sweet potato and 3 white potatoes, cut into chunks
+1 large onion, cut into large dice
+1 tablespoon butter
+1 pinch sugar
+3 large garlic cloves, thickly sliced
+1.5 teaspoons ground ginger
+0.5 teaspoon ground nutmeg
+0.125 teaspoon cayenne pepper
+3 cups chicken broth, homemade or from a carton or can
+2% milk
+Salt and freshly ground pepper, to taste
+Garnish: chopped honey-roasted peanuts
+== Banana Banana Bread (Community Enhanced)
+2 cups all-purpose flour
+1 teaspoon baking soda
+0.25 teaspoon salt
+0.75 cup brown sugar
+1 T cinnamon and 1.5 t vanilla, plus chopped walnuts
+0.5 cup butter
+2 eggs, beaten
+2.3333332538605 cups mashed overripe bananas
+31:BASELINE_COOKIES = "data/enhanced/baseline/enhanced_10813_best-chocolate-chip-cookies.json"
+58:            ["uv", "run", "python", "scripts/print_ingredients.py", BASELINE_COOKIES],
+$ uv run python scripts/print_ingredients.py data/enhanced/baseline/enhanced_10813_best-chocolate-chip-cookies.json
+Best Chocolate Chip Cookies (Community Enhanced)
+
+  I0  1 cup butter, softened
+  I1  1 cup white sugar, 1/2 cup packed brown sugar
+  I2  1 cup packed brown sugar
+  I3  2 eggs
+  I4  2 teaspoons vanilla extract
+  I5  1 teaspoon baking soda
+  I6  2 teaspoons hot water
+  I7  0.5 teaspoon salt
+  I8  2.5 cups all-purpose flour
+  I9  2 cups semisweet chocolate chips
+  I10 1 cup chopped walnuts
+```
+
+<details><summary>Assistant thinking</summary>
+
+
+
+</details>
+
+### Assistant 19:46:24
+
+Rendering next. In this batch: the narration script, a README note on the b-roll tooling, the full nine-scene render, and the integration test re-run. These are independent of each other.
+
+**Tool: Bash** — Write the narration script, update README, render all scenes, run full test suite
+
+```bash
+cat > video/SCRIPT.md <<'EOF'
+# Video script
+
+Target 6:00 to 6:30, under the 7:00 cap. Two kinds of footage: **to camera** (you, recorded separately) and **b-roll** (`video/scene-NN.mp4`, rendered by `scripts/render_broll.py`; `video/broll-full.mp4` is all nine in order). Each b-roll scene types its command, streams the output, then holds on the final frame for the seconds shown, so the narration fits without cuts. Freeze the last frame in the editor if you run long.
+
+Speak at a normal pace, about 2.5 words a second. Word counts are given so you can check the fit.
+
+---
+
+## 0:00  To camera, about 35 s (no b-roll)
+
+> This is a platform that improves recipes by applying the highest-voted community tweaks from AllRecipes. A user should see an enhanced recipe and be able to inspect line-level diffs: which suggestion was applied, from which review, and why. I inherited a partly built pipeline, and my job was to find out whether it works. Short answer: it runs, it reports success, and it corrupts most of what it touches. So I spent the time on making it measurable, then fixing what the measurement pointed at. (85 words)
+
+---
+
+## Scene 1 — It fails on its own examples (b-roll 45 s: types, streams, holds 32 s)
+
+Talk over the output as it appears. Point at three things.
+
+> Before spending anything on API calls, I asked a cheaper question. The starter shows the model four examples of correct output. What happens if I feed those back through the starter's own code? Example four: two edits intended, zero applied. This is the repo's own example failing through the repo's own matcher. It compares a short phrase against a whole instruction line, so any change to a cooking step is silently dropped. Section B: the match succeeds, the replace changes nothing, and it still records a change. Before and after are identical. Section C: "one egg" resolves to "two eggs". A replace on that line rewrites the wrong ingredient. No API key was used for any of that. (118 words, about 47 s)
+
+## Scene 2 — What the inherited pipeline wrote (b-roll 20 s)
+
+> Here is a real output. The reviewer used a whole cup of white sugar and half a cup of brown. The pipeline merged both into the white sugar line and left the brown sugar line alone. The recipe now calls for one and a half cups of brown sugar. And this run reported success. (55 words, about 22 s)
+
+## Scene 3 — The tests (b-roll 15 s)
+
+> Those three defects are pinned as tests. They failed against the inherited code before I changed anythin
+… [6568 more characters]
+```
+
+*Tool result:*
+
+```
+terminal 140x33 at 1920x1080, 15 fps
+scene-01.mp4    40.3s  1  It fails on its own examples
+scene-02.mp4    22.9s  2  What the inherited pipeline wrote
+scene-03.mp4    14.0s  3  The tests the inherited code failed
+scene-04.mp4    36.4s  4  Measure the inherited pipeline
+scene-05.mp4    29.3s  5  Measure the rewrite
+scene-06.mp4    52.7s  6  Before and after, four configurations
+scene-07.mp4    31.0s  7  Run every recipe
+scene-08.mp4    47.7s  8  One line, three opinions
+scene-09.mp4    41.5s  9  Eight modifications from one recipe
+broll-full.mp4   315.8s  all scenes
+uv run python scripts/render_broll.py  96.74s user 19.05s system 309% cpu 37.448 total
+37 passed in 1.59s
+```
+
+<details><summary>Assistant thinking</summary>
+
+
+
+</details>
+
+<details><summary>Assistant thinking</summary>
+
+The b-roll rendered fully (5:16 across nine scenes) and all 37 tests pass. Now checking legibility of the soup scene's star glyph and compare scene's wide table, plus updating the script's timing table to match the rendered lengths—doing all three in parallel.
+
+</details>
+
+**Tool: Bash** — Extract frames from scenes 8 and 6, fix script timing
+
+```bash
+S=/tmp/claude-501/-Users-shane-git-ai-eng-assignment/0437d864-e727-4a34-ae38-a1b0eadac16a/scratchpad && ffmpeg -y -loglevel error -sseof -1 -i video/scene-08.mp4 -frames:v 1 $S/f8.png && ffmpeg -y -loglevel error -sseof -1 -i video/scene-06.mp4 -frames:v 1 $S/f6.png && python3 - <<'EOF'
+from pathlib import Path
+p=Path('video/SCRIPT.md'); s=p.read_text()
+s=s.replace("| Scenes 1 to 9 b-roll (`video/scenes.json` has exact lengths) | about 4:15 |","| Scenes 1 to 9 b-roll (`video/scenes.json` has exact lengths) | 5:16 |")
+s=s.replace("| **Total** | **about 5:30**, slack to 7:00 |","| **Total** | **about 6:30**, under the 7:00 cap; trim scene 3 and the tail of scene 6 if you need room |")
+p.write_text(s)
+EOF
+echo frames ok
+```
+
+*Tool result:*
+
+```
+frames ok
+```
+
+**Tool: Read** `/tmp/claude-501/-Users-shane-git-ai-eng-assignment/0437d864-e727-4a34-ae38-a1b0eadac16a/scratchpad/f8.png`
+
+*Tool result:*
+
+```
+
+```
+
+<details><summary>Assistant thinking</summary>
+
+
+
+</details>
+
+<details><summary>Assistant thinking</summary>
+
+The soup frame and star glyph look good, but the hold lingers at the end while key lines like the I10 change scroll off-screen. I'll add a mid-scene hold on the first screenful for long scenes and re-render, while also checking the compare-table frame.
+
+</details>
+
+**Tool: Bash** — Add a first-screen hold for long scenes and re-render everything
+
+```bash
+python3 - <<'EOF'
+from pathlib import Path
+p=Path('scripts/render_broll.py'); s=p.read_text()
+s=s.replace('''HOLD_SECONDS = {1: 32, 2: 12, 3: 8, 4: 20, 5: 14, 6: 32, 7: 16, 8: 32, 9: 26}''','''HOLD_SECONDS = {1: 26, 2: 12, 3: 8, 4: 20, 5: 14, 6: 32, 7: 16, 8: 22, 9: 20}
+TOP_HOLD_SECONDS = {1: 10, 8: 14, 9: 12}   # pause on the first full screen before scrolling on''')
+s=s.replace('''    per_line = 1.0 / STREAM_LINES_PER_SEC
+    for line in ANSI.sub("", output).rstrip("\\n").split("\\n"):
+        term.write(line, line_color(line))
+        enc.hold(term.frame(), per_line)
+    enc.hold(term.frame(), HOLD_SECONDS.get(index, 15))''','''    per_line = 1.0 / STREAM_LINES_PER_SEC
+    top_hold = TOP_HOLD_SECONDS.get(index, 0)
+    for line in ANSI.sub("", output).rstrip("\\n").split("\\n"):
+        term.write(line, line_color(line))
+        if top_hold and len(term.lines) == term.rows:
+            enc.hold(term.frame(), top_hold)  # the first screenful, before it scrolls
+            top_hold = 0
+        enc.hold(term.frame(), per_line)
+    enc.hold(term.frame(), HOLD_SECONDS.get(index, 15))''')
+p.write_text(s)
+EOF
+uv run python scripts/render_broll.py 2>&1 | grep -E "mp4" && ffmpeg -y -loglevel error -ss 12 -i video/scene-08.mp4 -frames:v 1 /tmp/claude-501/-Users-shane-git-ai-eng-assignment/0437d864-e727-4a34-ae38-a1b0eadac16a/scratchpad/f8top.png && echo ok
+```
+
+*Tool result:*
+
+```
+scene-01.mp4    44.3s  1  It fails on its own examples
+scene-02.mp4    22.9s  2  What the inherited pipeline wrote
+scene-03.mp4    14.0s  3  The tests the inherited code failed
+scene-04.mp4    36.4s  4  Measure the inherited pipeline
+scene-05.mp4    29.3s  5  Measure the rewrite
+scene-06.mp4    52.7s  6  Before and after, four configurations
+scene-07.mp4    31.0s  7  Run every recipe
+scene-08.mp4    51.7s  8  One line, three opinions
+scene-09.mp4    47.5s  9  Eight modifications from one recipe
+broll-full.mp4   329.8s  all scenes
+ok
+```
+
+**Tool: Read** `/tmp/claude-501/-Users-shane-git-ai-eng-assignment/0437d864-e727-4a34-ae38-a1b0eadac16a/scratchpad/f8top.png`
+
+*Tool result:*
+
+```
+
+```
+
+<details><summary>Assistant thinking</summary>
+
+
+
+</details>
+
+<details><summary>Assistant thinking</summary>
+
+The displayed command line currently reveals the ugly temp directory used for rendering. I'll split the displayed command from the actual executed one so the video shows clean paths while outputs still go to scratch, then re-render and verify.
+
+</details>
+
+**Tool: Bash** — Show pretty commands on screen, re-render, extract the soup first-screen frame, run tests
+
+```bash
+python3 - <<'EOF'
+from pathlib import Path
+p=Path('scripts/broll.py'); s=p.read_text()
+s=s.replace('''@dataclass
+class Scene:
+    title: str
+    caption: str
+    command: list[str]
+    expect: list[str]  # substrings the integration test asserts on
+''','''@dataclass
+class Scene:
+    title: str
+    caption: str
+    command: list[str]
+    expect: list[str]  # substrings the integration test asserts on
+    shown: str = ""  # what is typed on screen; defaults to the command itself
+
+    def typed(self) -> str:
+        return self.shown or shlex.join(self.command)
+''')
+s=s.replace('''            ["uv", "run", "python", "-m", "eval.run_eval", "--legacy", "--label", "Inherited (gpt-3.5-turbo)", "--results-dir", results_dir],
+            ["Modification delivered (in output) | 57%", "False-apply rate (intent / circumstance) | 65%"],''','''            ["uv", "run", "python", "-m", "eval.run_eval", "--legacy", "--label", "Inherited (gpt-3.5-turbo)", "--results-dir", results_dir],
+            ["Modification delivered (in output) | 57%", "False-apply rate (intent / circumstance) | 65%"],
+            shown="uv run python -m eval.run_eval --legacy",''')
+s=s.replace('''            ["uv", "run", "python", "-m", "eval.run_eval", "--label", "Rewrite (gpt-5-mini)", "--results-dir", results_dir],
+            ["Modification delivered (in output) | 93%", "Silent no-op rate | 0%"],''','''            ["uv", "run", "python", "-m", "eval.run_eval", "--label", "Rewrite (gpt-5-mini)", "--results-dir", results_dir],
+            ["Modification delivered (in output) | 93%", "Silent no-op rate | 0%"],
+            shown="uv run python -m eval.run_eval",''')
+s=s.replace('''            ["uv", "run", "python", "-m", "eval.run_eval", "--compare", *compare],
+            ["Inherited (gpt-3.5-turbo)", "Rewrite (gpt-5-nano)", "Rewrite (gpt-5-mini)", "| 100% | 24% | 29% |"],''','''            ["uv", "run", "python", "-m", "eval.run_eval", "--compare", *compare],
+            ["Inherited (gpt-3.5-turbo)", "Rewrite (gpt-5-nano)", "Rewrite (gpt-5-mini)", "| 100% | 24% | 29% |"],
+            shown="uv run python -m eval.run_eval --compare eval/results/*.json",''')
+s=s.replace('''            ["uv", "run", "python", "-m", "llm_pipeline", "run", "--all", "--output-dir", output_dir],
+            ["4 enhanced, 3 no tweaks, 0 failed", "recipe has no reviews"],''','''            ["uv", "run", "python", "-m", "llm_pipeline", "run", "--all", "--output-dir", output_dir],
+            ["4 enhanced, 3 no tweaks, 0 fa
+… [1900 more characters]
+```
+
+*Tool result:*
+
+```
+1  It fails on its own examples             uv run python scripts/repro_inherited_defects.py
+2  What the inherited pipeline wrote        uv run python scripts/print_ingredients.py data/enhanced/baseline/enha
+3  The tests the inherited code failed      uv run pytest -q --ignore=tests/test_integration.py
+4  Measure the inherited pipeline           uv run python -m eval.run_eval --legacy
+5  Measure the rewrite                      uv run python -m eval.run_eval
+6  Before and after, four configurations    uv run python -m eval.run_eval --compare eval/results/*.json
+7  Run every recipe                         uv run python -m llm_pipeline run --all
+8  One line, three opinions                 uv run python -m llm_pipeline show data/enhanced/enhanced_77935_creamy
+9  Eight modifications from one recipe      uv run python -m llm_pipeline show data/enhanced/enhanced_10813_best-c
+scene-01.mp4    44.3s  1  It fails on its own examples
+scene-02.mp4    22.9s  2  What the inherited pipeline wrote
+scene-03.mp4    14.0s  3  The tests the inherited code failed
+scene-04.mp4    28.3s  4  Measure the inherited pipeline
+scene-05.mp4    21.5s  5  Measure the rewrite
+scene-06.mp4    39.4s  6  Before and after, four configurations
+scene-07.mp4    25.3s  7  Run every recipe
+scene-08.mp4    47.8s  8  One line, three opinions
+scene-09.mp4    43.6s  9  Eight modifications from one recipe
+broll-full.mp4   287.1s  all scenes
+37 passed in 1.58s
+```
+
+<details><summary>Assistant thinking</summary>
+
+The re-render now runs 4:47 total with clean commands on screen and tests still passing. Next I'll verify the soup first-screen frame and update the script's timings, then re-export the trajectory and commit.
+
+</details>
+
+**Tool: Read** `/tmp/claude-501/-Users-shane-git-ai-eng-assignment/0437d864-e727-4a34-ae38-a1b0eadac16a/scratchpad/f8top.png`
+
+*Tool result:*
+
+```
+
+```
+
+<details><summary>Assistant thinking</summary>
+
+
+
+</details>
+
+### Assistant 19:50:19
+
+That frame is right: the command, the applied change and both alternatives on one screen. Last steps: update the script timings to the rendered lengths, re-export the trajectory, and commit.
+
+**Tool: Bash** — Update script timings, commit demo tooling, re-export trajectory, commit it last
+
+```bash
+python3 - <<'EOF'
+import json,re
+from pathlib import Path
+m={s['scene']:s['seconds'] for s in json.load(open('video/scenes.json'))}
+p=Path('video/SCRIPT.md'); s=p.read_text()
+subs={1:"b-roll 44 s: types, streams, holds 10 s on the first screen and 26 s at the end",2:"b-roll 23 s",3:"b-roll 14 s",4:"b-roll 28 s",5:"b-roll 22 s",6:"b-roll 39 s",7:"b-roll 25 s",8:"b-roll 48 s: 14 s on the first screen, 22 s at the end",9:"b-roll 44 s: 12 s on the first screen, 20 s at the end"}
+s=re.sub(r"\(b-roll 45 s: types, streams, holds 32 s\)", f"({subs[1]})", s)
+for n,t in subs.items():
+    if n==1: continue
+    s=re.sub(r"(## Scene %d — [^\n(]*)\(b-roll [^)]*\)"%n, lambda mm: mm.group(1)+f"({t})", s)
+total=sum(m.values())
+s=s.replace("| Scenes 1 to 9 b-roll (`video/scenes.json` has exact lengths) | 5:16 |", f"| Scenes 1 to 9 b-roll (`video/scenes.json` has exact lengths) | {int(total//60)}:{int(total%60):02d} |")
+s=s.replace("| **Total** | **about 6:30**, under the 7:00 cap; trim scene 3 and the tail of scene 6 if you need room |","| **Total** | **about 6:00**, under the 7:00 cap |")
+s=s.replace("(122 words, about 49 s; the hold is 32 s plus stream, freeze the frame if needed)","(122 words, about 49 s; the scene is 39 s, so freeze the last frame for ten seconds)")
+p.write_text(s)
+print(re.findall(r"## Scene \d[^\n]*", s))
+EOF
+git add -A scripts tests video .gitignore README.md pyproject.toml uv.lock eval/run_eval.py && git status --short && git commit -q -m "feat: scripted demo scenes, MP4 b-roll renderer, and an end-to-end test
+
+scripts/broll.py plays the walkthrough as nine terminal scenes from the
+committed cache. scripts/render_broll.py replays them as a simulated
+terminal into video/scene-NN.mp4 and broll-full.mp4 through ffmpeg, with
+a hold on the first screen and the last so narration fits.
+tests/test_integration.py runs every scene offline into a temp directory
+and asserts the outputs the narration refers to. video/SCRIPT.md is the
+narration with word counts and timings. Rendered files are ignored.
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>" && uv run python scripts/export_trajectory.py ~/.claude/projects/-Users-shane-git-ai-eng-assignment/0437d864-e727-4a34-ae38-a1b0eadac16a.jsonl AGENT_TRAJECTORY.md && grep -c "sk-[A-Za-z0-9]\{10\}" AGENT_TRAJECTORY.md; git add AGENT_TRAJECTORY.md && git commit -q -m "docs: refresh the agent trajectory
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>" && git log --oneline | head -3 && git status --sho
+… [55 more characters]
 ```
 

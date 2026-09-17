@@ -9,7 +9,9 @@ Pillow and piped to ffmpeg.
     uv run python scripts/render_broll.py --scene 8 --hold 40
     uv run python scripts/render_broll.py --fps 30 --size 1920x1080
 
-Edit HOLD_SECONDS to change how long each scene sits on its final frame.
+Scene lengths come from the narration in video/SCRIPT.md: a scene lasts as
+long as its words take at narration.PACE words per second. --pace changes
+that; --hold forces a fixed end hold for the chosen scenes.
 The result is silent; record narration separately and cut to it.
 """
 
@@ -29,9 +31,11 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "scripts"))
 import broll  # noqa: E402
+import narration  # noqa: E402
 
 FONT = "/System/Library/Fonts/Menlo.ttc"
-HOLD_SECONDS = {1: 30, 2: 12, 3: 4, 4: 36, 5: 14, 6: 43, 7: 16, 8: 22, 9: 20}
+MIN_END_HOLD = 3.0                          # never cut a scene off right after its output
+HOLD_SECONDS: dict[int, float] = {}         # filled from the narration (words / PACE); --hold overrides
 TOP_HOLD_SECONDS = {1: 10, 8: 14, 9: 12}   # pause on the first full screen before scrolling on
 TYPE_DELAY = 0.045          # seconds per character
 STREAM_LINES_PER_SEC = 30   # how fast output appears
@@ -124,7 +128,8 @@ class Encoder:
         return self.frames / self.fps
 
 
-def render_scene(index: int, scene: broll.Scene, output: str, term: Terminal, enc: Encoder) -> None:
+def render_scene(index: int, scene: broll.Scene, output: str, term: Terminal, enc: Encoder, target: float) -> None:
+    started = enc.frames
     term.clear()
     term.write(scene.title, CYAN, bold=True)
     term.write(scene.caption, DIMC)
@@ -149,13 +154,18 @@ def render_scene(index: int, scene: broll.Scene, output: str, term: Terminal, en
             enc.hold(term.frame(), top_hold)  # the first screenful, before it scrolls
             top_hold = 0
         enc.hold(term.frame(), per_line)
-    enc.hold(term.frame(), HOLD_SECONDS.get(index, 15))
+    elapsed = (enc.frames - started) / enc.fps
+    hold = HOLD_SECONDS.get(index)
+    if hold is None:
+        hold = max(MIN_END_HOLD, target - elapsed)
+    enc.hold(term.frame(), hold)
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--scene", type=int, action="append")
-    parser.add_argument("--hold", type=float, help="override the hold for the chosen scenes")
+    parser.add_argument("--hold", type=float, help="fixed end hold for the chosen scenes instead of deriving it from the narration")
+    parser.add_argument("--pace", type=float, default=narration.PACE, help="narration words per second (default %(default)s)")
     parser.add_argument("--fps", type=int, default=15)
     parser.add_argument("--size", default="1920x1080")
     parser.add_argument("--font-size", type=int, default=22)
@@ -171,8 +181,9 @@ def main(argv: list[str] | None = None) -> int:
         for i in chosen:
             HOLD_SECONDS[i] = args.hold
 
+    _, scene_text, _ = narration.parse_script(ROOT / "video" / "SCRIPT.md")
     term = Terminal(w, h, args.font_size)
-    print(f"terminal {term.cols}x{term.rows} at {w}x{h}, {args.fps} fps")
+    print(f"terminal {term.cols}x{term.rows} at {w}x{h}, {args.fps} fps, pace {args.pace} words/s")
     manifest = []
     files = []
     for i in chosen:
@@ -182,11 +193,13 @@ def main(argv: list[str] | None = None) -> int:
             print(f"scene {i} exited {code}; rendering anyway", file=sys.stderr)
         path = args.out_dir / f"scene-{i:02d}.mp4"
         enc = Encoder(path, (w, h), args.fps)
-        render_scene(i, scene, output, term, enc)
+        text = scene_text.get(i, "")
+        target = narration.seconds_for(text, args.pace)
+        render_scene(i, scene, output, term, enc, target)
         seconds = enc.close()
         files.append(path)
-        manifest.append({"scene": i, "title": scene.title, "file": path.name, "seconds": round(seconds, 1), "hold": HOLD_SECONDS.get(i, 15)})
-        print(f"{path.name}  {seconds:6.1f}s  {scene.title}")
+        manifest.append({"scene": i, "title": scene.title, "file": path.name, "seconds": round(seconds, 1), "words": narration.words(text)})
+        print(f"{path.name}  {seconds:6.1f}s  ({narration.words(text)} words, {narration.words(text) / seconds:.2f} w/s)  {scene.title}")
 
     if len(chosen) == len(all_scenes):
         concat = tmp / "concat.txt"

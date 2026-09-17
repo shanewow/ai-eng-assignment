@@ -9,15 +9,17 @@ you picture-in-picture (bottom right) while it plays. Audio is yours
 throughout. Output is video/kearney-recipe-pipeline.mp4 at 1080p.
 
 Sync: by default the script finds the first moment you speak (ffmpeg
-silencedetect) and starts the b-roll 47 s later, which is the intro length
-on the prompter. If you started the camera and the prompter at the same
-instant, --broll-at 50 is the same thing. Check the first cut and adjust
+silencedetect) and starts the b-roll one intro-length later (from
+video/timing.json, written by render_prompter.py). If you started the camera
+and the prompter at the same instant, --broll-at <b-roll start in
+video/timing.txt> is the same thing. Check the first cut and adjust
 --broll-at by a second or two if your first word and the prompter differ.
 """
 
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import subprocess
 import sys
@@ -25,7 +27,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 VIDEO = ROOT / "video"
-INTRO_SECONDS = 47.0
+
+
+def intro_seconds() -> float:
+    timing = VIDEO / "timing.json"
+    if timing.exists():
+        return float(json.loads(timing.read_text())["intro_seconds"])
+    return 47.0
 
 
 def duration(path: Path) -> float:
@@ -54,7 +62,7 @@ def main() -> int:
     ap.add_argument("camera", type=Path)
     ap.add_argument("--broll", type=Path, default=VIDEO / "broll-full.mp4")
     ap.add_argument("--out", type=Path, default=VIDEO / "kearney-recipe-pipeline.mp4")
-    ap.add_argument("--broll-at", type=float, help="seconds into the camera file where the b-roll starts (default: first speech + 47)")
+    ap.add_argument("--broll-at", type=float, help="seconds into the camera file where the b-roll starts (default: first speech + intro length)")
     ap.add_argument("--pip", choices=["small", "large", "none"], default="small", help="your picture during the b-roll")
     args = ap.parse_args()
 
@@ -62,7 +70,7 @@ def main() -> int:
     broll_len = duration(args.broll)
     if args.broll_at is None:
         speech = first_speech(args.camera)
-        args.broll_at = speech + INTRO_SECONDS
+        args.broll_at = speech + intro_seconds()
         print(f"first speech at {speech:.1f}s, b-roll starts at {args.broll_at:.1f}s")
     start, end = args.broll_at, args.broll_at + broll_len
     print(f"camera {cam_len:.0f}s, b-roll {broll_len:.0f}s, b-roll window {start:.1f}s to {end:.1f}s")

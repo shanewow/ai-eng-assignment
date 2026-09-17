@@ -1,25 +1,79 @@
-"""
-LLM Analysis Pipeline - Main Orchestrator
+"""LLM Analysis Pipeline - Main Orchestrator
 
-This module coordinates the complete 3-step pipeline:
-1. Extract modifications from reviews
-2. Apply modifications to recipes
-3. Generate enhanced recipes with attribution
+    extract (per review, cached)  ->  compose (per recipe, no model)  ->  emit
 
-Processes recipe data from scraped JSON files and outputs enhanced recipes.
+A recipe with no applicable modifications still emits a record, with
+status "no_tweaks" and a reason. "failed" is reserved for genuine faults
+(unreadable file, extraction that never validated).
 """
+
+from __future__ import annotations
 
 import json
+import os
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from dotenv import load_dotenv
 from loguru import logger
 
+from .composer import Composer
 from .enhanced_recipe_generator import EnhancedRecipeGenerator
+from .llm_client import DEFAULT_CACHE_DIR, CachedChatClient
 from .models import EnhancedRecipe, Recipe, Review
+from .prompts import PROMPT_VERSION
 from .recipe_modifier import RecipeModifier
 from .tweak_extractor import TweakExtractor
+
+
+def load_recipe_data(file_path: str | Path) -> Dict[str, Any]:
+    with open(file_path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def parse_recipe(data: Dict[str, Any]) -> Recipe:
+    return Recipe(
+        recipe_id=str(data.get("recipe_id", "unknown")),
+        title=data.get("title", "Unknown Recipe"),
+        ingredients=data.get("ingredients", []),
+        instructions=data.get("instructions", []),
+        description=data.get("description"),
+        servings=str(data["servings"]) if data.get("servings") is not None else None,
+        rating=data.get("rating"),
+        prep_time=data.get("preptime"),
+        cook_time=data.get("cooktime"),
+        total_time=data.get("totaltime"),
+        url=data.get("url"),
+    )
+
+
+def parse_reviews(data: Dict[str, Any]) -> List[Review]:
+    """Every review with text. Featured status comes from `featured_tweaks`."""
+    featured = {t.get("text", "").strip() for t in data.get("featured_tweaks") or []}
+    reviews = []
+    for index, raw in enumerate(data.get("reviews", [])):
+        text = (raw.get("text") or "").strip()
+        if not text:
+            continue
+        reviews.append(Review(
+            text=text,
+            rating=raw.get("rating"),
+            username=raw.get("username"),
+            has_modification=bool(raw.get("has_modification", False)),
+            is_featured=text in featured or bool(raw.get("is_featured", False)),
+            index=index,
+        ))
+    return reviews
+
+
+@dataclass
+class RecipeResult:
+    recipe_file: str
+    status: str  # enhanced | no_tweaks | failed
+    enhanced: Optional[EnhancedRecipe] = None
+    output_path: Optional[str] = None
+    error: Optional[str] = None
 
 
 class LLMAnalysisPipeline:
@@ -28,274 +82,89 @@ class LLMAnalysisPipeline:
     def __init__(
         self,
         openai_api_key: Optional[str] = None,
-        output_dir: str = "data/enhanced",
-        pipeline_version: str = "1.0.0",
+        output_dir: str | Path = "data/enhanced",
+        model: Optional[str] = None,
+        cache_dir: str | Path = DEFAULT_CACHE_DIR,
+        use_cache: bool = True,
+        pipeline_version: Optional[str] = None,
     ):
-        """
-        Initialize the complete LLM Analysis Pipeline.
-
-        Args:
-            openai_api_key: OpenAI API key (loads from env if not provided)
-            output_dir: Directory to save enhanced recipes
-            pipeline_version: Version identifier for tracking
-        """
-        # Load environment variables
         load_dotenv()
-
         self.output_dir = Path(output_dir)
-        self.output_dir.mkdir(parents=True, exist_ok=True)
-
-        # Initialize pipeline components
-        self.tweak_extractor = TweakExtractor(api_key=openai_api_key)
+        self.client = CachedChatClient(cache_dir=cache_dir, api_key=openai_api_key, use_cache=use_cache)
+        self.tweak_extractor = TweakExtractor(client=self.client, model=model or os.getenv("OPENAI_MODEL"))
         self.recipe_modifier = RecipeModifier()
-        self.enhanced_generator = EnhancedRecipeGenerator(
-            pipeline_version=pipeline_version
-        )
+        self.composer = Composer(self.recipe_modifier)
+        self.enhanced_generator = EnhancedRecipeGenerator(**({"pipeline_version": pipeline_version} if pipeline_version else {}))
+        logger.info(f"pipeline model={self.tweak_extractor.model} output_dir={self.output_dir}")
 
-        logger.info(f"Initialized LLM Analysis Pipeline v{pipeline_version}")
-        logger.info(f"Output directory: {self.output_dir}")
+    # -- single recipe -----------------------------------------------------------
 
-    def load_recipe_data(self, file_path: str) -> Dict[str, Any]:
-        """
-        Load recipe data from JSON file.
+    def enhance(self, data: Dict[str, Any]) -> EnhancedRecipe:
+        recipe = parse_recipe(data)
+        reviews = parse_reviews(data)
+        logger.info(f"{recipe.title}: screening {len(reviews)} review(s)")
+        extractions = self.tweak_extractor.extract_all(reviews, recipe)
+        composition = self.composer.compose(recipe, extractions)
+        model = next((e.model for _, e in extractions if e.model), self.tweak_extractor.model)
+        return self.enhanced_generator.generate_enhanced_recipe(recipe, composition, model=model, prompt_version=PROMPT_VERSION)
 
-        Args:
-            file_path: Path to recipe JSON file
-
-        Returns:
-            Recipe data dictionary
-        """
-        with open(file_path, "r", encoding="utf-8") as f:
-            return json.load(f)
-
-    def parse_recipe_data(self, recipe_data: Dict[str, Any]) -> Recipe:
-        """
-        Parse raw recipe data into Recipe object.
-
-        Args:
-            recipe_data: Raw recipe data from JSON
-
-        Returns:
-            Recipe object
-        """
-        return Recipe(
-            recipe_id=recipe_data.get("recipe_id", "unknown"),
-            title=recipe_data.get("title", "Unknown Recipe"),
-            ingredients=recipe_data.get("ingredients", []),
-            instructions=recipe_data.get("instructions", []),
-            description=recipe_data.get("description"),
-            servings=recipe_data.get("servings"),
-            rating=recipe_data.get("rating"),
-        )
-
-    def parse_reviews_data(self, recipe_data: Dict[str, Any]) -> List[Review]:
-        """
-        Parse raw review data into Review objects.
-
-        Args:
-            recipe_data: Raw recipe data containing reviews
-
-        Returns:
-            List of Review objects
-        """
-        reviews = []
-        raw_reviews = recipe_data.get("reviews", [])
-
-        for review_data in raw_reviews:
-            if review_data.get("text"):
-                review = Review(
-                    text=review_data["text"],
-                    rating=review_data.get("rating"),
-                    username=review_data.get("username"),
-                    has_modification=review_data.get("has_modification", False),
-                )
-                reviews.append(review)
-
-        return reviews
-
-    def process_single_recipe(
-        self, recipe_file: str, save_output: bool = True
-    ) -> Optional[EnhancedRecipe]:
-        """
-        Process a single recipe through the complete pipeline.
-
-        Args:
-            recipe_file: Path to recipe JSON file
-            save_output: Whether to save the enhanced recipe
-
-        Returns:
-            EnhancedRecipe if successful, None otherwise
-        """
+    def process_single_recipe(self, recipe_file: str | Path, save_output: bool = True) -> RecipeResult:
+        recipe_file = str(recipe_file)
         try:
-            logger.info(f"Processing recipe file: {recipe_file}")
+            data = load_recipe_data(recipe_file)
+            enhanced = self.enhance(data)
+        except Exception as exc:
+            logger.exception(f"failed: {recipe_file}")
+            return RecipeResult(recipe_file=recipe_file, status="failed", error=f"{type(exc).__name__}: {exc}")
 
-            # Step 0: Load and parse data
-            recipe_data = self.load_recipe_data(recipe_file)
-            recipe = self.parse_recipe_data(recipe_data)
-            reviews = self.parse_reviews_data(recipe_data)
-
-            logger.info(f"Loaded recipe: {recipe.title}")
-            logger.info(
-                f"Found {len(reviews)} reviews, {len([r for r in reviews if r.has_modification])} with modifications"
-            )
-
-            if not any(r.has_modification for r in reviews):
-                logger.warning("No reviews with modifications found")
-                return None
-
-            # Step 1: Extract modification from one random review
-            logger.info("Step 1: Extracting modification from a single review...")
-            modification, source_review = (
-                self.tweak_extractor.extract_single_modification(reviews, recipe)
-            )
-
-            if not modification or not source_review:
-                logger.warning("No modification could be extracted")
-                return None
-
-            logger.info(
-                f"Successfully extracted {modification.modification_type} modification"
-            )
-
-            # Step 2: Apply modification to recipe
-            logger.info("Step 2: Applying modification to recipe...")
-            modified_recipe, change_records = self.recipe_modifier.apply_modification(
-                recipe, modification
-            )
-
-            logger.info(
-                f"Applied modification: {len(change_records)} total changes made"
-            )
-
-            # Step 3: Generate enhanced recipe with attribution
-            logger.info("Step 3: Generating enhanced recipe with attribution...")
-
-            enhanced_recipe = self.enhanced_generator.generate_enhanced_recipe(
-                recipe, modified_recipe, modification, source_review, change_records
-            )
-
-            logger.info(f"Generated enhanced recipe: {enhanced_recipe.title}")
-
-            # Save output
-            if save_output:
-                output_filename = f"enhanced_{recipe.recipe_id}_{recipe.title.lower().replace(' ', '-')[:30]}.json"
-                output_path = self.output_dir / output_filename
-                self.enhanced_generator.save_enhanced_recipe(
-                    enhanced_recipe, str(output_path)
-                )
-
-            return enhanced_recipe
-
-        except Exception as e:
-            logger.error(f"Failed to process recipe {recipe_file}: {e}")
-            import traceback
-
-            traceback.print_exc()
-            return None
-
-    def process_recipe_directory(self, data_dir: str = "data") -> List[EnhancedRecipe]:
-        """
-        Process all recipe files in a directory.
-
-        Args:
-            data_dir: Directory containing recipe JSON files
-
-        Returns:
-            List of successfully processed EnhancedRecipe objects
-        """
-        data_path = Path(data_dir)
-        recipe_files = list(data_path.glob("recipe_*.json"))
-
-        logger.info(f"Found {len(recipe_files)} recipe files to process")
-
-        enhanced_recipes = []
-        for recipe_file in recipe_files:
-            logger.info(f"\n{'=' * 60}")
-            enhanced_recipe = self.process_single_recipe(str(recipe_file))
-
-            if enhanced_recipe:
-                enhanced_recipes.append(enhanced_recipe)
-                logger.info(f"✓ Successfully processed: {enhanced_recipe.title}")
-            else:
-                logger.warning(f"✗ Failed to process: {recipe_file.name}")
-
-        logger.info(f"\n{'=' * 60}")
+        status = enhanced.enhancement_summary.status
+        output_path = None
+        if save_output:
+            recipe = parse_recipe(data)
+            output_path = str(self.enhanced_generator.save_enhanced_recipe(
+                enhanced, self.output_dir / self.enhanced_generator.output_filename(recipe)
+            ))
+        s = enhanced.enhancement_summary
         logger.info(
-            f"Pipeline complete: {len(enhanced_recipes)}/{len(recipe_files)} recipes successfully enhanced"
+            f"{enhanced.title}: {status} "
+            f"({s.modifications_applied} applied, {s.modifications_considered} considered, {s.total_changes} line changes)"
         )
+        return RecipeResult(recipe_file=recipe_file, status=status, enhanced=enhanced, output_path=output_path)
 
-        return enhanced_recipes
+    # -- many recipes ------------------------------------------------------------
 
-    def generate_summary_report(
-        self, enhanced_recipes: List[EnhancedRecipe]
-    ) -> Dict[str, Any]:
-        """
-        Generate a summary report of pipeline results.
+    def process_recipe_directory(self, data_dir: str | Path = "data") -> List[RecipeResult]:
+        files = sorted(Path(data_dir).glob("recipe_*.json"))
+        logger.info(f"found {len(files)} recipe file(s) in {data_dir}")
+        return [self.process_single_recipe(f) for f in files]
 
-        Args:
-            enhanced_recipes: List of enhanced recipes
-
-        Returns:
-            Summary report dictionary
-        """
-        if not enhanced_recipes:
-            return {"status": "no_recipes_processed"}
-
-        total_modifications = sum(
-            len(recipe.modifications_applied) for recipe in enhanced_recipes
-        )
-        total_changes = sum(
-            recipe.enhancement_summary.total_changes for recipe in enhanced_recipes
-        )
-
-        change_type_counts = {}
-        for recipe in enhanced_recipes:
-            for change_type in recipe.enhancement_summary.change_types:
-                change_type_counts[change_type] = (
-                    change_type_counts.get(change_type, 0) + 1
+    @staticmethod
+    def summarize(results: List[RecipeResult]) -> Dict[str, Any]:
+        counts = {k: sum(1 for r in results if r.status == k) for k in ("enhanced", "no_tweaks", "failed")}
+        rows = []
+        for r in results:
+            row: Dict[str, Any] = {"recipe_file": Path(r.recipe_file).name, "status": r.status}
+            if r.enhanced:
+                s = r.enhanced.enhancement_summary
+                row.update(
+                    title=r.enhanced.title,
+                    reviews_screened=s.reviews_screened,
+                    modifications_extracted=s.modifications_extracted,
+                    modifications_applied=s.modifications_applied,
+                    modifications_considered=s.modifications_considered,
+                    line_changes=s.total_changes,
+                    change_types=s.change_types,
+                    reason=s.reason,
+                    output=r.output_path,
                 )
+            if r.error:
+                row["error"] = r.error
+            rows.append(row)
+        return {"pipeline_summary": {"recipes": len(results), **counts}, "recipes": rows}
 
-        report = {
-            "pipeline_summary": {
-                "recipes_processed": len(enhanced_recipes),
-                "total_modifications_applied": total_modifications,
-                "total_changes_made": total_changes,
-                "change_type_distribution": change_type_counts,
-            },
-            "enhanced_recipes": [
-                {
-                    "recipe_id": recipe.recipe_id,
-                    "title": recipe.title,
-                    "modifications_count": len(recipe.modifications_applied),
-                    "changes_count": recipe.enhancement_summary.total_changes,
-                    "change_types": recipe.enhancement_summary.change_types,
-                }
-                for recipe in enhanced_recipes
-            ],
-        }
-
-        return report
-
-    def save_summary_report(
-        self, enhanced_recipes: List[EnhancedRecipe], output_path: Optional[str] = None
-    ) -> str:
-        """
-        Save pipeline summary report to JSON file.
-
-        Args:
-            enhanced_recipes: List of enhanced recipes
-            output_path: Path to save report (auto-generated if None)
-
-        Returns:
-            Path to saved report
-        """
-        if output_path is None:
-            output_path = str(self.output_dir / "pipeline_summary_report.json")
-
-        report = self.generate_summary_report(enhanced_recipes)
-
-        with open(output_path, "w", encoding="utf-8") as f:
-            json.dump(report, f, indent=2, ensure_ascii=False)
-
-        logger.info(f"Saved pipeline summary report to: {output_path}")
-        return output_path
+    def save_summary_report(self, results: List[RecipeResult], output_path: Optional[str | Path] = None) -> Path:
+        path = Path(output_path) if output_path else self.output_dir / "pipeline_summary_report.json"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(self.summarize(results), indent=2, ensure_ascii=False), encoding="utf-8")
+        logger.info(f"saved {path}")
+        return path

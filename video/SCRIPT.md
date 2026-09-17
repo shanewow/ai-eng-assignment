@@ -6,9 +6,9 @@ Speak at a normal pace, about 2.5 words a second. Word counts are given so you c
 
 ---
 
-## 0:00  To camera, about 35 s (no b-roll)
+## 0:00  To camera, about 47 s (no b-roll)
 
-> This is a platform that improves recipes by applying the highest-voted community tweaks from AllRecipes. A user should see an enhanced recipe and be able to inspect line-level diffs: which suggestion was applied, from which review, and why. I inherited a partly built pipeline, and my job was to find out whether it works. Short answer: it runs, it reports success, and it corrupts most of what it touches. So I spent the time on making it measurable, then fixing what the measurement pointed at. (85 words)
+> Hi, I'm Shane Kearney. I build AI-first products, and this is my walkthrough of the Casper Studios take-home. The product improves recipes by applying the highest-voted community tweaks from AllRecipes. A user sees an enhanced recipe and can inspect line-level diffs: which suggestion was applied, from which review, and why. I inherited a partly built pipeline, and the question was whether it works. In the next six minutes I'll show three things: what the inherited pipeline actually does when you run it, the evaluation I built to measure it, and the rewrite, with the numbers before and after. Short answer up front: it runs, it reports success, and it corrupts most of what it touches. (117 words, about 47 s)
 
 ---
 
@@ -22,11 +22,10 @@ Talk over the output as it appears. Point at three things.
 
 > Here is a real output. The reviewer used a whole cup of white sugar and half a cup of brown. The pipeline merged both into the white sugar line and left the brown sugar line alone. The recipe now calls for one and a half cups of brown sugar. And this run reported success. (55 words, about 22 s)
 
-## Scene 3 — The tests (b-roll 14 s)
+## Scene 3 — The tests (b-roll 10 s)
 
 > Those three defects are pinned as tests. They failed against the inherited code before I changed anything. (18 words)
 
-Let the rest of the hold sit, or cut it short.
 
 ## Scene 4 — Measure the inherited pipeline (b-roll 44 s)
 
@@ -54,7 +53,7 @@ Let the rest of the hold sit, or cut it short.
 
 ---
 
-## Outro  To camera, about 35 s (no b-roll)
+## Outro  To camera, about 41 s (no b-roll)
 
 > The brief asks whether this works beyond a few examples, so I costed it as a Lambda triggered per review. The important change is the unit of work: extraction is per review, cached by hash so nothing is extracted twice; composition is per recipe with no model call. Two million reviews backfill for a few hundred dollars, and infrastructure is noise next to tokens. What I did not do: no UI, no deploy, no scraper rewrite, no nutrition recompute. Those are in the write-up with reasons. The thing worth the time was making the system able to tell whether it is right. (103 words, about 41 s)
 
@@ -64,14 +63,14 @@ Let the rest of the hold sit, or cut it short.
 
 | Segment | Length |
 |---|---|
-| Intro to camera | 0:35 |
-| Scenes 1 to 9 b-roll (`video/scenes.json` has exact lengths) | 5:18 |
+| Intro to camera | 0:47 |
+| Scenes 1 to 9 b-roll (`video/scenes.json` has exact lengths) | 5:14 |
 | Outro to camera | 0:41 |
-| **Total** | **6:34**, under the 7:00 cap |
+| **Total** | **6:42**, under the 7:00 cap |
 
 ## Recording with the prompter
 
-`uv run python scripts/render_prompter.py` writes `video/prompter.mp4`: a 3-second countdown, then every caption at the moment it should be spoken, on the same timeline as the b-roll plus the intro and outro. Start your camera recording and play the prompter at the same time; read each caption as it appears (the next one is dimmed underneath, the bar shows how long you have). `video/timing.txt` says where the b-roll starts on that timeline (0:38) and where each scene begins, and `video/narration-broll.srt` places the same captions on the `broll-full.mp4` timeline for the editor. Re-render the b-roll first if the code or holds change, then the prompter.
+`uv run python scripts/render_prompter.py` writes `video/prompter.mp4`: a 3-second countdown, then every caption at the moment it should be spoken, on the same timeline as the b-roll plus the intro and outro. Start your camera recording and play the prompter at the same time; read each caption as it appears (the next one is dimmed underneath, the bar shows how long you have). `video/timing.txt` says where the b-roll starts on that timeline (0:50) and where each scene begins, and `video/narration-broll.srt` places the same captions on the `broll-full.mp4` timeline for the editor. Re-render the b-roll first if the code or holds change, then the prompter.
 
 ## Assembling the final cut
 
@@ -81,7 +80,7 @@ Save the camera recording as `video/camera.mov`, then:
 uv run python scripts/assemble_video.py video/camera.mov
 ```
 
-It finds your first word, starts the b-roll 35 seconds later, keeps you full-frame for the intro and outro, shows the b-roll full-frame with you picture-in-picture in between, uses your audio throughout, and writes `video/kearney-recipe-pipeline.mp4`. Watch the first cut; if the b-roll lands a second early or late, pass `--broll-at <seconds>` and run it again. `--pip none` drops your picture during the b-roll, `--pip large` makes it bigger.
+It finds your first word, starts the b-roll 47 seconds later, keeps you full-frame for the intro and outro, shows the b-roll full-frame with you picture-in-picture in between, uses your audio throughout, and writes `video/kearney-recipe-pipeline.mp4`. Watch the first cut; if the b-roll lands a second early or late, pass `--broll-at <seconds>` and run it again. `--pip none` drops your picture during the b-roll, `--pip large` makes it bigger.
 
 ## Recording notes
 

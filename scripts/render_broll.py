@@ -31,7 +31,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import broll  # noqa: E402
 
 FONT = "/System/Library/Fonts/Menlo.ttc"
-HOLD_SECONDS = {1: 30, 2: 12, 3: 8, 4: 36, 5: 14, 6: 43, 7: 16, 8: 22, 9: 20}
+HOLD_SECONDS = {1: 30, 2: 12, 3: 4, 4: 36, 5: 14, 6: 43, 7: 16, 8: 22, 9: 20}
 TOP_HOLD_SECONDS = {1: 10, 8: 14, 9: 12}   # pause on the first full screen before scrolling on
 TYPE_DELAY = 0.045          # seconds per character
 STREAM_LINES_PER_SEC = 30   # how fast output appears

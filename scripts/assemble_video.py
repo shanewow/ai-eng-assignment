@@ -9,9 +9,9 @@ you picture-in-picture (bottom right) while it plays. Audio is yours
 throughout. Output is video/kearney-recipe-pipeline.mp4 at 1080p.
 
 Sync: by default the script finds the first moment you speak (ffmpeg
-silencedetect) and starts the b-roll 35 s later, which is the intro length
+silencedetect) and starts the b-roll 47 s later, which is the intro length
 on the prompter. If you started the camera and the prompter at the same
-instant, --broll-at 38 is the same thing. Check the first cut and adjust
+instant, --broll-at 50 is the same thing. Check the first cut and adjust
 --broll-at by a second or two if your first word and the prompter differ.
 """
 
@@ -25,7 +25,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 VIDEO = ROOT / "video"
-INTRO_SECONDS = 35.0
+INTRO_SECONDS = 47.0
 
 
 def duration(path: Path) -> float:
@@ -54,7 +54,7 @@ def main() -> int:
     ap.add_argument("camera", type=Path)
     ap.add_argument("--broll", type=Path, default=VIDEO / "broll-full.mp4")
     ap.add_argument("--out", type=Path, default=VIDEO / "kearney-recipe-pipeline.mp4")
-    ap.add_argument("--broll-at", type=float, help="seconds into the camera file where the b-roll starts (default: first speech + 35)")
+    ap.add_argument("--broll-at", type=float, help="seconds into the camera file where the b-roll starts (default: first speech + 47)")
     ap.add_argument("--pip", choices=["small", "large", "none"], default="small", help="your picture during the b-roll")
     args = ap.parse_args()
 

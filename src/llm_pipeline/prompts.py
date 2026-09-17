@@ -1,225 +1,140 @@
+"""Prompt and output schema for modification extraction.
+
+Layout matters for cost: the recipe (identical across all of a recipe's
+reviews) comes first and the review last, so provider-side prompt caching can
+hit on the shared prefix. The version string is stamped into every output so
+a prompt change can be re-run selectively.
 """
-LLM prompts and examples for recipe modification extraction.
 
-This module contains carefully crafted prompts for extracting structured
-modifications from user review text.
-"""
+from __future__ import annotations
 
-SYSTEM_PROMPT = """You are an expert recipe analyst. Your job is to extract structured recipe modifications from user reviews.
+from typing import Optional
 
-When a user shares their experience modifying a recipe, you need to:
-1. Identify exactly what changes they made
-2. Understand why they made those changes
-3. Convert their modifications into structured edit operations
+from .models import Recipe, Review
 
-You must output valid JSON that matches the ModificationObject schema.
+PROMPT_VERSION = "2.0"
 
-Categories:
-- "ingredient_substitution": Replacing one ingredient with another
-- "quantity_adjustment": Changing amounts of existing ingredients
-- "technique_change": Altering cooking method, temperature, time
-- "addition": Adding new ingredients or steps
-- "removal": Removing ingredients or steps
-
-Edit operations:
-- "replace": Find existing text and replace it
-- "add_after": Add new text after finding target text
-- "remove": Remove text that matches the find pattern
-
-Be precise with text matching - use the exact text from the original recipe when possible."""
-
-EXTRACTION_PROMPT = """Original Recipe:
-Title: {title}
-Ingredients: {ingredients}
-Instructions: {instructions}
-
-User Review: "{review_text}"
-
-Extract the recipe modifications from this review. The user has made changes to improve the recipe.
-
-Output a JSON object with this structure:
-{{
-    "modification_type": "quantity_adjustment|ingredient_substitution|technique_change|addition|removal",
-    "reasoning": "Brief explanation of why this modification improves the recipe",
-    "edits": [
-        {{
-            "target": "ingredients|instructions",
-            "operation": "replace|add_after|remove",
-            "find": "exact text to find",
-            "replace": "replacement text (for replace operations)",
-            "add": "text to add (for add_after operations)"
-        }}
-    ]
-}
-
-Focus on concrete changes the user actually made, not general suggestions."""
-
-FEW_SHOT_EXAMPLES = [
-    {
-        "review": "I used a half cup of sugar and one-and-a-half cups of brown sugar instead of the recipe amounts. Made the cookies much more chewy and flavorful!",
-        "ingredients": [
-            "1 cup butter, softened",
-            "1 cup white sugar",
-            "1 cup packed brown sugar",
-            "2 eggs",
-        ],
-        "expected_output": {
-            "modification_type": "quantity_adjustment",
-            "reasoning": "Makes cookies more chewy and flavorful by increasing brown sugar ratio",
-            "edits": [
-                {
-                    "target": "ingredients",
-                    "operation": "replace",
-                    "find": "1 cup white sugar",
-                    "replace": "0.5 cup white sugar",
-                },
-                {
-                    "target": "ingredients",
-                    "operation": "replace",
-                    "find": "1 cup packed brown sugar",
-                    "replace": "1.5 cups packed brown sugar",
-                },
-            ],
-        },
-    },
-    {
-        "review": "I added a teaspoon of cream of tartar to the batter and omitted the water. The cookies retained their shape and didn't spread when baked.",
-        "ingredients": [
-            "1 teaspoon baking soda",
-            "2 teaspoons hot water",
-            "0.5 teaspoon salt",
-        ],
-        "expected_output": {
-            "modification_type": "addition",
-            "reasoning": "Helps cookies retain shape and prevents spreading during baking",
-            "edits": [
-                {
-                    "target": "ingredients",
-                    "operation": "add_after",
-                    "find": "0.5 teaspoon salt",
-                    "add": "1 teaspoon cream of tartar",
-                },
-                {
-                    "target": "ingredients",
-                    "operation": "remove",
-                    "find": "2 teaspoons hot water",
-                },
-            ],
-        },
-    },
-    {
-        "review": "I used 1 tsp of salt instead of 1/2 tsp and omitted the nuts. Much better flavor without being too salty.",
-        "ingredients": ["0.5 teaspoon salt", "1 cup chopped walnuts"],
-        "expected_output": {
-            "modification_type": "quantity_adjustment",
-            "reasoning": "Improves flavor balance without making cookies too salty",
-            "edits": [
-                {
-                    "target": "ingredients",
-                    "operation": "replace",
-                    "find": "0.5 teaspoon salt",
-                    "replace": "1 teaspoon salt",
-                },
-                {
-                    "target": "ingredients",
-                    "operation": "remove",
-                    "find": "1 cup chopped walnuts",
-                },
-            ],
-        },
-    },
-    {
-        "review": "I baked them at 375 degrees instead of 350 for about 8-9 minutes. They came out perfectly crispy on the edges.",
-        "instructions": [
-            "Preheat the oven to 350 degrees F (175 degrees C)",
-            "Bake in the preheated oven until edges are nicely browned, about 10 minutes",
-        ],
-        "expected_output": {
-            "modification_type": "technique_change",
-            "reasoning": "Higher temperature and shorter time creates crispier edges",
-            "edits": [
-                {
-                    "target": "instructions",
-                    "operation": "replace",
-                    "find": "350 degrees F",
-                    "replace": "375 degrees F",
-                },
-                {
-                    "target": "instructions",
-                    "operation": "replace",
-                    "find": "about 10 minutes",
-                    "replace": "about 8-9 minutes",
-                },
-            ],
-        },
-    },
+MODIFICATION_TYPES = [
+    "ingredient_substitution",
+    "quantity_adjustment",
+    "technique_change",
+    "addition",
+    "removal",
 ]
 
+SYSTEM_PROMPT = """You are a careful recipe editor. You read one community review of a recipe and extract every discrete modification the reviewer describes, as precise edits to the recipe's numbered lines.
 
-def build_few_shot_prompt(
-    review_text: str, title: str, ingredients: list, instructions: list
-) -> str:
-    """Build a few-shot prompt with examples for better extraction accuracy."""
+Rules
+1. One modification per discrete change, each with exactly one category. "I added an egg and halved the sugar" is two modifications.
+2. Report every modification you find, then set two flags honestly:
+   - was_applied_by_reviewer: true only if the reviewer actually made the change. "Next time I will", "I would prefer", "it would probably also work" are false.
+   - is_generalizable: true only if the change would help another cook making this recipe. False when the reviewer did it only because of what they happened to have or lack ("because that's what I had", "I was out of X so", "only because I had some left over"), did it by accident, reverted it, or reports the result was worse. A change made out of circumstance is not generalizable even if the result was fine.
+3. Edits reference the numbered lines (I3 = ingredient line 3, S6 = instruction step 6). `find` must be text copied verbatim from that line: a fragment, or the whole line. Do not paraphrase it.
+4. Changing the amount or form of an existing ingredient is a `replace` on that ingredient's line, never an `add_after`. The replacement keeps a quantity and unit ("1 tablespoon fresh grated ginger", not "fresh grated ginger"). If the reviewer gives no amount, keep the original amount and append ", or more to taste".
+5. A new ingredient is an `add_after` with the full new line in `add`, anchored to a sensible neighbouring ingredient line. If a step should mention it, also replace that step's text.
+6. Removing an ingredient is a `remove` of its ingredient line, plus a `replace` on any step that names it so the step no longer mentions it.
+7. Technique changes (temperature, time, chilling, pressing, portioning, order) are a `replace` on the instruction step, keeping the step readable.
+8. Never invent a change. Remarks that are not changes to the recipe (portion size, that three bananas equal the stated cups, general praise) are not modifications. A reviewer who followed the recipe as written has no modifications: return an empty list.
+9. Unused string fields are "". `replace` is used only by replace edits, `add` only by add_after edits. Never put a line id such as "I11:" inside `find`, `replace` or `add`; those fields hold recipe text only.
 
-    examples_text = "\n\n".join(
-        [
-            f"Example {i + 1}:\n"
-            f'Review: "{example["review"]}"\n'
-            f"Output: {example['expected_output']}"
-            for i, example in enumerate(
-                FEW_SHOT_EXAMPLES[:2]
-            )  # Use 2 most relevant examples
-        ]
+Example. Recipe lines include "I7: 0.5 teaspoon salt", "I10: 1 cup chopped walnuts", "S4: Stir in flour, chocolate chips, and walnuts.", "S5: Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets."
+Review: "I used 1 tsp of salt instead of 1/2 and left out the nuts. Pressed them flat before baking, which helped. Next time I'll try brown butter."
+Output:
+{"modifications": [
+ {"summary": "salt 1/2 tsp -> 1 tsp", "modification_type": "quantity_adjustment", "reasoning": "Reviewer found the cookies bland with the original amount", "was_applied_by_reviewer": true, "is_generalizable": true,
+  "edits": [{"target": "ingredients", "operation": "replace", "line_ref": "I7", "find": "0.5 teaspoon salt", "replace": "1 teaspoon salt", "add": ""}]},
+ {"summary": "omit the walnuts", "modification_type": "removal", "reasoning": "Reviewer preferred them without nuts", "was_applied_by_reviewer": true, "is_generalizable": true,
+  "edits": [{"target": "ingredients", "operation": "remove", "line_ref": "I10", "find": "1 cup chopped walnuts", "replace": "", "add": ""},
+            {"target": "instructions", "operation": "replace", "line_ref": "S4", "find": "Stir in flour, chocolate chips, and walnuts.", "replace": "Stir in flour and chocolate chips.", "add": ""}]},
+ {"summary": "press dough flat before baking", "modification_type": "technique_change", "reasoning": "Gives a more even, less domed cookie", "was_applied_by_reviewer": true, "is_generalizable": true,
+  "edits": [{"target": "instructions", "operation": "replace", "line_ref": "S5", "find": "Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets.", "replace": "Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets and press each one down slightly.", "add": ""}]},
+ {"summary": "try brown butter next time", "modification_type": "ingredient_substitution", "reasoning": "Stated as a future idea, not tried", "was_applied_by_reviewer": false, "is_generalizable": true,
+  "edits": []}
+]}"""
+
+
+def format_recipe(recipe: Recipe) -> str:
+    lines = [f"Recipe: {recipe.title}"]
+    if recipe.servings:
+        lines.append(f"Servings: {recipe.servings}")
+    lines.append("")
+    lines.append("Ingredients:")
+    lines += [f"I{i}: {text}" for i, text in enumerate(recipe.ingredients)]
+    lines.append("")
+    lines.append("Instructions:")
+    lines += [f"S{i}: {text}" for i, text in enumerate(recipe.instructions)]
+    return "\n".join(lines)
+
+
+def build_user_prompt(review: Review, recipe: Recipe) -> str:
+    rating = f"{review.rating}/5" if review.rating is not None else "unrated"
+    featured = ", listed as a featured tweak" if review.is_featured else ""
+    return (
+        f"{format_recipe(recipe)}\n\n"
+        f"Review (rating {rating}{featured}):\n"
+        f'"""{review.text.strip()}"""\n\n'
+        "Extract every discrete modification in this review as JSON."
     )
 
-    prompt = f"""{SYSTEM_PROMPT}
 
-Here are some examples of how to extract modifications:
-
-{examples_text}
-
-Now extract from this review:
-
-{
-        EXTRACTION_PROMPT.format(
-            title=title,
-            ingredients=ingredients,
-            instructions=instructions,
-            review_text=review_text,
-        )
-    }"""
-
-    return prompt
-
-
-def build_simple_prompt(
-    review_text: str, title: str, ingredients: list, instructions: list
-) -> str:
-    """Build a simple prompt without examples for faster processing."""
-    return f"""{SYSTEM_PROMPT}
-
-Original Recipe:
-Title: {title}
-Ingredients: {ingredients}
-Instructions: {instructions}
-
-User Review: "{review_text}"
-
-Extract the recipe modifications from this review. The user has made changes to improve the recipe.
-
-Output a JSON object with this structure:
-{{
-    "modification_type": "quantity_adjustment|ingredient_substitution|technique_change|addition|removal",
-    "reasoning": "Brief explanation of why this modification improves the recipe",
-    "edits": [
-        {{
-            "target": "ingredients|instructions",
-            "operation": "replace|add_after|remove",
-            "find": "exact text to find",
-            "replace": "replacement text (for replace operations)",
-            "add": "text to add (for add_after operations)"
-        }}
+def build_messages(review: Review, recipe: Recipe) -> list[dict[str, str]]:
+    return [
+        {"role": "system", "content": SYSTEM_PROMPT},
+        {"role": "user", "content": build_user_prompt(review, recipe)},
     ]
-}}
 
-Focus on concrete changes the user actually made, not general suggestions."""
+
+_EDIT_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "properties": {
+        "target": {"type": "string", "enum": ["ingredients", "instructions"]},
+        "operation": {"type": "string", "enum": ["replace", "add_after", "remove"]},
+        "line_ref": {"type": "string", "description": "I<n> or S<n>"},
+        "find": {"type": "string", "description": "verbatim text from the referenced line; '' for the whole line"},
+        "replace": {"type": "string"},
+        "add": {"type": "string"},
+    },
+    "required": ["target", "operation", "line_ref", "find", "replace", "add"],
+}
+
+_MODIFICATION_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "properties": {
+        "summary": {"type": "string"},
+        "modification_type": {"type": "string", "enum": MODIFICATION_TYPES},
+        "reasoning": {"type": "string"},
+        "was_applied_by_reviewer": {"type": "boolean"},
+        "is_generalizable": {"type": "boolean"},
+        "edits": {"type": "array", "items": _EDIT_SCHEMA},
+    },
+    "required": ["summary", "modification_type", "reasoning", "was_applied_by_reviewer", "is_generalizable", "edits"],
+}
+
+EXTRACTION_RESPONSE_FORMAT = {
+    "type": "json_schema",
+    "json_schema": {
+        "name": "extraction_result",
+        "strict": True,
+        "schema": {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {"modifications": {"type": "array", "items": _MODIFICATION_SCHEMA}},
+            "required": ["modifications"],
+        },
+    },
+}
+
+
+def retry_messages(messages: list[dict[str, str]], raw: str, error: str) -> list[dict[str, str]]:
+    """Feed a validation failure back so the retry is not an identical request."""
+    return messages + [
+        {"role": "assistant", "content": raw},
+        {"role": "user", "content": f"That output failed validation: {error}\nReturn corrected JSON only."},
+    ]
+
+
+def describe(review: Review, limit: int = 80) -> Optional[str]:
+    text = review.text.strip().replace("\n", " ")
+    return text if len(text) <= limit else text[: limit - 1] + "…"

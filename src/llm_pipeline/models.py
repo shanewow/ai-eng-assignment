@@ -87,6 +87,12 @@ class ExtractionResult(BaseModel):
     """Everything the extractor found in one review. May be empty."""
 
     modifications: List[ModificationObject] = Field(default_factory=list)
+    # Run metadata, not part of the model's output schema.
+    raw: str = ""
+    usage: Dict[str, int] = Field(default_factory=dict)
+    cached: bool = False
+    model: str = ""
+    prompt_version: str = ""
 
 
 # -- Application ---------------------------------------------------------------

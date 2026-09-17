@@ -62,3 +62,5 @@ candidate-grading/
 # Rendered b-roll (attach to the submission, do not commit)
 video/*.mp4
 video/*.json
+video/*.srt
+video/timing.txt

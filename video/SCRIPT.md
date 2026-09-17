@@ -12,7 +12,7 @@ Speak at a normal pace, about 2.5 words a second. Word counts are given so you c
 
 ---
 
-## Scene 1 — It fails on its own examples (b-roll 44 s: types, streams, holds 10 s on the first screen and 26 s at the end)
+## Scene 1 — It fails on its own examples (b-roll 48 s: types, streams, holds 10 s on the first screen and 30 s at the end)
 
 Talk over the output as it appears. Point at three things.
 
@@ -28,7 +28,7 @@ Talk over the output as it appears. Point at three things.
 
 Let the rest of the hold sit, or cut it short.
 
-## Scene 4 — Measure the inherited pipeline (b-roll 28 s)
+## Scene 4 — Measure the inherited pipeline (b-roll 44 s)
 
 > That is why I did not start by fixing bugs. Fixing without a measure reproduces the same failure one level up: something that looks better with no way to prove it. I labelled every review in the data set with the discrete changes it actually contains, whether the reviewer really made them, and whether they'd help anyone else. Plus synthetic cases for the edge conditions the data misses. Then I scored the inherited pipeline. It delivers fifty-seven percent of the modifications it should, and applies sixty-five percent of the ones it should not: wishes, and personal circumstances like "I used margarine because that's what I had." (108 words, about 43 s; the stream takes 8 s, so start talking as it scrolls)
 
@@ -36,9 +36,9 @@ Let the rest of the hold sit, or cut it short.
 
 > Same cases, same scorer, the rewritten pipeline. Ninety-three percent delivered. False-apply down to twenty-four percent. Zero silent no-ops. Every response is cached by content hash, so this run made no API calls, and anyone can reproduce these numbers without a key. (42 words)
 
-## Scene 6 — Before and after, four configurations (b-roll 39 s)
+## Scene 6 — Before and after, four configurations (b-roll 50 s)
 
-> The three fixes. Extraction: one modification per review was the schema. Now a review returns many, each with two flags: did the reviewer actually do this, and would it help anyone else. Both must be true to apply. Application: fuzzy matching on whole lines is gone. It is exact match first, then normalized for fractions and units, fuzzy only as a guarded fallback, and every edit reports applied, failed, or ambiguous. Selection: every review is ranked, featured first, then rating. And the eval caught something I would have got wrong: the cheapest model, gpt-5-nano, finds everything and applies everything. One hundred percent false-apply. It never once set a flag to false. Without the measurement that column looks like the winner. (122 words, about 49 s; the scene is 39 s, so freeze the last frame for ten seconds)
+> The three fixes. Extraction: one modification per review was the schema. Now a review returns many, each with two flags: did the reviewer actually do this, and would it help anyone else. Both must be true to apply. Application: fuzzy matching on whole lines is gone. It is exact match first, then normalized for fractions and units, fuzzy only as a guarded fallback, and every edit reports applied, failed, or ambiguous. Selection: every review is ranked, featured first, then rating. And the eval caught something I would have got wrong: the cheapest model, gpt-5-nano, finds everything and applies everything. One hundred percent false-apply. It never once set a flag to false. Without the measurement that column looks like the winner. (122 words, about 49 s)
 
 ## Scene 7 — Run every recipe (b-roll 25 s)
 
@@ -65,9 +65,13 @@ Let the rest of the hold sit, or cut it short.
 | Segment | Length |
 |---|---|
 | Intro to camera | 0:35 |
-| Scenes 1 to 9 b-roll (`video/scenes.json` has exact lengths) | 4:47 |
-| Outro to camera | 0:40 |
-| **Total** | **about 6:00**, under the 7:00 cap |
+| Scenes 1 to 9 b-roll (`video/scenes.json` has exact lengths) | 5:18 |
+| Outro to camera | 0:41 |
+| **Total** | **6:34**, under the 7:00 cap |
+
+## Recording with the prompter
+
+`uv run python scripts/render_prompter.py` writes `video/prompter.mp4`: a 3-second countdown, then every caption at the moment it should be spoken, on the same timeline as the b-roll plus the intro and outro. Start your camera recording and play the prompter at the same time; read each caption as it appears (the next one is dimmed underneath, the bar shows how long you have). `video/timing.txt` says where the b-roll starts on that timeline (0:38) and where each scene begins, and `video/narration-broll.srt` places the same captions on the `broll-full.mp4` timeline for the editor. Re-render the b-roll first if the code or holds change, then the prompter.
 
 ## Recording notes
 

@@ -20,6 +20,7 @@ recording up with broll-full.mp4 using that offset (or the SRT files).
 from __future__ import annotations
 
 import json
+import math
 import re
 import subprocess
 import sys
@@ -31,7 +32,7 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT = Path(__file__).resolve().parent.parent
 VIDEO = ROOT / "video"
 FONT = "/System/Library/Fonts/Menlo.ttc"
-FPS = 15
+FPS = 30
 W, H = 1920, 1080
 COUNTDOWN = 3.0
 INTRO_SECONDS = 47.0
@@ -189,7 +190,7 @@ def main() -> int:
         d = ImageDraw.Draw(img)
 
         if now < COUNTDOWN:
-            n = int(COUNTDOWN - now) + 1
+            n = max(1, math.ceil(COUNTDOWN - now))
             d.text((W / 2, H / 2), str(n), font=big, fill=ACCENT, anchor="mm")
             d.text((W / 2, H / 2 + 200), "recording starts with the intro", font=small, fill=NEXT, anchor="mm")
         else:

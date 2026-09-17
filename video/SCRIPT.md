@@ -73,6 +73,16 @@ Let the rest of the hold sit, or cut it short.
 
 `uv run python scripts/render_prompter.py` writes `video/prompter.mp4`: a 3-second countdown, then every caption at the moment it should be spoken, on the same timeline as the b-roll plus the intro and outro. Start your camera recording and play the prompter at the same time; read each caption as it appears (the next one is dimmed underneath, the bar shows how long you have). `video/timing.txt` says where the b-roll starts on that timeline (0:38) and where each scene begins, and `video/narration-broll.srt` places the same captions on the `broll-full.mp4` timeline for the editor. Re-render the b-roll first if the code or holds change, then the prompter.
 
+## Assembling the final cut
+
+Save the camera recording as `video/camera.mov`, then:
+
+```
+uv run python scripts/assemble_video.py video/camera.mov
+```
+
+It finds your first word, starts the b-roll 35 seconds later, keeps you full-frame for the intro and outro, shows the b-roll full-frame with you picture-in-picture in between, uses your audio throughout, and writes `video/kearney-recipe-pipeline.mp4`. Watch the first cut; if the b-roll lands a second early or late, pass `--broll-at <seconds>` and run it again. `--pip none` drops your picture during the b-roll, `--pip large` makes it bigger.
+
 ## Recording notes
 
 - Render fresh after any code change: `uv run python scripts/render_broll.py`. The integration test (`uv run pytest tests/test_integration.py`) checks the scenes still show what the script says.

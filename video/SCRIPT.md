@@ -8,7 +8,7 @@ Speak at a normal pace, about 2.5 words a second. Word counts are given so you c
 
 ## 0:00  To camera, about 47 s (no b-roll)
 
-> Hi, I'm Shane Kearney, and this is my walkthrough of the Casper Studios take-home. The product improves recipes by applying the highest-voted community tweaks from AllRecipes. A user sees an enhanced recipe and can inspect line-level diffs: which suggestion was applied, from which review, and why. I inherited a partly built pipeline, and the question was whether it works. In the next six minutes I'll show three things: what the inherited pipeline actually does when you run it, the evaluation I built to measure it, and the rewrite, with the numbers before and after. Short answer up front: it runs, it reports success, and it corrupts most of what it touches. (113 words, about 45 s)
+> Hi, I'm Shane Kearney, and this is my walkthrough of the Casper Studios take-home. One thing up front: I did the diagnosis and made the calls, but a coding agent did most of the building from a written plan, and its full transcript is in the repo. The product improves recipes by applying the highest-voted community tweaks from AllRecipes. Users see an enhanced recipe with line-level diffs showing which suggestion was applied, from which review, and why. In the next six minutes I'll show what the inherited pipeline actually does when you run it, the evaluation built to measure it, and the rewrite, with the numbers before and after. Short answer: it runs, it reports success, and it corrupts most of what it touches. (118 words, about 47 s)
 
 ---
 

@@ -58,3 +58,7 @@ scorecardwork/*
 
 # Candidate grading workspace - large files and sensitive data
 candidate-grading/
+
+# Rendered b-roll (attach to the submission, do not commit)
+video/*.mp4
+video/*.json

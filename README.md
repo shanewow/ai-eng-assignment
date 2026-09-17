@@ -97,16 +97,24 @@ eval/
   cases.json            28 labelled cases (21 real reviews, 7 synthetic)
   run_eval.py, adapters.py, scoring.py
   results/              one JSON per configuration
-tests/                  matcher, composer, and the three inherited defects
+tests/                  matcher, composer, the three inherited defects, and an
+                        end-to-end test that plays every demo scene offline
 scripts/
   repro_inherited_defects.py   no-key reproduction of the inherited apply-layer defects
   run_legacy_baseline.py       regenerate the inherited pipeline's outputs (seeded)
+  broll.py                     the demo as numbered terminal scenes (offline, from the cache)
+  render_broll.py              renders those scenes to MP4 for the video
+  export_trajectory.py         session transcript to AGENT_TRAJECTORY.md
 data/
   recipe_*.json         scraped input
   enhanced/             current outputs; enhanced/baseline/ holds the inherited pipeline's
   cache/llm/            committed model responses
 docs/ASSESSMENT.md      the write-up
 ```
+
+## Demo and video
+
+`uv run python scripts/broll.py` plays the nine demo scenes in a terminal, pausing between them; `--scene N` replays one. `uv run python scripts/render_broll.py` renders the same scenes to `video/scene-NN.mp4` and `video/broll-full.mp4` (silent, 1080p) for the walkthrough video; `video/SCRIPT.md` is the narration. `tests/test_integration.py` runs every scene from the committed cache and asserts the outputs the script talks about, so the demo cannot drift from the code.
 
 ## Scraper
 

@@ -58,6 +58,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--label", help="column label for the table (default: adapter/model)")
     parser.add_argument("--compare", nargs="+", type=Path, help="render a table from saved result files and exit")
     parser.add_argument("--verbose", "-v", action="store_true", help="print every edit outcome")
+    parser.add_argument("--results-dir", type=Path, default=RESULTS, help="where to write the result JSON")
     args = parser.parse_args(argv)
 
     logger.remove()
@@ -110,9 +111,9 @@ def main(argv: list[str] | None = None) -> int:
     print(render_table([(label, agg)]))
     print(f"\ntokens: {agg['tokens']}")
 
-    RESULTS.mkdir(parents=True, exist_ok=True)
+    args.results_dir.mkdir(parents=True, exist_ok=True)
     stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-    out = RESULTS / f"{adapter.name}-{adapter.model}-{stamp}.json"
+    out = args.results_dir / f"{adapter.name}-{adapter.model}-{stamp}.json"
     out.write_text(
         json.dumps(
             {"label": label, "adapter": adapter.name, "model": adapter.model, "cases_file": str(args.cases.relative_to(ROOT)) if args.cases.is_relative_to(ROOT) else str(args.cases), "created_at": stamp, "aggregate": agg, "cases": per_case},
@@ -121,7 +122,7 @@ def main(argv: list[str] | None = None) -> int:
         ),
         encoding="utf-8",
     )
-    print(f"wrote {out.relative_to(ROOT)}")
+    print(f"wrote {out.relative_to(ROOT) if out.is_relative_to(ROOT) else out}")
     return 0
 
 

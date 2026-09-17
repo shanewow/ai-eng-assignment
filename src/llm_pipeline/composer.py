@@ -172,11 +172,14 @@ class Composer:
                 continue
             kind = "ingredient" if edit.target == "ingredients" else "instruction"
             if edit.operation == "add_after":
-                new_lines, result = self.modifier.apply_edit(edit, [ln.text for ln in lines])
-                if result.status != "applied":
-                    failed.append(f"add_after '{edit.add}': {result.reason}")
+                if not edit.add or not edit.add.strip():
+                    failed.append("add_after has no text to add")
                     continue
-                lines.insert(pos + 1, _Line(None, edit.add or ""))
+                dup = self.modifier.find_duplicate(edit.add, [ln.text for ln in lines], edit.target)
+                if dup is not None:
+                    failed.append(f"add_after '{edit.add}': duplicates existing line '{lines[dup].text}'; use replace instead")
+                    continue
+                lines.insert(pos + 1, _Line(None, edit.add))
                 changes.append(ChangeRecord(type=kind, operation="add", line_index=res.index, from_text="", to_text=edit.add or ""))
                 continue
             current = lines[pos].text

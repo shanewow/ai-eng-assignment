@@ -12,7 +12,7 @@ from typing import Optional
 
 from .models import Recipe, Review
 
-PROMPT_VERSION = "2.0"
+PROMPT_VERSION = "2.1"
 
 MODIFICATION_TYPES = [
     "ingredient_substitution",
@@ -31,10 +31,10 @@ Rules
    - is_generalizable: true only if the change would help another cook making this recipe. False when the reviewer did it only because of what they happened to have or lack ("because that's what I had", "I was out of X so", "only because I had some left over"), did it by accident, reverted it, or reports the result was worse. A change made out of circumstance is not generalizable even if the result was fine.
 3. Edits reference the numbered lines (I3 = ingredient line 3, S6 = instruction step 6). `find` must be text copied verbatim from that line: a fragment, or the whole line. Do not paraphrase it.
 4. Changing the amount or form of an existing ingredient is a `replace` on that ingredient's line, never an `add_after`. The replacement keeps a quantity and unit ("1 tablespoon fresh grated ginger", not "fresh grated ginger"). If the reviewer gives no amount, keep the original amount and append ", or more to taste".
-5. A new ingredient is an `add_after` with the full new line in `add`, anchored to a sensible neighbouring ingredient line. If a step should mention it, also replace that step's text.
+5. A new ingredient is an `add_after` with the full new line in `add`, anchored by `line_ref` to a neighbouring ingredient line. One `add_after` adds exactly one line; two new ingredients are two edits. If a step should mention it, also replace that step's text.
 6. Removing an ingredient is a `remove` of its ingredient line, plus a `replace` on any step that names it so the step no longer mentions it.
 7. Technique changes (temperature, time, chilling, pressing, portioning, order) are a `replace` on the instruction step, keeping the step readable.
-8. Never invent a change. Remarks that are not changes to the recipe (portion size, that three bananas equal the stated cups, general praise) are not modifications. A reviewer who followed the recipe as written has no modifications: return an empty list.
+8. Never invent a change. Remarks that are not changes to the recipe (portion size, that three bananas equal the stated cups, general praise) are not modifications. A reviewer who followed the recipe as written has no modifications: return an empty list. Never write commentary about the reviewer into recipe text; every `replace` and `add` is text a cook would follow.
 9. Unused string fields are "". `replace` is used only by replace edits, `add` only by add_after edits. Never put a line id such as "I11:" inside `find`, `replace` or `add`; those fields hold recipe text only.
 
 Example. Recipe lines include "I7: 0.5 teaspoon salt", "I10: 1 cup chopped walnuts", "S4: Stir in flour, chocolate chips, and walnuts.", "S5: Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets."

@@ -7,7 +7,8 @@
       "generalizable": "the change would help someone else making this recipe; false for personal circumstance, accidents, and changes the reviewer themselves judged bad",
       "optional": "true when reasonable people could disagree about applying it; the scorer counts it as correct whether it is applied or not, and it is not required for recall",
       "lines": "line refs a correct replace/remove edit would touch",
-      "added_contains": "lower-case keywords; an add or replacement whose new text contains one of these counts as a hit"
+      "added_contains": "lower-case keywords; an add or replacement whose new text contains one of these counts as a hit",
+      "steps": "secondary line refs, usually the step that names the ingredient, that a correct edit may also touch; they count for the wrong-line check but not for finding the modification"
     },
     "method": "Drafted by the coding agent from a read of every review, then reviewed and corrected by hand (Shane Kearney). See docs/ASSESSMENT.md 5.7."
   },
@@ -18,8 +19,32 @@
       "review_index": 0,
       "source": "data",
       "expected": [
-        {"summary": "add an extra egg yolk for chewiness", "type": "addition", "applied_by_reviewer": true, "generalizable": true, "lines": ["I3"], "added_contains": ["egg yolk", "yolk"]},
-        {"summary": "portion with an ice cream scoop into 16 large cookies", "type": "technique_change", "applied_by_reviewer": true, "generalizable": true, "optional": true, "lines": ["S5"], "added_contains": ["scoop"]}
+        {
+          "summary": "add an extra egg yolk for chewiness",
+          "type": "addition",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "lines": [
+            "I3"
+          ],
+          "added_contains": [
+            "egg yolk",
+            "yolk"
+          ]
+        },
+        {
+          "summary": "portion with an ice cream scoop into 16 large cookies",
+          "type": "technique_change",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "optional": true,
+          "lines": [
+            "S5"
+          ],
+          "added_contains": [
+            "scoop"
+          ]
+        }
       ]
     },
     {
@@ -29,11 +54,62 @@
       "source": "data",
       "note": "Four numbered tweaks in one review. The assignment's explicit multi-modification cue.",
       "expected": [
-        {"summary": "white sugar 1 cup -> 1/2 cup", "type": "quantity_adjustment", "applied_by_reviewer": true, "generalizable": true, "lines": ["I1"]},
-        {"summary": "brown sugar 1 cup -> 1.5 cups", "type": "quantity_adjustment", "applied_by_reviewer": true, "generalizable": true, "lines": ["I2"]},
-        {"summary": "omit the hot water", "type": "removal", "applied_by_reviewer": true, "generalizable": true, "lines": ["I6", "S3"]},
-        {"summary": "add 1 teaspoon cream of tartar", "type": "addition", "applied_by_reviewer": true, "generalizable": true, "lines": [], "added_contains": ["cream of tartar"]},
-        {"summary": "refrigerate the dough at least an hour before scooping", "type": "technique_change", "applied_by_reviewer": true, "generalizable": true, "lines": ["S5"], "added_contains": ["refrigerat", "chill"]}
+        {
+          "summary": "white sugar 1 cup -> 1/2 cup",
+          "type": "quantity_adjustment",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "lines": [
+            "I1"
+          ]
+        },
+        {
+          "summary": "brown sugar 1 cup -> 1.5 cups",
+          "type": "quantity_adjustment",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "lines": [
+            "I2"
+          ]
+        },
+        {
+          "summary": "omit the hot water",
+          "type": "removal",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "lines": [
+            "I6"
+          ],
+          "steps": [
+            "S3"
+          ]
+        },
+        {
+          "summary": "add 1 teaspoon cream of tartar",
+          "type": "addition",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "lines": [],
+          "added_contains": [
+            "cream of tartar"
+          ],
+          "steps": [
+            "S3"
+          ]
+        },
+        {
+          "summary": "refrigerate the dough at least an hour before scooping",
+          "type": "technique_change",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "lines": [
+            "S5"
+          ],
+          "added_contains": [
+            "refrigerat",
+            "chill"
+          ]
+        }
       ]
     },
     {
@@ -43,9 +119,43 @@
       "source": "data",
       "note": "Three-star review. Reviewer made these on a second batch and reports they helped.",
       "expected": [
-        {"summary": "salt 1/2 tsp -> 1 tsp", "type": "quantity_adjustment", "applied_by_reviewer": true, "generalizable": true, "lines": ["I7"]},
-        {"summary": "omit the walnuts", "type": "removal", "applied_by_reviewer": true, "generalizable": true, "lines": ["I10", "S4"]},
-        {"summary": "press the dough down slightly before baking", "type": "technique_change", "applied_by_reviewer": true, "generalizable": true, "lines": ["S5"], "added_contains": ["press", "flatten"]}
+        {
+          "summary": "salt 1/2 tsp -> 1 tsp",
+          "type": "quantity_adjustment",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "lines": [
+            "I7"
+          ],
+          "steps": [
+            "S3"
+          ]
+        },
+        {
+          "summary": "omit the walnuts",
+          "type": "removal",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "lines": [
+            "I10"
+          ],
+          "steps": [
+            "S4"
+          ]
+        },
+        {
+          "summary": "press the dough down slightly before baking",
+          "type": "technique_change",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "lines": [
+            "S5"
+          ],
+          "added_contains": [
+            "press",
+            "flatten"
+          ]
+        }
       ]
     },
     {
@@ -55,9 +165,38 @@
       "source": "data",
       "note": "'a whole cup of white sugar' is what the recipe already says; an edit to I1 is a false change. The baseline run merged both sugars into I1.",
       "expected": [
-        {"summary": "brown sugar 1 cup -> 1/2 cup (reviewer had no more; result praised)", "type": "quantity_adjustment", "applied_by_reviewer": true, "generalizable": true, "optional": true, "lines": ["I2"]},
-        {"summary": "flour 3 cups -> 2.5 cups", "type": "quantity_adjustment", "applied_by_reviewer": true, "generalizable": true, "lines": ["I8"]},
-        {"summary": "add a dash of cinnamon", "type": "addition", "applied_by_reviewer": true, "generalizable": true, "lines": [], "added_contains": ["cinnamon"]}
+        {
+          "summary": "brown sugar 1 cup -> 1/2 cup (reviewer had no more; result praised)",
+          "type": "quantity_adjustment",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "optional": true,
+          "lines": [
+            "I2"
+          ]
+        },
+        {
+          "summary": "flour 3 cups -> 2.5 cups",
+          "type": "quantity_adjustment",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "lines": [
+            "I8"
+          ]
+        },
+        {
+          "summary": "add a dash of cinnamon",
+          "type": "addition",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "lines": [],
+          "added_contains": [
+            "cinnamon"
+          ],
+          "steps": [
+            "S4"
+          ]
+        }
       ]
     },
     {
@@ -75,10 +214,61 @@
       "source": "data",
       "note": "Error correction plus two unquantified increases. The dashi note is advice the reviewer did not act on (they got dashi from their mother). The baseline run inserted second soy and sugar lines instead of replacing.",
       "expected": [
-        {"summary": "sirloin 1/4 lb -> about 1 lb", "type": "quantity_adjustment", "applied_by_reviewer": true, "generalizable": true, "lines": ["I2"]},
-        {"summary": "more soy sauce, to taste", "type": "quantity_adjustment", "applied_by_reviewer": true, "generalizable": true, "lines": ["I5"], "added_contains": ["soy"]},
-        {"summary": "more sugar, to taste", "type": "quantity_adjustment", "applied_by_reviewer": true, "generalizable": true, "lines": ["I7"], "added_contains": ["sugar"]},
-        {"summary": "beef broth can stand in for dashi", "type": "ingredient_substitution", "applied_by_reviewer": false, "generalizable": true, "lines": ["I4"], "added_contains": ["beef broth", "beef stock"]}
+        {
+          "summary": "sirloin 1/4 lb -> about 1 lb",
+          "type": "quantity_adjustment",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "lines": [
+            "I2"
+          ]
+        },
+        {
+          "summary": "more soy sauce, to taste",
+          "type": "quantity_adjustment",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "lines": [
+            "I5"
+          ],
+          "added_contains": [
+            "soy"
+          ],
+          "steps": [
+            "S1"
+          ]
+        },
+        {
+          "summary": "more sugar, to taste",
+          "type": "quantity_adjustment",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "lines": [
+            "I7"
+          ],
+          "added_contains": [
+            "sugar"
+          ],
+          "steps": [
+            "S1"
+          ]
+        },
+        {
+          "summary": "beef broth can stand in for dashi",
+          "type": "ingredient_substitution",
+          "applied_by_reviewer": false,
+          "generalizable": true,
+          "lines": [
+            "I4"
+          ],
+          "added_contains": [
+            "beef broth",
+            "beef stock"
+          ],
+          "steps": [
+            "S1"
+          ]
+        }
       ]
     },
     {
@@ -88,8 +278,31 @@
       "source": "data",
       "note": "Not flagged by the scraper (no `has_modification` key) but corroborates the meat quantity and adds carrots.",
       "expected": [
-        {"summary": "at least 1 lb beef", "type": "quantity_adjustment", "applied_by_reviewer": true, "generalizable": true, "optional": true, "lines": ["I2"]},
-        {"summary": "add carrots", "type": "addition", "applied_by_reviewer": true, "generalizable": true, "optional": true, "lines": [], "added_contains": ["carrot"]}
+        {
+          "summary": "at least 1 lb beef",
+          "type": "quantity_adjustment",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "optional": true,
+          "lines": [
+            "I2"
+          ]
+        },
+        {
+          "summary": "add carrots",
+          "type": "addition",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "optional": true,
+          "lines": [],
+          "added_contains": [
+            "carrot"
+          ],
+          "steps": [
+            "S1",
+            "S2"
+          ]
+        }
       ]
     },
     {
@@ -99,8 +312,35 @@
       "source": "data",
       "note": "Made exactly as directed. The frosting swap is personal circumstance; the extra apples are future intent. The baseline run replaced the whole frosting step with 'Use a different frosting leftover from another cake.'",
       "expected": [
-        {"summary": "used a different frosting because some was left over", "type": "ingredient_substitution", "applied_by_reviewer": true, "generalizable": false, "lines": ["I13", "I14", "I15", "I16", "I17", "S4"], "added_contains": ["frosting"]},
-        {"summary": "next time add one more cup of apples", "type": "quantity_adjustment", "applied_by_reviewer": false, "generalizable": true, "lines": ["I12"], "added_contains": ["apple"]}
+        {
+          "summary": "used a different frosting because some was left over",
+          "type": "ingredient_substitution",
+          "applied_by_reviewer": true,
+          "generalizable": false,
+          "lines": [
+            "I13",
+            "I14",
+            "I15",
+            "I16",
+            "I17",
+            "S4"
+          ],
+          "added_contains": [
+            "frosting"
+          ]
+        },
+        {
+          "summary": "next time add one more cup of apples",
+          "type": "quantity_adjustment",
+          "applied_by_reviewer": false,
+          "generalizable": true,
+          "lines": [
+            "I12"
+          ],
+          "added_contains": [
+            "apple"
+          ]
+        }
       ]
     },
     {
@@ -110,7 +350,18 @@
       "source": "data",
       "note": "'I would prefer some more apple chunks' is a wish, flagged by the scraper's `more \\w+` regex.",
       "expected": [
-        {"summary": "would prefer more apple chunks", "type": "quantity_adjustment", "applied_by_reviewer": false, "generalizable": true, "lines": ["I12"], "added_contains": ["apple"]}
+        {
+          "summary": "would prefer more apple chunks",
+          "type": "quantity_adjustment",
+          "applied_by_reviewer": false,
+          "generalizable": true,
+          "lines": [
+            "I12"
+          ],
+          "added_contains": [
+            "apple"
+          ]
+        }
       ]
     },
     {
@@ -120,7 +371,22 @@
       "source": "data",
       "note": "Circumstance-driven substitution with a praised result and a niche ingredient. Either decision is defensible.",
       "expected": [
-        {"summary": "1 cup mashed banana + 1 cup almond banana milk instead of 2 1/3 cups banana", "type": "ingredient_substitution", "applied_by_reviewer": true, "generalizable": true, "optional": true, "lines": ["I6"], "added_contains": ["almond"]}
+        {
+          "summary": "1 cup mashed banana + 1 cup almond banana milk instead of 2 1/3 cups banana",
+          "type": "ingredient_substitution",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "optional": true,
+          "lines": [
+            "I6"
+          ],
+          "added_contains": [
+            "almond"
+          ],
+          "steps": [
+            "S1"
+          ]
+        }
       ]
     },
     {
@@ -130,10 +396,57 @@
       "source": "data",
       "note": "Reviewer made four changes and judged the result 'just isn't great'. Applied, but not generalizable: the reviewer's own verdict is negative.",
       "expected": [
-        {"summary": "a tad extra brown sugar", "type": "quantity_adjustment", "applied_by_reviewer": true, "generalizable": false, "lines": ["I3"], "added_contains": ["brown sugar"]},
-        {"summary": "add 1 tablespoon cinnamon", "type": "addition", "applied_by_reviewer": true, "generalizable": false, "lines": [], "added_contains": ["cinnamon"]},
-        {"summary": "add 1.5 teaspoons vanilla", "type": "addition", "applied_by_reviewer": true, "generalizable": false, "lines": [], "added_contains": ["vanilla"]},
-        {"summary": "add chopped walnuts", "type": "addition", "applied_by_reviewer": true, "generalizable": false, "lines": [], "added_contains": ["walnut"]}
+        {
+          "summary": "a tad extra brown sugar",
+          "type": "quantity_adjustment",
+          "applied_by_reviewer": true,
+          "generalizable": false,
+          "lines": [
+            "I3"
+          ],
+          "added_contains": [
+            "brown sugar"
+          ]
+        },
+        {
+          "summary": "add 1 tablespoon cinnamon",
+          "type": "addition",
+          "applied_by_reviewer": true,
+          "generalizable": false,
+          "lines": [],
+          "added_contains": [
+            "cinnamon"
+          ],
+          "steps": [
+            "S1"
+          ]
+        },
+        {
+          "summary": "add 1.5 teaspoons vanilla",
+          "type": "addition",
+          "applied_by_reviewer": true,
+          "generalizable": false,
+          "lines": [],
+          "added_contains": [
+            "vanilla"
+          ],
+          "steps": [
+            "S1"
+          ]
+        },
+        {
+          "summary": "add chopped walnuts",
+          "type": "addition",
+          "applied_by_reviewer": true,
+          "generalizable": false,
+          "lines": [],
+          "added_contains": [
+            "walnut"
+          ],
+          "steps": [
+            "S1"
+          ]
+        }
       ]
     },
     {
@@ -143,7 +456,21 @@
       "source": "data",
       "note": "The one baseline output that was faithful to its review.",
       "expected": [
-        {"summary": "honey instead of brown sugar", "type": "ingredient_substitution", "applied_by_reviewer": true, "generalizable": true, "lines": ["I3"], "added_contains": ["honey"]}
+        {
+          "summary": "honey instead of brown sugar",
+          "type": "ingredient_substitution",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "lines": [
+            "I3"
+          ],
+          "added_contains": [
+            "honey"
+          ],
+          "steps": [
+            "S1"
+          ]
+        }
       ]
     },
     {
@@ -152,8 +479,35 @@
       "review_index": 7,
       "source": "data",
       "expected": [
-        {"summary": "bake about 45 minutes, check at 45 (60 overcooks)", "type": "technique_change", "applied_by_reviewer": true, "generalizable": true, "lines": ["S3"], "added_contains": ["45"]},
-        {"summary": "three ripe bananas (an equivalent measure, not a change)", "type": "quantity_adjustment", "applied_by_reviewer": true, "generalizable": true, "optional": true, "lines": ["I6"], "added_contains": ["3 ripe", "three"]}
+        {
+          "summary": "bake about 45 minutes, check at 45 (60 overcooks)",
+          "type": "technique_change",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "lines": [
+            "S3"
+          ],
+          "added_contains": [
+            "45"
+          ]
+        },
+        {
+          "summary": "three ripe bananas (an equivalent measure, not a change)",
+          "type": "quantity_adjustment",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "optional": true,
+          "lines": [
+            "I6"
+          ],
+          "added_contains": [
+            "3 ripe",
+            "three"
+          ],
+          "steps": [
+            "S1"
+          ]
+        }
       ]
     },
     {
@@ -161,9 +515,23 @@
       "recipe": "recipe_20144_banana-banana-bread.json",
       "review_index": 8,
       "source": "data",
-      "note": "Not flagged by the scraper. Corroborates r7 on the same line, so composition must resolve the two as a conflict.",
+      "note": "Not flagged. Says 60 minutes over-bakes but names no time; either extracting a shorter bake or extracting nothing is defensible. Corroborates r7 on the same line, so composition must resolve the two as a conflict.",
       "expected": [
-        {"summary": "bake shorter; took it out 15 minutes early and it still caught", "type": "technique_change", "applied_by_reviewer": true, "generalizable": true, "lines": ["S3"], "added_contains": ["45", "early", "check"]}
+        {
+          "summary": "bake shorter; took it out 15 minutes early and it still caught",
+          "type": "technique_change",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "lines": [
+            "S3"
+          ],
+          "added_contains": [
+            "45",
+            "early",
+            "check"
+          ],
+          "optional": true
+        }
       ]
     },
     {
@@ -173,8 +541,38 @@
       "source": "data",
       "note": "Not flagged. Whole wheat flour and a mixed sugar. Both change the character of the bread; either decision is defensible.",
       "expected": [
-        {"summary": "100% whole wheat flour", "type": "ingredient_substitution", "applied_by_reviewer": true, "generalizable": true, "optional": true, "lines": ["I0"], "added_contains": ["whole wheat"]},
-        {"summary": "half brown, half cane sugar", "type": "ingredient_substitution", "applied_by_reviewer": true, "generalizable": true, "optional": true, "lines": ["I3"], "added_contains": ["cane"]}
+        {
+          "summary": "100% whole wheat flour",
+          "type": "ingredient_substitution",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "optional": true,
+          "lines": [
+            "I0"
+          ],
+          "added_contains": [
+            "whole wheat"
+          ],
+          "steps": [
+            "S1"
+          ]
+        },
+        {
+          "summary": "half brown, half cane sugar",
+          "type": "ingredient_substitution",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "optional": true,
+          "lines": [
+            "I3"
+          ],
+          "added_contains": [
+            "cane"
+          ],
+          "steps": [
+            "S1"
+          ]
+        }
       ]
     },
     {
@@ -183,9 +581,50 @@
       "review_index": 0,
       "source": "data",
       "expected": [
-        {"summary": "canned yams instead of raw sweet potatoes", "type": "ingredient_substitution", "applied_by_reviewer": true, "generalizable": true, "optional": true, "lines": ["I1"], "added_contains": ["yam"]},
-        {"summary": "add roasted Brussels sprouts and peppers", "type": "addition", "applied_by_reviewer": true, "generalizable": true, "optional": true, "lines": [], "added_contains": ["brussels", "sprout"]},
-        {"summary": "drizzle heavy cream at the end", "type": "addition", "applied_by_reviewer": true, "generalizable": true, "lines": ["S6"], "added_contains": ["heavy cream", "drizzle"]}
+        {
+          "summary": "canned yams instead of raw sweet potatoes",
+          "type": "ingredient_substitution",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "optional": true,
+          "lines": [
+            "I1"
+          ],
+          "added_contains": [
+            "yam"
+          ],
+          "steps": [
+            "S1"
+          ]
+        },
+        {
+          "summary": "add roasted Brussels sprouts and peppers",
+          "type": "addition",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "optional": true,
+          "lines": [],
+          "added_contains": [
+            "brussels",
+            "sprout"
+          ]
+        },
+        {
+          "summary": "drizzle heavy cream at the end",
+          "type": "addition",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "lines": [
+            "S6"
+          ],
+          "added_contains": [
+            "heavy cream",
+            "drizzle"
+          ],
+          "steps": [
+            "I10"
+          ]
+        }
       ]
     },
     {
@@ -195,7 +634,21 @@
       "source": "data",
       "note": "Pure intent. 'Very good as is but when I make it again I will use fresh ginger.'",
       "expected": [
-        {"summary": "will use fresh ginger next time", "type": "ingredient_substitution", "applied_by_reviewer": false, "generalizable": true, "lines": ["I6"], "added_contains": ["fresh ginger"]}
+        {
+          "summary": "will use fresh ginger next time",
+          "type": "ingredient_substitution",
+          "applied_by_reviewer": false,
+          "generalizable": true,
+          "lines": [
+            "I6"
+          ],
+          "added_contains": [
+            "fresh ginger"
+          ],
+          "steps": [
+            "S3"
+          ]
+        }
       ]
     },
     {
@@ -204,8 +657,38 @@
       "review_index": 3,
       "source": "data",
       "expected": [
-        {"summary": "one sweet potato plus 3 white potatoes (used what needed using)", "type": "ingredient_substitution", "applied_by_reviewer": true, "generalizable": false, "optional": true, "lines": ["I1"], "added_contains": ["white potato"]},
-        {"summary": "2% milk instead of half-and-half", "type": "ingredient_substitution", "applied_by_reviewer": true, "generalizable": true, "lines": ["I10"], "added_contains": ["2%"]}
+        {
+          "summary": "one sweet potato plus 3 white potatoes (used what needed using)",
+          "type": "ingredient_substitution",
+          "applied_by_reviewer": true,
+          "generalizable": false,
+          "optional": true,
+          "lines": [
+            "I1"
+          ],
+          "added_contains": [
+            "white potato"
+          ],
+          "steps": [
+            "S1"
+          ]
+        },
+        {
+          "summary": "2% milk instead of half-and-half",
+          "type": "ingredient_substitution",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "lines": [
+            "I10"
+          ],
+          "added_contains": [
+            "2%"
+          ],
+          "steps": [
+            "S5",
+            "S6"
+          ]
+        }
       ]
     },
     {
@@ -215,9 +698,51 @@
       "source": "data",
       "note": "Two applied changes and one 'next time'. The baseline run applied the broth wish and rewrote the ginger line without a quantity.",
       "expected": [
-        {"summary": "2% milk instead of half-and-half", "type": "ingredient_substitution", "applied_by_reviewer": true, "generalizable": true, "lines": ["I10"], "added_contains": ["2%"]},
-        {"summary": "fresh grated ginger instead of ground", "type": "ingredient_substitution", "applied_by_reviewer": true, "generalizable": true, "lines": ["I6"], "added_contains": ["fresh"]},
-        {"summary": "more broth next time", "type": "quantity_adjustment", "applied_by_reviewer": false, "generalizable": true, "lines": ["I9", "S4", "S6"], "added_contains": ["broth"]}
+        {
+          "summary": "2% milk instead of half-and-half",
+          "type": "ingredient_substitution",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "lines": [
+            "I10"
+          ],
+          "added_contains": [
+            "2%"
+          ],
+          "steps": [
+            "S5",
+            "S6"
+          ]
+        },
+        {
+          "summary": "fresh grated ginger instead of ground",
+          "type": "ingredient_substitution",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "lines": [
+            "I6"
+          ],
+          "added_contains": [
+            "fresh"
+          ],
+          "steps": [
+            "S3"
+          ]
+        },
+        {
+          "summary": "more broth next time",
+          "type": "quantity_adjustment",
+          "applied_by_reviewer": false,
+          "generalizable": true,
+          "lines": [
+            "I9",
+            "S4",
+            "S6"
+          ],
+          "added_contains": [
+            "broth"
+          ]
+        }
       ]
     },
     {
@@ -227,10 +752,67 @@
       "source": "data",
       "note": "The oven remark is hypothetical. Heavy cream conflicts with r3/r4 on I10; ranking decides.",
       "expected": [
-        {"summary": "extra cayenne pepper", "type": "quantity_adjustment", "applied_by_reviewer": true, "generalizable": true, "lines": ["I8"], "added_contains": ["cayenne"]},
-        {"summary": "lots of black pepper", "type": "quantity_adjustment", "applied_by_reviewer": true, "generalizable": true, "optional": true, "lines": ["I11"], "added_contains": ["black pepper"]},
-        {"summary": "heavy cream instead of half-and-half", "type": "ingredient_substitution", "applied_by_reviewer": true, "generalizable": true, "lines": ["I10"], "added_contains": ["heavy cream"]},
-        {"summary": "thinks it would also work in the oven", "type": "technique_change", "applied_by_reviewer": false, "generalizable": true, "lines": ["S1", "S2"], "added_contains": ["oven", "roast"]}
+        {
+          "summary": "extra cayenne pepper",
+          "type": "quantity_adjustment",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "lines": [
+            "I8"
+          ],
+          "added_contains": [
+            "cayenne"
+          ],
+          "steps": [
+            "S3"
+          ]
+        },
+        {
+          "summary": "lots of black pepper",
+          "type": "quantity_adjustment",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "optional": true,
+          "lines": [
+            "I11"
+          ],
+          "added_contains": [
+            "black pepper"
+          ],
+          "steps": [
+            "S6"
+          ]
+        },
+        {
+          "summary": "heavy cream instead of half-and-half",
+          "type": "ingredient_substitution",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "lines": [
+            "I10"
+          ],
+          "added_contains": [
+            "heavy cream"
+          ],
+          "steps": [
+            "S5",
+            "S6"
+          ]
+        },
+        {
+          "summary": "thinks it would also work in the oven",
+          "type": "technique_change",
+          "applied_by_reviewer": false,
+          "generalizable": true,
+          "lines": [
+            "S1",
+            "S2"
+          ],
+          "added_contains": [
+            "oven",
+            "roast"
+          ]
+        }
       ]
     },
     {
@@ -240,78 +822,242 @@
       "source": "data",
       "note": "Not flagged. An accidental substitution the reviewer says came out too strong ('rowdy AF').",
       "expected": [
-        {"summary": "minced ginger instead of ground, by accident, too strong", "type": "ingredient_substitution", "applied_by_reviewer": true, "generalizable": false, "lines": ["I6"], "added_contains": ["minced"]}
+        {
+          "summary": "minced ginger instead of ground, by accident, too strong",
+          "type": "ingredient_substitution",
+          "applied_by_reviewer": true,
+          "generalizable": false,
+          "lines": [
+            "I6"
+          ],
+          "added_contains": [
+            "minced"
+          ],
+          "steps": [
+            "S3"
+          ]
+        }
       ]
     },
     {
       "id": "syn-compound-sentence",
       "recipe": "recipe_10813_best-chocolate-chip-cookies.json",
       "source": "synthetic",
-      "review": {"text": "I added an egg and halved the white sugar. Best batch yet, they stayed thick and soft.", "rating": 5},
+      "review": {
+        "text": "I added an egg and halved the white sugar. Best batch yet, they stayed thick and soft.",
+        "rating": 5
+      },
       "expected": [
-        {"summary": "eggs 2 -> 3", "type": "quantity_adjustment", "applied_by_reviewer": true, "generalizable": true, "lines": ["I3"], "added_contains": ["egg"]},
-        {"summary": "white sugar 1 cup -> 1/2 cup", "type": "quantity_adjustment", "applied_by_reviewer": true, "generalizable": true, "lines": ["I1"]}
+        {
+          "summary": "eggs 2 -> 3",
+          "type": "quantity_adjustment",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "lines": [
+            "I3"
+          ],
+          "added_contains": [
+            "egg"
+          ],
+          "steps": [
+            "S2"
+          ]
+        },
+        {
+          "summary": "white sugar 1 cup -> 1/2 cup",
+          "type": "quantity_adjustment",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "lines": [
+            "I1"
+          ]
+        }
       ]
     },
     {
       "id": "syn-fraction-phrasing",
       "recipe": "recipe_10813_best-chocolate-chip-cookies.json",
       "source": "synthetic",
-      "review": {"text": "Used 1 1/2 tsp salt instead of 1/2 tsp and it finally tasted like something.", "rating": 4},
+      "review": {
+        "text": "Used 1 1/2 tsp salt instead of 1/2 tsp and it finally tasted like something.",
+        "rating": 4
+      },
       "note": "The recipe stores the line as '0.5 teaspoon salt'. Fraction and unit phrasing must still find it.",
       "expected": [
-        {"summary": "salt 1/2 tsp -> 1 1/2 tsp", "type": "quantity_adjustment", "applied_by_reviewer": true, "generalizable": true, "lines": ["I7"]}
+        {
+          "summary": "salt 1/2 tsp -> 1 1/2 tsp",
+          "type": "quantity_adjustment",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "lines": [
+            "I7"
+          ]
+        }
       ]
     },
     {
       "id": "syn-temp-and-time",
       "recipe": "recipe_10813_best-chocolate-chip-cookies.json",
       "source": "synthetic",
-      "review": {"text": "I baked them at 375 for 8 minutes instead of 350 for 10. Crispy edges, gooey middle.", "rating": 5},
+      "review": {
+        "text": "I baked them at 375 for 8 minutes instead of 350 for 10. Crispy edges, gooey middle.",
+        "rating": 5
+      },
       "note": "The starter's own few-shot example 4, which its modifier could not apply.",
       "expected": [
-        {"summary": "oven 350 F -> 375 F", "type": "technique_change", "applied_by_reviewer": true, "generalizable": true, "lines": ["S1"], "added_contains": ["375"]},
-        {"summary": "bake 10 minutes -> 8 minutes", "type": "technique_change", "applied_by_reviewer": true, "generalizable": true, "lines": ["S6"], "added_contains": ["8 minutes"]}
+        {
+          "summary": "oven 350 F -> 375 F",
+          "type": "technique_change",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "lines": [
+            "S1"
+          ],
+          "added_contains": [
+            "375"
+          ]
+        },
+        {
+          "summary": "bake 10 minutes -> 8 minutes",
+          "type": "technique_change",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "lines": [
+            "S6"
+          ],
+          "added_contains": [
+            "8 minutes"
+          ]
+        }
       ]
     },
     {
       "id": "syn-pure-intent",
       "recipe": "recipe_10813_best-chocolate-chip-cookies.json",
       "source": "synthetic",
-      "review": {"text": "Delicious as written! Next time I'll try adding a cup of oats and maybe cut the chocolate chips in half.", "rating": 5},
+      "review": {
+        "text": "Delicious as written! Next time I'll try adding a cup of oats and maybe cut the chocolate chips in half.",
+        "rating": 5
+      },
       "expected": [
-        {"summary": "might add oats next time", "type": "addition", "applied_by_reviewer": false, "generalizable": true, "lines": [], "added_contains": ["oat"]},
-        {"summary": "might halve the chocolate chips next time", "type": "quantity_adjustment", "applied_by_reviewer": false, "generalizable": true, "lines": ["I9"], "added_contains": ["chocolate chip"]}
+        {
+          "summary": "might add oats next time",
+          "type": "addition",
+          "applied_by_reviewer": false,
+          "generalizable": true,
+          "lines": [],
+          "added_contains": [
+            "oat"
+          ]
+        },
+        {
+          "summary": "might halve the chocolate chips next time",
+          "type": "quantity_adjustment",
+          "applied_by_reviewer": false,
+          "generalizable": true,
+          "lines": [
+            "I9"
+          ],
+          "added_contains": [
+            "chocolate chip"
+          ]
+        }
       ]
     },
     {
       "id": "syn-personal-circumstance",
       "recipe": "recipe_10813_best-chocolate-chip-cookies.json",
       "source": "synthetic",
-      "review": {"text": "I was out of vanilla so I left it out, and I used margarine because that's what I had. Still came out fine.", "rating": 4},
+      "review": {
+        "text": "I was out of vanilla so I left it out, and I used margarine because that's what I had. Still came out fine.",
+        "rating": 4
+      },
       "expected": [
-        {"summary": "left out the vanilla (had none)", "type": "removal", "applied_by_reviewer": true, "generalizable": false, "lines": ["I4", "S2"], "added_contains": ["vanilla"]},
-        {"summary": "margarine instead of butter (had no butter)", "type": "ingredient_substitution", "applied_by_reviewer": true, "generalizable": false, "lines": ["I0"], "added_contains": ["margarine"]}
+        {
+          "summary": "left out the vanilla (had none)",
+          "type": "removal",
+          "applied_by_reviewer": true,
+          "generalizable": false,
+          "lines": [
+            "I4"
+          ],
+          "added_contains": [
+            "vanilla"
+          ],
+          "steps": [
+            "S2"
+          ]
+        },
+        {
+          "summary": "margarine instead of butter (had no butter)",
+          "type": "ingredient_substitution",
+          "applied_by_reviewer": true,
+          "generalizable": false,
+          "lines": [
+            "I0"
+          ],
+          "added_contains": [
+            "margarine"
+          ],
+          "steps": [
+            "S0",
+            "S1"
+          ]
+        }
       ]
     },
     {
       "id": "syn-reverted-tweak",
       "recipe": "recipe_10813_best-chocolate-chip-cookies.json",
       "source": "synthetic",
-      "review": {"text": "I doubled the vanilla on the first batch, but it was overpowering, so on the second batch I went back to the original amount. Great cookies.", "rating": 5},
+      "review": {
+        "text": "I doubled the vanilla on the first batch, but it was overpowering, so on the second batch I went back to the original amount. Great cookies.",
+        "rating": 5
+      },
       "note": "A tweak the reviewer tried and reverted. Applied, then judged bad.",
       "expected": [
-        {"summary": "doubled vanilla, then reverted", "type": "quantity_adjustment", "applied_by_reviewer": true, "generalizable": false, "lines": ["I4"], "added_contains": ["vanilla"]}
+        {
+          "summary": "doubled vanilla, then reverted",
+          "type": "quantity_adjustment",
+          "applied_by_reviewer": true,
+          "generalizable": false,
+          "lines": [
+            "I4"
+          ],
+          "added_contains": [
+            "vanilla"
+          ],
+          "steps": [
+            "S2"
+          ]
+        }
       ]
     },
     {
       "id": "syn-substitution-keeps-quantity",
       "recipe": "recipe_10813_best-chocolate-chip-cookies.json",
       "source": "synthetic",
-      "review": {"text": "Swapped the walnuts for pecans. Nicer with the chocolate.", "rating": 5},
+      "review": {
+        "text": "Swapped the walnuts for pecans. Nicer with the chocolate.",
+        "rating": 5
+      },
       "note": "The replacement line must keep the quantity ('1 cup chopped pecans'), not become 'pecans'.",
       "expected": [
-        {"summary": "pecans instead of walnuts", "type": "ingredient_substitution", "applied_by_reviewer": true, "generalizable": true, "lines": ["I10"], "added_contains": ["pecan"]}
+        {
+          "summary": "pecans instead of walnuts",
+          "type": "ingredient_substitution",
+          "applied_by_reviewer": true,
+          "generalizable": true,
+          "lines": [
+            "I10"
+          ],
+          "added_contains": [
+            "pecan"
+          ],
+          "steps": [
+            "S4"
+          ]
+        }
       ]
     }
   ]

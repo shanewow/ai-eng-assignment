@@ -7,12 +7,14 @@
     "0.5 cup white sugar",
     "1.5 cups packed brown sugar",
     "2 eggs",
-    "1 additional egg yolk",
+    "1 egg yolk (additional)",
     "2 teaspoons vanilla extract",
     "1 teaspoon baking soda",
     "2 teaspoons hot water",
-    "0.5 teaspoon salt",
-    "3 cups all-purpose flour",
+    "1 teaspoon cream of tartar",
+    "1 teaspoon salt",
+    "a tiny dash ground cinnamon, or more to taste",
+    "2.5 cups all-purpose flour",
     "2 cups semisweet chocolate chips",
     "1 cup chopped walnuts"
   ],
@@ -20,9 +22,9 @@
     "Gather your ingredients, making sure your butter is softened, and your eggs are room temperature.",
     "Preheat the oven to 350 degrees F (175 degrees C). Beat butter, white sugar, and brown sugar with an electric mixer in a large bowl until smooth.",
     "Beat in eggs, one at a time, then stir in vanilla.",
-    "Dissolve baking soda in hot water. Add to batter along with salt.",
-    "Stir in flour, chocolate chips, and walnuts.",
-    "Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets.",
+    "Add baking soda and cream of tartar to batter along with salt.",
+    "Stir in flour, chocolate chips, and walnuts. Refrigerate the batter for at least 1 hour before scooping and baking.",
+    "Portion dough using an ice cream scoop (for larger cookies, yields about 16) and place scoops 2 inches apart onto ungreased baking sheets.",
     "Bake in the preheated oven until edges are nicely browned, about 10 minutes.",
     "Cool on the baking sheets briefly before removing to a wire rack to cool completely.",
     "Store in an airtight container or serve immediately and enjoy!"
@@ -32,59 +34,321 @@
       "source_review": {
         "text": "I used an ice cream scoop, that made 16 big cookies. I did add an additional egg yolk to help keep the cookie chewy.They turned out fantastic.",
         "reviewer": null,
-        "rating": 5
+        "rating": 5,
+        "is_featured": true
+      },
+      "modification_type": "technique_change",
+      "summary": "use an ice cream scoop to portion dough (makes larger cookies)",
+      "reasoning": "Reviewer used an ice cream scoop to portion dough, yielding 16 big cookies instead of the recipe's 48 smaller ones",
+      "changes_made": [
+        {
+          "type": "instruction",
+          "operation": "replace",
+          "line_index": 5,
+          "from_text": "Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets.",
+          "to_text": "Portion dough using an ice cream scoop (for larger cookies, yields about 16) and place scoops 2 inches apart onto ungreased baking sheets.",
+          "alternatives": [
+            {
+              "source_review": {
+                "text": "The first batch that I made was a bit bland. But I did love that they weren't flat! They are a nice thick, chewy cookie. The second batch I used 1 tsp. of salt instead of 1/2 tsp. and omitted the nuts. This was better, but still not quite as flavorful at the traditional Tollhouse cookie recipe. I found that if I pressed them down slightly before baking that worked the best.If I were to rate this recipe on look and texture, it would be a 5. But the flavor falls a bit flat for me. I may keep trying to see how I can make it taste better, but maintain the aesthetic.",
+                "reviewer": null,
+                "rating": 3,
+                "is_featured": true
+              },
+              "modification_type": "technique_change",
+              "summary": "press cookies down slightly before baking",
+              "proposed_text": "Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets and press each one down slightly."
+            }
+          ]
+        }
+      ],
+      "edits_failed": []
+    },
+    {
+      "source_review": {
+        "text": "I used an ice cream scoop, that made 16 big cookies. I did add an additional egg yolk to help keep the cookie chewy.They turned out fantastic.",
+        "reviewer": null,
+        "rating": 5,
+        "is_featured": true
       },
       "modification_type": "addition",
-      "reasoning": "Adding an additional egg yolk helps keep the cookies chewy.",
+      "summary": "add an additional egg yolk",
+      "reasoning": "Reviewer added an extra egg yolk to increase chewiness",
       "changes_made": [
         {
           "type": "ingredient",
+          "operation": "add",
+          "line_index": 3,
           "from_text": "",
-          "to_text": "1 additional egg yolk",
-          "operation": "add"
+          "to_text": "1 egg yolk (additional)",
+          "alternatives": []
         }
       ],
-      "confidence_score": 0.85
+      "edits_failed": []
     },
     {
       "source_review": {
         "text": "These are awesome cookies. I followed the advice of others by making the following tweaks: (1) I used a half cup of sugar and one-and-a-half cups of brown sugar; (2) I omitted the water; (3) I added a teaspoon of cream of tartar to the batter; (4) I refrigerated the batter for at least an hour before scooping and baking. The cookies retained their shape and didn't spread when baked. I think the cream of tartar made a difference, and the cookies did not come out too cakey either! This recipe is going in my \"favorites\" cookbook.",
         "reviewer": null,
-        "rating": 5
+        "rating": 5,
+        "is_featured": true
       },
       "modification_type": "quantity_adjustment",
-      "reasoning": "Increases the ratio of brown sugar for a chewier texture and more flavor.",
+      "summary": "use 0.5 cup white sugar and 1.5 cups brown sugar",
+      "reasoning": "Reviewer changed the sugar ratio to reduce white sugar and increase brown sugar.",
       "changes_made": [
         {
           "type": "ingredient",
+          "operation": "replace",
+          "line_index": 1,
           "from_text": "1 cup white sugar",
           "to_text": "0.5 cup white sugar",
-          "operation": "replace"
+          "alternatives": []
         },
         {
           "type": "ingredient",
+          "operation": "replace",
+          "line_index": 2,
           "from_text": "1 cup packed brown sugar",
           "to_text": "1.5 cups packed brown sugar",
-          "operation": "replace"
+          "alternatives": [
+            {
+              "source_review": {
+                "text": "I just made these and 😍😋!!!! Changes- used a whole cup of white sugar and 1/2 c of brown (because it's what I had) and 1/2 c less flour after reading some other reviews, and added a tiny dash of cinnamon. They are phenomenal! Crispy edges and gooey center. My husband works from home and he can't stop coming out of his office and trying them!!!! HUGE hit and will be my go to. Thank you!!",
+                "reviewer": null,
+                "rating": 5,
+                "is_featured": true
+              },
+              "modification_type": "quantity_adjustment",
+              "summary": "brown sugar 1 cup -> 1/2 cup",
+              "proposed_text": "0.5 cup packed brown sugar"
+            }
+          ]
         }
       ],
-      "confidence_score": 0.9
+      "edits_failed": []
+    },
+    {
+      "source_review": {
+        "text": "These are awesome cookies. I followed the advice of others by making the following tweaks: (1) I used a half cup of sugar and one-and-a-half cups of brown sugar; (2) I omitted the water; (3) I added a teaspoon of cream of tartar to the batter; (4) I refrigerated the batter for at least an hour before scooping and baking. The cookies retained their shape and didn't spread when baked. I think the cream of tartar made a difference, and the cookies did not come out too cakey either! This recipe is going in my \"favorites\" cookbook.",
+        "reviewer": null,
+        "rating": 5,
+        "is_featured": true
+      },
+      "modification_type": "addition",
+      "summary": "add 1 teaspoon cream of tartar to the batter",
+      "reasoning": "Reviewer reported adding cream of tartar and credited it with helping cookies retain shape.",
+      "changes_made": [
+        {
+          "type": "ingredient",
+          "operation": "add",
+          "line_index": 6,
+          "from_text": "",
+          "to_text": "1 teaspoon cream of tartar",
+          "alternatives": []
+        },
+        {
+          "type": "instruction",
+          "operation": "replace",
+          "line_index": 3,
+          "from_text": "Dissolve baking soda in hot water. Add to batter along with salt.",
+          "to_text": "Add baking soda and cream of tartar to batter along with salt.",
+          "alternatives": []
+        }
+      ],
+      "edits_failed": []
+    },
+    {
+      "source_review": {
+        "text": "These are awesome cookies. I followed the advice of others by making the following tweaks: (1) I used a half cup of sugar and one-and-a-half cups of brown sugar; (2) I omitted the water; (3) I added a teaspoon of cream of tartar to the batter; (4) I refrigerated the batter for at least an hour before scooping and baking. The cookies retained their shape and didn't spread when baked. I think the cream of tartar made a difference, and the cookies did not come out too cakey either! This recipe is going in my \"favorites\" cookbook.",
+        "reviewer": null,
+        "rating": 5,
+        "is_featured": true
+      },
+      "modification_type": "technique_change",
+      "summary": "refrigerate the batter for at least 1 hour before scooping and baking",
+      "reasoning": "Reviewer chilled the dough for at least an hour to prevent spreading and retain shape.",
+      "changes_made": [
+        {
+          "type": "instruction",
+          "operation": "replace",
+          "line_index": 4,
+          "from_text": "Stir in flour, chocolate chips, and walnuts.",
+          "to_text": "Stir in flour, chocolate chips, and walnuts. Refrigerate the batter for at least 1 hour before scooping and baking.",
+          "alternatives": [
+            {
+              "source_review": {
+                "text": "The first batch that I made was a bit bland. But I did love that they weren't flat! They are a nice thick, chewy cookie. The second batch I used 1 tsp. of salt instead of 1/2 tsp. and omitted the nuts. This was better, but still not quite as flavorful at the traditional Tollhouse cookie recipe. I found that if I pressed them down slightly before baking that worked the best.If I were to rate this recipe on look and texture, it would be a 5. But the flavor falls a bit flat for me. I may keep trying to see how I can make it taste better, but maintain the aesthetic.",
+                "reviewer": null,
+                "rating": 3,
+                "is_featured": true
+              },
+              "modification_type": "removal",
+              "summary": "omit the chopped walnuts",
+              "proposed_text": "Stir in flour and chocolate chips."
+            }
+          ]
+        }
+      ],
+      "edits_failed": []
+    },
+    {
+      "source_review": {
+        "text": "I just made these and 😍😋!!!! Changes- used a whole cup of white sugar and 1/2 c of brown (because it's what I had) and 1/2 c less flour after reading some other reviews, and added a tiny dash of cinnamon. They are phenomenal! Crispy edges and gooey center. My husband works from home and he can't stop coming out of his office and trying them!!!! HUGE hit and will be my go to. Thank you!!",
+        "reviewer": null,
+        "rating": 5,
+        "is_featured": true
+      },
+      "modification_type": "quantity_adjustment",
+      "summary": "reduce flour by 1/2 cup",
+      "reasoning": "Reviewer used 1/2 cup less flour than the recipe's amount to achieve desired texture",
+      "changes_made": [
+        {
+          "type": "ingredient",
+          "operation": "replace",
+          "line_index": 8,
+          "from_text": "3 cups all-purpose flour",
+          "to_text": "2.5 cups all-purpose flour",
+          "alternatives": []
+        }
+      ],
+      "edits_failed": []
+    },
+    {
+      "source_review": {
+        "text": "I just made these and 😍😋!!!! Changes- used a whole cup of white sugar and 1/2 c of brown (because it's what I had) and 1/2 c less flour after reading some other reviews, and added a tiny dash of cinnamon. They are phenomenal! Crispy edges and gooey center. My husband works from home and he can't stop coming out of his office and trying them!!!! HUGE hit and will be my go to. Thank you!!",
+        "reviewer": null,
+        "rating": 5,
+        "is_featured": true
+      },
+      "modification_type": "addition",
+      "summary": "add a tiny dash of cinnamon",
+      "reasoning": "Reviewer added a small amount of cinnamon for flavor",
+      "changes_made": [
+        {
+          "type": "ingredient",
+          "operation": "add",
+          "line_index": 7,
+          "from_text": "",
+          "to_text": "a tiny dash ground cinnamon, or more to taste",
+          "alternatives": []
+        }
+      ],
+      "edits_failed": []
+    },
+    {
+      "source_review": {
+        "text": "The first batch that I made was a bit bland. But I did love that they weren't flat! They are a nice thick, chewy cookie. The second batch I used 1 tsp. of salt instead of 1/2 tsp. and omitted the nuts. This was better, but still not quite as flavorful at the traditional Tollhouse cookie recipe. I found that if I pressed them down slightly before baking that worked the best.If I were to rate this recipe on look and texture, it would be a 5. But the flavor falls a bit flat for me. I may keep trying to see how I can make it taste better, but maintain the aesthetic.",
+        "reviewer": null,
+        "rating": 3,
+        "is_featured": true
+      },
+      "modification_type": "quantity_adjustment",
+      "summary": "increase salt from 0.5 teaspoon to 1 teaspoon",
+      "reasoning": "Reviewer found first batch bland and increased salt in the second batch",
+      "changes_made": [
+        {
+          "type": "ingredient",
+          "operation": "replace",
+          "line_index": 7,
+          "from_text": "0.5 teaspoon salt",
+          "to_text": "1 teaspoon salt",
+          "alternatives": []
+        }
+      ],
+      "edits_failed": []
+    }
+  ],
+  "modifications_considered": [
+    {
+      "source_review": {
+        "text": "These are awesome cookies. I followed the advice of others by making the following tweaks: (1) I used a half cup of sugar and one-and-a-half cups of brown sugar; (2) I omitted the water; (3) I added a teaspoon of cream of tartar to the batter; (4) I refrigerated the batter for at least an hour before scooping and baking. The cookies retained their shape and didn't spread when baked. I think the cream of tartar made a difference, and the cookies did not come out too cakey either! This recipe is going in my \"favorites\" cookbook.",
+        "reviewer": null,
+        "rating": 5,
+        "is_featured": true
+      },
+      "modification_type": "removal",
+      "summary": "omit the hot water",
+      "reasoning": "Reviewer left out the hot water used to dissolve the baking soda.",
+      "reason": "not generalizable (personal circumstance, accident, or judged worse by the reviewer)",
+      "conflicts_with_line": null
+    },
+    {
+      "source_review": {
+        "text": "I just made these and 😍😋!!!! Changes- used a whole cup of white sugar and 1/2 c of brown (because it's what I had) and 1/2 c less flour after reading some other reviews, and added a tiny dash of cinnamon. They are phenomenal! Crispy edges and gooey center. My husband works from home and he can't stop coming out of his office and trying them!!!! HUGE hit and will be my go to. Thank you!!",
+        "reviewer": null,
+        "rating": 5,
+        "is_featured": true
+      },
+      "modification_type": "ingredient_substitution",
+      "summary": "white sugar 1 cup (no change) — reviewer used as written",
+      "reasoning": "Reviewer states they used a whole cup of white sugar (matches recipe), mentioned as part of change but not altering from recipe",
+      "reason": "no concrete edit could be derived from the review",
+      "conflicts_with_line": null
+    },
+    {
+      "source_review": {
+        "text": "I just made these and 😍😋!!!! Changes- used a whole cup of white sugar and 1/2 c of brown (because it's what I had) and 1/2 c less flour after reading some other reviews, and added a tiny dash of cinnamon. They are phenomenal! Crispy edges and gooey center. My husband works from home and he can't stop coming out of his office and trying them!!!! HUGE hit and will be my go to. Thank you!!",
+        "reviewer": null,
+        "rating": 5,
+        "is_featured": true
+      },
+      "modification_type": "quantity_adjustment",
+      "summary": "brown sugar 1 cup -> 1/2 cup",
+      "reasoning": "Reviewer used only 1/2 cup brown sugar instead of the recipe's 1 cup",
+      "reason": "conflicts with a higher-ranked modification on I2; kept as an alternative",
+      "conflicts_with_line": 2
+    },
+    {
+      "source_review": {
+        "text": "The first batch that I made was a bit bland. But I did love that they weren't flat! They are a nice thick, chewy cookie. The second batch I used 1 tsp. of salt instead of 1/2 tsp. and omitted the nuts. This was better, but still not quite as flavorful at the traditional Tollhouse cookie recipe. I found that if I pressed them down slightly before baking that worked the best.If I were to rate this recipe on look and texture, it would be a 5. But the flavor falls a bit flat for me. I may keep trying to see how I can make it taste better, but maintain the aesthetic.",
+        "reviewer": null,
+        "rating": 3,
+        "is_featured": true
+      },
+      "modification_type": "removal",
+      "summary": "omit the chopped walnuts",
+      "reasoning": "Reviewer omitted the nuts in the second batch and preferred it",
+      "reason": "conflicts with a higher-ranked modification on S4; kept as an alternative",
+      "conflicts_with_line": 4
+    },
+    {
+      "source_review": {
+        "text": "The first batch that I made was a bit bland. But I did love that they weren't flat! They are a nice thick, chewy cookie. The second batch I used 1 tsp. of salt instead of 1/2 tsp. and omitted the nuts. This was better, but still not quite as flavorful at the traditional Tollhouse cookie recipe. I found that if I pressed them down slightly before baking that worked the best.If I were to rate this recipe on look and texture, it would be a 5. But the flavor falls a bit flat for me. I may keep trying to see how I can make it taste better, but maintain the aesthetic.",
+        "reviewer": null,
+        "rating": 3,
+        "is_featured": true
+      },
+      "modification_type": "technique_change",
+      "summary": "press cookies down slightly before baking",
+      "reasoning": "Reviewer pressed them down slightly before baking and found that produced the best result",
+      "reason": "conflicts with a higher-ranked modification on S5; kept as an alternative",
+      "conflicts_with_line": 5
     }
   ],
   "enhancement_summary": {
-    "total_changes": 3,
+    "status": "enhanced",
+    "reason": "",
+    "total_changes": 10,
     "change_types": [
+      "addition",
       "quantity_adjustment",
-      "addition"
+      "technique_change"
     ],
-    "confidence_score": 0.88,
-    "expected_impact": "Adding an additional egg yolk helps keep the cookies chewy.; Increases the ratio of brown sugar for a chewier texture and more flavor."
+    "expected_impact": "use an ice cream scoop to portion dough (makes larger cookies); add an additional egg yolk; use 0.5 cup white sugar and 1.5 cups brown sugar (and 5 more)",
+    "reviews_screened": 9,
+    "modifications_extracted": 13,
+    "modifications_applied": 8,
+    "modifications_considered": 5
   },
   "description": "This classic chocolate chip cookie recipe makes deliciously buttery cookies with crisp edges, chewy middles, and gooey chocolate chips in every bite.",
   "servings": "48",
-  "prep_time": null,
-  "cook_time": null,
-  "total_time": null,
-  "created_at": "2025-09-25T01:20:16.152241",
-  "pipeline_version": "1.0.0"
+  "prep_time": "PT20M",
+  "cook_time": "PT10M",
+  "total_time": "PT30M",
+  "url": "https://www.allrecipes.com/recipe/10813/best-chocolate-chip-cookies/",
+  "created_at": "2026-09-17T19:32:57+00:00",
+  "pipeline_version": "2.0.0",
+  "model": "gpt-5-mini-2025-08-07",
+  "prompt_version": "2.1"
 }

@@ -1,0 +1,130 @@
+{
+  "request": {
+    "model": "gpt-5-nano",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are a careful recipe editor. You read one community review of a recipe and extract every discrete modification the reviewer describes, as precise edits to the recipe's numbered lines.\n\nRules\n1. One modification per discrete change, each with exactly one category. \"I added an egg and halved the sugar\" is two modifications.\n2. Report every modification you find, then set two flags honestly:\n   - was_applied_by_reviewer: true only if the reviewer actually made the change. \"Next time I will\", \"I would prefer\", \"it would probably also work\" are false.\n   - is_generalizable: true only if the change would help another cook making this recipe. False when the reviewer did it only because of what they happened to have or lack (\"because that's what I had\", \"I was out of X so\", \"only because I had some left over\"), did it by accident, reverted it, or reports the result was worse. A change made out of circumstance is not generalizable even if the result was fine.\n3. Edits reference the numbered lines (I3 = ingredient line 3, S6 = instruction step 6). `find` must be text copied verbatim from that line: a fragment, or the whole line. Do not paraphrase it.\n4. Changing the amount or form of an existing ingredient is a `replace` on that ingredient's line, never an `add_after`. The replacement keeps a quantity and unit (\"1 tablespoon fresh grated ginger\", not \"fresh grated ginger\"). If the reviewer gives no amount, keep the original amount and append \", or more to taste\".\n5. A new ingredient is an `add_after` with the full new line in `add`, anchored to a sensible neighbouring ingredient line. If a step should mention it, also replace that step's text.\n6. Removing an ingredient is a `remove` of its ingredient line, plus a `replace` on any step that names it so the step no longer mentions it.\n7. Technique changes (temperature, time, chilling, pressing, portioning, order) are a `replace` on the instruction step, keeping the step readable.\n8. Never invent a change. Remarks that are not changes to the recipe (portion size, that three bananas equal the stated cups, general praise) are not modifications. A reviewer who followed the recipe as written has no modifications: return an empty list.\n9. Unused string fields are \"\". `replace` is used only by replace edits, `add` only by add_after edits. Never put a line id such as \"I11:\" inside `find`, `replace` or `add`; those fields hold recipe text only.\n\nExample. Recipe lines include \"I7: 0.5 teaspoon salt\", \"I10: 1 cup chopped walnuts\", \"S4: Stir in flour, chocolate chips, and walnuts.\", \"S5: Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets.\"\nReview: \"I used 1 tsp of salt instead of 1/2 and left out the nuts. Pressed them flat before baking, which helped. Next time I'll try brown butter.\"\nOutput:\n{\"modifications\": [\n {\"summary\": \"salt 1/2 tsp -> 1 tsp\", \"modification_type\": \"quantity_adjustment\", \"reasoning\": \"Reviewer found the cookies bland with the original amount\", \"was_applied_by_reviewer\": true, \"is_generalizable\": true,\n  \"edits\": [{\"target\": \"ingredients\", \"operation\": \"replace\", \"line_ref\": \"I7\", \"find\": \"0.5 teaspoon salt\", \"replace\": \"1 teaspoon salt\", \"add\": \"\"}]},\n {\"summary\": \"omit the walnuts\", \"modification_type\": \"removal\", \"reasoning\": \"Reviewer preferred them without nuts\", \"was_applied_by_reviewer\": true, \"is_generalizable\": true,\n  \"edits\": [{\"target\": \"ingredients\", \"operation\": \"remove\", \"line_ref\": \"I10\", \"find\": \"1 cup chopped walnuts\", \"replace\": \"\", \"add\": \"\"},\n            {\"target\": \"instructions\", \"operation\": \"replace\", \"line_ref\": \"S4\", \"find\": \"Stir in flour, chocolate chips, and walnuts.\", \"replace\": \"Stir in flour and chocolate chips.\", \"add\": \"\"}]},\n {\"summary\": \"press dough flat before baking\", \"modification_type\": \"technique_change\", \"reasoning\": \"Gives a more even, less domed cookie\", \"was_applied_by_reviewer\": true, \"is_generalizable\": true,\n  \"edits\": [{\"target\": \"instructions\", \"operation\": \"replace\", \"line_ref\": \"S5\", \"find\": \"Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets.\", \"replace\": \"Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets and press each one down slightly.\", \"add\": \"\"}]},\n {\"summary\": \"try brown butter next time\", \"modification_type\": \"ingredient_substitution\", \"reasoning\": \"Stated as a future idea, not tried\", \"was_applied_by_reviewer\": false, \"is_generalizable\": true,\n  \"edits\": []}\n]}"
+      },
+      {
+        "role": "user",
+        "content": "Recipe: Best Chocolate Chip Cookies\nServings: 48\n\nIngredients:\nI0: 1 cup butter, softened\nI1: 1 cup white sugar\nI2: 1 cup packed brown sugar\nI3: 2 eggs\nI4: 2 teaspoons vanilla extract\nI5: 1 teaspoon baking soda\nI6: 2 teaspoons hot water\nI7: 0.5 teaspoon salt\nI8: 3 cups all-purpose flour\nI9: 2 cups semisweet chocolate chips\nI10: 1 cup chopped walnuts\n\nInstructions:\nS0: Gather your ingredients, making sure your butter is softened, and your eggs are room temperature.\nS1: Preheat the oven to 350 degrees F (175 degrees C). Beat butter, white sugar, and brown sugar with an electric mixer in a large bowl until smooth.\nS2: Beat in eggs, one at a time, then stir in vanilla.\nS3: Dissolve baking soda in hot water. Add to batter along with salt.\nS4: Stir in flour, chocolate chips, and walnuts.\nS5: Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets.\nS6: Bake in the preheated oven until edges are nicely browned, about 10 minutes.\nS7: Cool on the baking sheets briefly before removing to a wire rack to cool completely.\nS8: Store in an airtight container or serve immediately and enjoy!\n\nReview (rating 3/5, listed as a featured tweak):\n\"\"\"The first batch that I made was a bit bland. But I did love that they weren't flat! They are a nice thick, chewy cookie. The second batch I used 1 tsp. of salt instead of 1/2 tsp. and omitted the nuts. This was better, but still not quite as flavorful at the traditional Tollhouse cookie recipe. I found that if I pressed them down slightly before baking that worked the best.If I were to rate this recipe on look and texture, it would be a 5. But the flavor falls a bit flat for me. I may keep trying to see how I can make it taste better, but maintain the aesthetic.\"\"\"\n\nExtract every discrete modification in this review as JSON."
+      }
+    ],
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "extraction_result",
+        "strict": true,
+        "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "modifications": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "summary": {
+                    "type": "string"
+                  },
+                  "modification_type": {
+                    "type": "string",
+                    "enum": [
+                      "ingredient_substitution",
+                      "quantity_adjustment",
+                      "technique_change",
+                      "addition",
+                      "removal"
+                    ]
+                  },
+                  "reasoning": {
+                    "type": "string"
+                  },
+                  "was_applied_by_reviewer": {
+                    "type": "boolean"
+                  },
+                  "is_generalizable": {
+                    "type": "boolean"
+                  },
+                  "edits": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "target": {
+                          "type": "string",
+                          "enum": [
+                            "ingredients",
+                            "instructions"
+                          ]
+                        },
+                        "operation": {
+                          "type": "string",
+                          "enum": [
+                            "replace",
+                            "add_after",
+                            "remove"
+                          ]
+                        },
+                        "line_ref": {
+                          "type": "string",
+                          "description": "I<n> or S<n>"
+                        },
+                        "find": {
+                          "type": "string",
+                          "description": "verbatim text from the referenced line; '' for the whole line"
+                        },
+                        "replace": {
+                          "type": "string"
+                        },
+                        "add": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "target",
+                        "operation",
+                        "line_ref",
+                        "find",
+                        "replace",
+                        "add"
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "summary",
+                  "modification_type",
+                  "reasoning",
+                  "was_applied_by_reviewer",
+                  "is_generalizable",
+                  "edits"
+                ]
+              }
+            }
+          },
+          "required": [
+            "modifications"
+          ]
+        }
+      }
+    },
+    "params": {
+      "max_completion_tokens": 2000,
+      "reasoning_effort": "low"
+    }
+  },
+  "response": {
+    "content": "{\"modifications\": [\n  {\n    \"summary\": \"salt 0.5 teaspoon -> 1 teaspoon\",\n    \"modification_type\": \"quantity_adjustment\",\n    \"reasoning\": \"The reviewer found that increasing salt improved flavor after adjusting seasoning\",\n    \"was_applied_by_reviewer\": true,\n    \"is_generalizable\": true,\n    \"edits\": [\n      {\n        \"target\": \"ingredients\",\n        \"operation\": \"replace\",\n        \"line_ref\": \"I7\",\n        \"find\": \"0.5 teaspoon salt\",\n        \"replace\": \"1 teaspoon salt\",\n        \"add\": \"\"\n      }\n    ]\n  },\n  {\n    \"summary\": \"omit the walnuts\",\n    \"modification_type\": \"removal\",\n    \"reasoning\": \"Reviewer omitted walnuts for flavor/texture preference\",\n    \"was_applied_by_reviewer\": true,\n    \"is_generalizable\": true,\n    \"edits\": [\n      {\n        \"target\": \"ingredients\",\n        \"operation\": \"remove\",\n        \"line_ref\": \"I10\",\n        \"find\": \"1 cup chopped walnuts\",\n        \"replace\": \"\",\n        \"add\": \"\"\n      },\n      {\n        \"target\": \"instructions\",\n        \"operation\": \"replace\",\n        \"line_ref\": \"S4\",\n        \"find\": \"Stir in flour, chocolate chips, and walnuts.\",\n        \"replace\": \"Stir in flour, chocolate chips.\",\n        \"add\": \"\"\n      }\n    ]\n  },\n  {\n    \"summary\": \"press dough down slightly before baking\",\n    \"modification_type\": \"technique_change\",\n    \"reasoning\": \"Pressing the dough creates a more even, chewier cookie shape\",\n    \"was_applied_by_reviewer\": true,\n    \"is_generalizable\": true,\n    \"edits\": [\n      {\n        \"target\": \"instructions\",\n        \"operation\": \"replace\",\n        \"line_ref\": \"S5\",\n        \"find\": \"Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets.\",\n        \"replace\": \"Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets and press each one down slightly before baking.\",\n        \"add\": \"\"\n      }\n    ]\n  }\n]}",
+    "model": "gpt-5-nano-2025-08-07",
+    "usage": {
+      "prompt_tokens": 1760,
+      "completion_tokens": 863,
+      "cached_prompt_tokens": 1152
+    },
+    "created_at": "2026-09-17T19:24:17.644509+00:00"
+  }
+}

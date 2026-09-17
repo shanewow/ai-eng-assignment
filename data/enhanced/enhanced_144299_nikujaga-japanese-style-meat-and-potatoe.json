@@ -1,0 +1,165 @@
+{
+  "recipe_id": "144299_enhanced",
+  "original_recipe_id": "144299",
+  "title": "Nikujaga (Japanese-Style Meat and Potatoes) (Community Enhanced)",
+  "ingredients": [
+    "8 snow peas",
+    "1 tablespoon vegetable oil",
+    "1 pound sirloin steak, thinly sliced",
+    "4 potatoes, cut into bite sized pieces",
+    "2 cups dashi soup",
+    "0.25 cup soy sauce, or more to taste",
+    "0.25 cup sake",
+    "1 tablespoon white sugar, or more to taste",
+    "1 onion, chopped"
+  ],
+  "instructions": [
+    "Put the snow peas in a small saucepan with enough water to cover; bring to a boil and immediately remove from heat. Drain and set aside.",
+    "Heat the oil in a large skillet over medium heat; cook the beef in the oil until browned. Add the potatoes; cook and stir until soft, 5 to 7 minutes. Stir the dashi soup, soy sauce, sake, and sugar into the mixture; simmer for 10 minutes.",
+    "Reduce heat to low and scatter the chopped onion over the mixture; allow to simmer until the liquid is nearly completely evaporated, about 15 minutes more. Top the mixture with the snow peas to serve."
+  ],
+  "modifications_applied": [
+    {
+      "source_review": {
+        "text": "Overall it was pretty good but the measurements were way off. HAS to be a typo. 1/4lb of meat to serve 4??? I used a lil over 1lb and it even then it was swimming in the broth. After following the recipe, i added extra soy and sugar only because i thought the flavor was a little on the lite side. Overall good.** If you cant find dashi, beef broth/stock works just fine. My japanese mom happen to have some so i was able to get some from her.",
+        "reviewer": null,
+        "rating": 4,
+        "is_featured": true
+      },
+      "modification_type": "quantity_adjustment",
+      "summary": "increase meat from 0.25 pound to ~1 pound",
+      "reasoning": "Reviewer used a little over 1 lb of meat instead of the recipe's 0.25 lb for 4 servings, implying original was a typo and insufficient for servings",
+      "changes_made": [
+        {
+          "type": "ingredient",
+          "operation": "replace",
+          "line_index": 2,
+          "from_text": "0.25 pound sirloin steak, thinly sliced",
+          "to_text": "1 pound sirloin steak, thinly sliced",
+          "alternatives": [
+            {
+              "source_review": {
+                "text": "Great recipe and not hard, even for someone like me who never cooks. The taste is really good, but i agree with everyone else about the measurements. You need at least a 1lb of beef for this. Also, I threw in carrots since i had them around.",
+                "reviewer": null,
+                "rating": 5,
+                "is_featured": false
+              },
+              "modification_type": "quantity_adjustment",
+              "summary": "increase beef from 0.25 pound to 1 pound",
+              "proposed_text": "1 pound sirloin steak, thinly sliced"
+            }
+          ]
+        }
+      ],
+      "edits_failed": []
+    },
+    {
+      "source_review": {
+        "text": "Overall it was pretty good but the measurements were way off. HAS to be a typo. 1/4lb of meat to serve 4??? I used a lil over 1lb and it even then it was swimming in the broth. After following the recipe, i added extra soy and sugar only because i thought the flavor was a little on the lite side. Overall good.** If you cant find dashi, beef broth/stock works just fine. My japanese mom happen to have some so i was able to get some from her.",
+        "reviewer": null,
+        "rating": 4,
+        "is_featured": true
+      },
+      "modification_type": "quantity_adjustment",
+      "summary": "add extra soy sauce",
+      "reasoning": "Reviewer found the flavor light and added extra soy sauce after following the recipe",
+      "changes_made": [
+        {
+          "type": "ingredient",
+          "operation": "replace",
+          "line_index": 5,
+          "from_text": "0.25 cup soy sauce",
+          "to_text": "0.25 cup soy sauce, or more to taste",
+          "alternatives": []
+        }
+      ],
+      "edits_failed": []
+    },
+    {
+      "source_review": {
+        "text": "Overall it was pretty good but the measurements were way off. HAS to be a typo. 1/4lb of meat to serve 4??? I used a lil over 1lb and it even then it was swimming in the broth. After following the recipe, i added extra soy and sugar only because i thought the flavor was a little on the lite side. Overall good.** If you cant find dashi, beef broth/stock works just fine. My japanese mom happen to have some so i was able to get some from her.",
+        "reviewer": null,
+        "rating": 4,
+        "is_featured": true
+      },
+      "modification_type": "quantity_adjustment",
+      "summary": "add extra sugar",
+      "reasoning": "Reviewer added extra sugar because the flavor was a little light",
+      "changes_made": [
+        {
+          "type": "ingredient",
+          "operation": "replace",
+          "line_index": 7,
+          "from_text": "1 tablespoon white sugar",
+          "to_text": "1 tablespoon white sugar, or more to taste",
+          "alternatives": []
+        }
+      ],
+      "edits_failed": []
+    }
+  ],
+  "modifications_considered": [
+    {
+      "source_review": {
+        "text": "Overall it was pretty good but the measurements were way off. HAS to be a typo. 1/4lb of meat to serve 4??? I used a lil over 1lb and it even then it was swimming in the broth. After following the recipe, i added extra soy and sugar only because i thought the flavor was a little on the lite side. Overall good.** If you cant find dashi, beef broth/stock works just fine. My japanese mom happen to have some so i was able to get some from her.",
+        "reviewer": null,
+        "rating": 4,
+        "is_featured": true
+      },
+      "modification_type": "ingredient_substitution",
+      "summary": "substitute beef broth/stock for dashi when unavailable",
+      "reasoning": "Reviewer said beef broth/stock works fine if you can't find dashi",
+      "reason": "not applied by the reviewer (stated intent or suggestion)",
+      "conflicts_with_line": null
+    },
+    {
+      "source_review": {
+        "text": "Great recipe and not hard, even for someone like me who never cooks. The taste is really good, but i agree with everyone else about the measurements. You need at least a 1lb of beef for this. Also, I threw in carrots since i had them around.",
+        "reviewer": null,
+        "rating": 5,
+        "is_featured": false
+      },
+      "modification_type": "quantity_adjustment",
+      "summary": "increase beef from 0.25 pound to 1 pound",
+      "reasoning": "Reviewer found 0.25 lb of beef insufficient and used at least 1 lb",
+      "reason": "same change as a higher-ranked modification on I2",
+      "conflicts_with_line": 2
+    },
+    {
+      "source_review": {
+        "text": "Great recipe and not hard, even for someone like me who never cooks. The taste is really good, but i agree with everyone else about the measurements. You need at least a 1lb of beef for this. Also, I threw in carrots since i had them around.",
+        "reviewer": null,
+        "rating": 5,
+        "is_featured": false
+      },
+      "modification_type": "addition",
+      "summary": "add carrots",
+      "reasoning": "Reviewer threw in carrots because they had them and the addition complements the dish",
+      "reason": "not generalizable (personal circumstance, accident, or judged worse by the reviewer)",
+      "conflicts_with_line": null
+    }
+  ],
+  "enhancement_summary": {
+    "status": "enhanced",
+    "reason": "",
+    "total_changes": 3,
+    "change_types": [
+      "quantity_adjustment"
+    ],
+    "expected_impact": "increase meat from 0.25 pound to ~1 pound; add extra soy sauce; add extra sugar",
+    "reviews_screened": 2,
+    "modifications_extracted": 6,
+    "modifications_applied": 3,
+    "modifications_considered": 3
+  },
+  "description": "This main dish recipe features sliced beef sirloin cooked with potatoes, and onion in a sauce made with prepared dashi soup, sake, and soy sauce.",
+  "servings": "4",
+  "prep_time": "PT15M",
+  "cook_time": "PT35M",
+  "total_time": "PT50M",
+  "url": "https://www.allrecipes.com/recipe/144299/nikujaga-japanese-style-meat-and-potatoes/",
+  "created_at": "2026-09-17T19:32:57+00:00",
+  "pipeline_version": "2.0.0",
+  "model": "gpt-5-mini-2025-08-07",
+  "prompt_version": "2.1"
+}

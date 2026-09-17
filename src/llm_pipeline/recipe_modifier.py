@@ -210,6 +210,9 @@ class RecipeModifier:
             logger.debug(f"line_ref {edit.line_ref!r} out of range for {edit.target}")
 
         if not edit.find:
+            if edit.operation == "add_after" and edit.target == "ingredients":
+                last = len(content) - 1  # no anchor given: a new ingredient goes at the end
+                return Resolution("ok", last, Span(0, len(content[last]), "exact"), "line_ref", 1.0)
             return Resolution("failed", reason="no find text and no valid line reference")
 
         candidates: List[Tuple[int, Span]] = []
@@ -236,7 +239,10 @@ class RecipeModifier:
     # -- apply -----------------------------------------------------------------
 
     @staticmethod
-    def _duplicate_of(text: str, content: List[str]) -> Optional[int]:
+    def find_duplicate(text: str, content: List[str], target: str = "ingredients") -> Optional[int]:
+        """Index of an existing line that the added text would duplicate, else None."""
+        if target != "ingredients":
+            return content.index(text) if text in content else None
         key = ingredient_key(text)
         if not key:
             return None
@@ -288,9 +294,7 @@ class RecipeModifier:
         if edit.operation == "add_after":
             if not edit.add or not edit.add.strip():
                 return working, EditResult(edit=edit, status="failed", reason="add_after has no text to add", line_index=index)
-            dup = self._duplicate_of(edit.add, working) if edit.target == "ingredients" else (
-                working.index(edit.add) if edit.add in working else None
-            )
+            dup = self.find_duplicate(edit.add, working, edit.target)
             if dup is not None:
                 return working, EditResult(
                     edit=edit, status="failed", line_index=index,

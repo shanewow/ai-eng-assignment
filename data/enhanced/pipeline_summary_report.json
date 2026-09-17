@@ -1,0 +1,116 @@
+{
+  "pipeline_summary": {
+    "recipes": 7,
+    "enhanced": 4,
+    "no_tweaks": 3,
+    "failed": 0
+  },
+  "recipes": [
+    {
+      "recipe_file": "recipe_10813_best-chocolate-chip-cookies.json",
+      "status": "enhanced",
+      "title": "Best Chocolate Chip Cookies (Community Enhanced)",
+      "reviews_screened": 9,
+      "modifications_extracted": 13,
+      "modifications_applied": 8,
+      "modifications_considered": 5,
+      "line_changes": 10,
+      "change_types": [
+        "addition",
+        "quantity_adjustment",
+        "technique_change"
+      ],
+      "reason": "",
+      "output": "data/enhanced/enhanced_10813_best-chocolate-chip-cookies.json"
+    },
+    {
+      "recipe_file": "recipe_144299_nikujaga-japanese-style-meat-and-potatoes-.json",
+      "status": "enhanced",
+      "title": "Nikujaga (Japanese-Style Meat and Potatoes) (Community Enhanced)",
+      "reviews_screened": 2,
+      "modifications_extracted": 6,
+      "modifications_applied": 3,
+      "modifications_considered": 3,
+      "line_changes": 3,
+      "change_types": [
+        "quantity_adjustment"
+      ],
+      "reason": "",
+      "output": "data/enhanced/enhanced_144299_nikujaga-japanese-style-meat-and-potatoe.json"
+    },
+    {
+      "recipe_file": "recipe_19117_spicy-apple-cake.json",
+      "status": "no_tweaks",
+      "title": "Spicy Apple Cake",
+      "reviews_screened": 2,
+      "modifications_extracted": 3,
+      "modifications_applied": 0,
+      "modifications_considered": 3,
+      "line_changes": 0,
+      "change_types": [],
+      "reason": "modifications were found but none was both applied by its reviewer and generalizable",
+      "output": "data/enhanced/enhanced_19117_spicy-apple-cake.json"
+    },
+    {
+      "recipe_file": "recipe_20144_banana-banana-bread.json",
+      "status": "enhanced",
+      "title": "Banana Banana Bread (Community Enhanced)",
+      "reviews_screened": 9,
+      "modifications_extracted": 11,
+      "modifications_applied": 5,
+      "modifications_considered": 6,
+      "line_changes": 6,
+      "change_types": [
+        "addition",
+        "ingredient_substitution",
+        "technique_change"
+      ],
+      "reason": "",
+      "output": "data/enhanced/enhanced_20144_banana-banana-bread.json"
+    },
+    {
+      "recipe_file": "recipe_284494_spiced-purple-plum-jam.json",
+      "status": "no_tweaks",
+      "title": "Spiced Purple Plum Jam",
+      "reviews_screened": 0,
+      "modifications_extracted": 0,
+      "modifications_applied": 0,
+      "modifications_considered": 0,
+      "line_changes": 0,
+      "change_types": [],
+      "reason": "recipe has no reviews",
+      "output": "data/enhanced/enhanced_284494_spiced-purple-plum-jam.json"
+    },
+    {
+      "recipe_file": "recipe_45613_mango-teriyaki-marinade.json",
+      "status": "no_tweaks",
+      "title": "Mango Teriyaki Marinade",
+      "reviews_screened": 0,
+      "modifications_extracted": 0,
+      "modifications_applied": 0,
+      "modifications_considered": 0,
+      "line_changes": 0,
+      "change_types": [],
+      "reason": "recipe has no reviews",
+      "output": "data/enhanced/enhanced_45613_mango-teriyaki-marinade.json"
+    },
+    {
+      "recipe_file": "recipe_77935_creamy-sweet-potato-with-ginger-soup.json",
+      "status": "enhanced",
+      "title": "Creamy Sweet Potato With Ginger Soup (Community Enhanced)",
+      "reviews_screened": 6,
+      "modifications_extracted": 13,
+      "modifications_applied": 5,
+      "modifications_considered": 8,
+      "line_changes": 5,
+      "change_types": [
+        "addition",
+        "ingredient_substitution",
+        "quantity_adjustment",
+        "technique_change"
+      ],
+      "reason": "",
+      "output": "data/enhanced/enhanced_77935_creamy-sweet-potato-with-ginger-soup.json"
+    }
+  ]
+}

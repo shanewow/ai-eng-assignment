@@ -79,19 +79,31 @@ class TweakExtractor:
         return [(review, self.extract(review, recipe)) for review in reviews]
 
 
-_LINE_ID_PREFIX = re.compile(r"^\s*[IS]\d+\s*:\s*")
+_LINE_ID_PREFIX = re.compile(r"^\s*[IS][\d?.]*[a-z]?\s*[:;]\s*")
 
 
 def _clean(data: dict) -> ModificationObject:
-    """Strict schemas require every key; map empty strings back to None and drop stray line ids."""
+    """Strict schemas require every key. Map empty strings back to None, drop stray
+    line ids the model sometimes writes into text fields, and tolerate the two
+    text fields being swapped (added text in `replace`, or the reverse)."""
     edits = []
     for e in data.get("edits", []):
         e = dict(e)
         for key in ("find", "replace", "add"):
             if e.get(key):
-                e[key] = _LINE_ID_PREFIX.sub("", e[key])
-        e["replace"] = e.get("replace") or None
-        e["add"] = e.get("add") or None
+                e[key] = _LINE_ID_PREFIX.sub("", e[key]).strip()
+        replace, add = e.get("replace") or None, e.get("add") or None
+        if e.get("operation") == "add_after":
+            add = add or replace
+            replace = None
+            if add and "\n" in add:  # one line per add; the model dumped neighbours
+                add = add.split("\n")[0].strip()
+        elif e.get("operation") == "replace":
+            replace = replace or add
+            add = None
+        else:
+            replace, add = None, None
+        e["replace"], e["add"] = replace, add
         edits.append(e)
     data = dict(data)
     data["edits"] = edits

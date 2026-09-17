@@ -24,7 +24,7 @@ from typing import Any, Optional
 
 from loguru import logger
 
-DEFAULT_MODEL = "gpt-5-nano"
+DEFAULT_MODEL = "gpt-5-mini"
 DEFAULT_CACHE_DIR = "data/cache/llm"
 REASONING_PREFIXES = ("gpt-5", "o1", "o3", "o4")
 

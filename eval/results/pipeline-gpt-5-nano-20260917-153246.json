@@ -1,0 +1,1977 @@
+{
+  "label": "Rewrite (gpt-5-nano)",
+  "adapter": "pipeline",
+  "model": "gpt-5-nano",
+  "cases_file": "eval/cases.json",
+  "created_at": "20260917-153246",
+  "aggregate": {
+    "cases": 28,
+    "llm_errors": 0,
+    "mods_returned": 64,
+    "mod_recall": 1.0,
+    "mod_delivered": 1.0,
+    "edit_precision": 0.567,
+    "false_apply_rate": 1.0,
+    "excluded_rate": 0.0,
+    "edit_apply_rate": 0.91,
+    "noop_rate": 0.0,
+    "wrong_line_rate": 0.065,
+    "contradictory_add_rate": 0.0,
+    "quantity_dropped_rate": 0.0,
+    "counts": {
+      "expected_must_apply": 28,
+      "found_must_apply": 28,
+      "delivered_must_apply": 28,
+      "expected_must_not": 17,
+      "false_applied": 17,
+      "excluded_correctly": 0,
+      "intended_edits": 67,
+      "precise_edits": 38,
+      "applied_edits": 61,
+      "records": 61,
+      "noop_records": 0,
+      "applied_line_edits": 46,
+      "wrong_line_edits": 3,
+      "applied_adds": 11,
+      "contradictory_adds": 0,
+      "applied_ingredient_replaces": 33,
+      "quantity_dropped": 0,
+      "mods_returned": 64
+    },
+    "tokens": {
+      "prompt": 49217,
+      "completion": 7799,
+      "cached_responses": 28
+    }
+  },
+  "cases": [
+    {
+      "score": {
+        "case_id": "cookies-r0-egg-yolk",
+        "error": false,
+        "expected_must_apply": 1,
+        "found_must_apply": 1,
+        "delivered_must_apply": 1,
+        "expected_must_not": 0,
+        "false_applied": 0,
+        "excluded_correctly": 0,
+        "intended_edits": 2,
+        "precise_edits": 2,
+        "applied_edits": 2,
+        "records": 2,
+        "noop_records": 0,
+        "applied_line_edits": 0,
+        "wrong_line_edits": 0,
+        "applied_adds": 1,
+        "contradictory_adds": 0,
+        "applied_ingredient_replaces": 0,
+        "quantity_dropped": 0,
+        "mods_returned": 2
+      },
+      "run": {
+        "case_id": "cookies-r0-egg-yolk",
+        "outcomes": [
+          {
+            "target": "instructions",
+            "operation": "add_after",
+            "find": "Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets.",
+            "new_text": "Using an ice cream scoop to portion the dough results in evenly sized large cookies; space them accordingly.",
+            "line_ref": "S5",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 0,
+            "from_text": "",
+            "to_text": "Using an ice cream scoop to portion the dough results in evenly sized large cookies; space them accordingly.",
+            "reason": ""
+          },
+          {
+            "target": "ingredients",
+            "operation": "add_after",
+            "find": "",
+            "new_text": "1 large egg yolk",
+            "line_ref": "I3",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 1,
+            "from_text": "",
+            "to_text": "1 large egg yolk",
+            "reason": ""
+          }
+        ],
+        "mods_returned": 2,
+        "error": null,
+        "usage": {
+          "prompt_tokens": 1705,
+          "completion_tokens": 262
+        },
+        "cached": true,
+        "raw": "{\"modifications\": [{\"summary\": \"used an ice cream scoop to portion dough\", \"modification_type\": \"addition\", \"reasoning\": \"The reviewer used an ice cream scoop to portion dough, resulting in 16 big cookies\", \"was_applied_by_reviewer\": true, \"is_generalizable\": true, \"edits\": [{\"target\": \"instructions\", \"operation\": \"add_after\", \"line_ref\": \"S5\", \"find\": \"Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets.\", \"replace\": \"\", \"add\": \"Using an ice cream scoop to portion the dough results in evenly sized large cookies; space them accordingly.\"}]}, {\"summary\": \"added an additional egg yolk to keep cookies chewy\", \"modification_type\": \"ingredient_substitution\", \"reasoning\": \"Added egg yolk to improve chewiness\", \"was_applied_by_reviewer\": true, \"is_generalizable\": true, \"edits\": [{\"target\": \"ingredients\", \"operation\": \"add_after\", \"line_ref\": \"I3\", \"find\": \"\", \"replace\": \"\", \"add\": \"I3.5: 1 large egg yolk\"}]}]}"
+      }
+    },
+    {
+      "score": {
+        "case_id": "cookies-r1-four-tweaks",
+        "error": false,
+        "expected_must_apply": 5,
+        "found_must_apply": 5,
+        "delivered_must_apply": 5,
+        "expected_must_not": 0,
+        "false_applied": 0,
+        "excluded_correctly": 0,
+        "intended_edits": 6,
+        "precise_edits": 5,
+        "applied_edits": 5,
+        "records": 5,
+        "noop_records": 0,
+        "applied_line_edits": 3,
+        "wrong_line_edits": 0,
+        "applied_adds": 1,
+        "contradictory_adds": 0,
+        "applied_ingredient_replaces": 2,
+        "quantity_dropped": 0,
+        "mods_returned": 4
+      },
+      "run": {
+        "case_id": "cookies-r1-four-tweaks",
+        "outcomes": [
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "1 cup white sugar",
+            "new_text": "0.5 cup white sugar",
+            "line_ref": "I1",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 0,
+            "from_text": "1 cup white sugar",
+            "to_text": "0.5 cup white sugar",
+            "reason": ""
+          },
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "1 cup packed brown sugar",
+            "new_text": "1.5 cups packed brown sugar",
+            "line_ref": "I2",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 0,
+            "from_text": "1 cup packed brown sugar",
+            "to_text": "1.5 cups packed brown sugar",
+            "reason": ""
+          },
+          {
+            "target": "ingredients",
+            "operation": "remove",
+            "find": "2 teaspoons hot water",
+            "new_text": "",
+            "line_ref": "I6",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 1,
+            "from_text": "2 teaspoons hot water",
+            "to_text": "",
+            "reason": ""
+          },
+          {
+            "target": "instructions",
+            "operation": "replace",
+            "find": "Dissolve baking soda in hot water. Add to batter along with salt.",
+            "new_text": "Dissolve baking soda in hot water. Add to batter along with salt.",
+            "line_ref": "S3",
+            "status": "failed",
+            "intended": true,
+            "mod_index": 1,
+            "from_text": "",
+            "to_text": "",
+            "reason": "replacement text equals the original; nothing changed"
+          },
+          {
+            "target": "ingredients",
+            "operation": "add_after",
+            "find": "",
+            "new_text": "1 teaspoon cream of tartar",
+            "line_ref": "I6",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 2,
+            "from_text": "",
+            "to_text": "1 teaspoon cream of tartar",
+            "reason": ""
+          },
+          {
+            "target": "instructions",
+            "operation": "add_after",
+            "find": "",
+            "new_text": "Refrigerate batter for at least 1 hour before scooping and baking.",
+            "line_ref": "S5",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 3,
+            "from_text": "",
+            "to_text": "Refrigerate batter for at least 1 hour before scooping and baking.",
+            "reason": ""
+          }
+        ],
+        "mods_returned": 4,
+        "error": null,
+        "usage": {
+          "prompt_tokens": 1796,
+          "completion_tokens": 461
+        },
+        "cached": true,
+        "raw": "{\"modifications\":[{\"summary\":\"sugar amount changed: half cup white sugar and 1.5 cups brown sugar\",\"modification_type\":\"quantity_adjustment\",\"reasoning\":\"Reviewer altered sugar to 0.5 cup white sugar and 1.5 cups brown sugar\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[{\"target\":\"ingredients\",\"operation\":\"replace\",\"line_ref\":\"I1\",\"find\":\"1 cup white sugar\",\"replace\":\"0.5 cup white sugar\",\"add\":\"\"},{\"target\":\"ingredients\",\"operation\":\"replace\",\"line_ref\":\"I2\",\"find\":\"1 cup packed brown sugar\",\"replace\":\"1.5 cups packed brown sugar\",\"add\":\"\"}]},{\"summary\":\"omit the water\",\"modification_type\":\"removal\",\"reasoning\":\"Reviewer omitted water (I6)\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[{\"target\":\"ingredients\",\"operation\":\"remove\",\"line_ref\":\"I6\",\"find\":\"2 teaspoons hot water\",\"replace\":\"\",\"add\":\"\"},{\"target\":\"instructions\",\"operation\":\"replace\",\"line_ref\":\"S3\",\"find\":\"Dissolve baking soda in hot water. Add to batter along with salt.\",\"replace\":\"Dissolve baking soda in hot water. Add to batter along with salt.\",\"add\":\"\"}]},{\"summary\":\"add a teaspoon of cream of tartar\",\"modification_type\":\"ingredient_substitution\",\"reasoning\":\"Cream of tartar added to batter\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[{\"target\":\"ingredients\",\"operation\":\"add_after\",\"line_ref\":\"I6\",\"find\":\"\",\"replace\":\"\",\"add\":\"I11: 1 teaspoon cream of tartar\"}]},{\"summary\":\"refrigerate batter before scooping and baking\",\"modification_type\":\"technique_change\",\"reasoning\":\"Refrigerating batter to help shape\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[{\"target\":\"instructions\",\"operation\":\"add_after\",\"line_ref\":\"S5\",\"find\":\"\",\"replace\":\"\",\"add\":\"S5b: Refrigerate batter for at least 1 hour before scooping and baking.\"}]}]}"
+      }
+    },
+    {
+      "score": {
+        "case_id": "cookies-r3-salt-nuts-press",
+        "error": false,
+        "expected_must_apply": 3,
+        "found_must_apply": 3,
+        "delivered_must_apply": 3,
+        "expected_must_not": 0,
+        "false_applied": 0,
+        "excluded_correctly": 0,
+        "intended_edits": 4,
+        "precise_edits": 3,
+        "applied_edits": 4,
+        "records": 4,
+        "noop_records": 0,
+        "applied_line_edits": 4,
+        "wrong_line_edits": 0,
+        "applied_adds": 0,
+        "contradictory_adds": 0,
+        "applied_ingredient_replaces": 1,
+        "quantity_dropped": 0,
+        "mods_returned": 3
+      },
+      "run": {
+        "case_id": "cookies-r3-salt-nuts-press",
+        "outcomes": [
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "0.5 teaspoon salt",
+            "new_text": "1 teaspoon salt",
+            "line_ref": "I7",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 0,
+            "from_text": "0.5 teaspoon salt",
+            "to_text": "1 teaspoon salt",
+            "reason": ""
+          },
+          {
+            "target": "ingredients",
+            "operation": "remove",
+            "find": "1 cup chopped walnuts",
+            "new_text": "",
+            "line_ref": "I10",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 1,
+            "from_text": "1 cup chopped walnuts",
+            "to_text": "",
+            "reason": ""
+          },
+          {
+            "target": "instructions",
+            "operation": "replace",
+            "find": "Stir in flour, chocolate chips, and walnuts.",
+            "new_text": "Stir in flour and chocolate chips.",
+            "line_ref": "S4",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 1,
+            "from_text": "Stir in flour, chocolate chips, and walnuts.",
+            "to_text": "Stir in flour and chocolate chips.",
+            "reason": ""
+          },
+          {
+            "target": "instructions",
+            "operation": "replace",
+            "find": "Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets.",
+            "new_text": "Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets and press each one down slightly.",
+            "line_ref": "S5",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 2,
+            "from_text": "Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets.",
+            "to_text": "Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets and press each one down slightly.",
+            "reason": ""
+          }
+        ],
+        "mods_returned": 3,
+        "error": null,
+        "usage": {
+          "prompt_tokens": 1806,
+          "completion_tokens": 403,
+          "cached_prompt_tokens": 1536
+        },
+        "cached": true,
+        "raw": "{\"modifications\": [{\"summary\": \"salt 1/2 tsp -> 1 tsp\", \"modification_type\": \"quantity_adjustment\", \"reasoning\": \"Reviewer increased salt to 1 tsp, from 0.5 tsp in original\", \"was_applied_by_reviewer\": true, \"is_generalizable\": true, \"edits\": [{\"target\": \"ingredients\", \"operation\": \"replace\", \"line_ref\": \"I7\", \"find\": \"0.5 teaspoon salt\", \"replace\": \"1 teaspoon salt\", \"add\": \"\"}]}, {\"summary\": \"omit walnuts\", \"modification_type\": \"removal\", \"reasoning\": \"Reviewer omitted walnuts in second batch\", \"was_applied_by_reviewer\": true, \"is_generalizable\": true, \"edits\": [{\"target\": \"ingredients\", \"operation\": \"remove\", \"line_ref\": \"I10\", \"find\": \"1 cup chopped walnuts\", \"replace\": \"\", \"add\": \"\"}, {\"target\": \"instructions\", \"operation\": \"replace\", \"line_ref\": \"S4\", \"find\": \"Stir in flour, chocolate chips, and walnuts.\", \"replace\": \"Stir in flour and chocolate chips.\", \"add\": \"\"}]}, {\"summary\": \"pressed dough down slightly before baking\", \"modification_type\": \"technique_change\", \"reasoning\": \"Reviewer pressed dough down slightly to improve appearance/texture\", \"was_applied_by_reviewer\": true, \"is_generalizable\": true, \"edits\": [{\"target\": \"instructions\", \"operation\": \"replace\", \"line_ref\": \"S5\", \"find\": \"Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets.\", \"replace\": \"Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets and press each one down slightly.\", \"add\": \"\"}]}]}"
+      }
+    },
+    {
+      "score": {
+        "case_id": "cookies-r6-sugar-flour-cinnamon",
+        "error": false,
+        "expected_must_apply": 2,
+        "found_must_apply": 2,
+        "delivered_must_apply": 2,
+        "expected_must_not": 0,
+        "false_applied": 0,
+        "excluded_correctly": 0,
+        "intended_edits": 4,
+        "precise_edits": 3,
+        "applied_edits": 4,
+        "records": 4,
+        "noop_records": 0,
+        "applied_line_edits": 3,
+        "wrong_line_edits": 1,
+        "applied_adds": 1,
+        "contradictory_adds": 0,
+        "applied_ingredient_replaces": 3,
+        "quantity_dropped": 0,
+        "mods_returned": 4
+      },
+      "run": {
+        "case_id": "cookies-r6-sugar-flour-cinnamon",
+        "outcomes": [
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "1 cup white sugar",
+            "new_text": "2 cups white sugar",
+            "line_ref": "I1",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 0,
+            "from_text": "1 cup white sugar",
+            "to_text": "2 cups white sugar",
+            "reason": ""
+          },
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "1 cup packed brown sugar",
+            "new_text": "0.5 cup packed brown sugar",
+            "line_ref": "I2",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 1,
+            "from_text": "1 cup packed brown sugar",
+            "to_text": "0.5 cup packed brown sugar",
+            "reason": ""
+          },
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "3 cups all-purpose flour",
+            "new_text": "2.5 cups all-purpose flour",
+            "line_ref": "I8",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 2,
+            "from_text": "3 cups all-purpose flour",
+            "to_text": "2.5 cups all-purpose flour",
+            "reason": ""
+          },
+          {
+            "target": "ingredients",
+            "operation": "add_after",
+            "find": "",
+            "new_text": "1/4 teaspoon cinnamon",
+            "line_ref": "I9",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 3,
+            "from_text": "",
+            "to_text": "1/4 teaspoon cinnamon",
+            "reason": ""
+          }
+        ],
+        "mods_returned": 4,
+        "error": null,
+        "usage": {
+          "prompt_tokens": 1771,
+          "completion_tokens": 452,
+          "cached_prompt_tokens": 1536
+        },
+        "cached": true,
+        "raw": "{\"modifications\": [\n  {\"summary\": \"increase white sugar from 1 cup to 2 cups\", \"modification_type\": \"quantity_adjustment\", \"reasoning\": \"Reviewer used a whole cup of white sugar (1 cup more)\", \"was_applied_by_reviewer\": true, \"is_generalizable\": true, \"edits\": [{\"target\": \"ingredients\", \"operation\": \"replace\", \"line_ref\": \"I1\", \"find\": \"1 cup white sugar\", \"replace\": \"2 cups white sugar\", \"add\": \"\"}]},\n  {\"summary\": \"decrease brown sugar from 1 cup packed to 1/2 cup\", \"modification_type\": \"quantity_adjustment\", \"reasoning\": \"Reviewer used 1/2 cup brown sugar\", \"was_applied_by_reviewer\": true, \"is_generalizable\": true, \"edits\": [{\"target\": \"ingredients\", \"operation\": \"replace\", \"line_ref\": \"I2\", \"find\": \"1 cup packed brown sugar\", \"replace\": \"0.5 cup packed brown sugar\", \"add\": \"\"}]},\n  {\"summary\": \"decrease flour by 1/2 cup\", \"modification_type\": \"quantity_adjustment\", \"reasoning\": \"Reviewer used 1/2 cup less flour\", \"was_applied_by_reviewer\": true, \"is_generalizable\": true, \"edits\": [{\"target\": \"ingredients\", \"operation\": \"replace\", \"line_ref\": \"I8\", \"find\": \"3 cups all-purpose flour\", \"replace\": \"2.5 cups all-purpose flour\", \"add\": \"\"}]},\n  {\"summary\": \"add dash of cinnamon\", \"modification_type\": \"ingredient_substitution\", \"reasoning\": \"Reviewer added a tiny dash of cinnamon\", \"was_applied_by_reviewer\": true, \"is_generalizable\": true, \"edits\": [{\"target\": \"ingredients\", \"operation\": \"add_after\", \"line_ref\": \"I9\", \"find\": \"\", \"replace\": \"\", \"add\": \"I11: 1/4 teaspoon cinnamon\"}]}\n]}"
+      }
+    },
+    {
+      "score": {
+        "case_id": "cookies-r8-followed-exactly",
+        "error": false,
+        "expected_must_apply": 0,
+        "found_must_apply": 0,
+        "delivered_must_apply": 0,
+        "expected_must_not": 0,
+        "false_applied": 0,
+        "excluded_correctly": 0,
+        "intended_edits": 0,
+        "precise_edits": 0,
+        "applied_edits": 0,
+        "records": 0,
+        "noop_records": 0,
+        "applied_line_edits": 0,
+        "wrong_line_edits": 0,
+        "applied_adds": 0,
+        "contradictory_adds": 0,
+        "applied_ingredient_replaces": 0,
+        "quantity_dropped": 0,
+        "mods_returned": 0
+      },
+      "run": {
+        "case_id": "cookies-r8-followed-exactly",
+        "outcomes": [],
+        "mods_returned": 0,
+        "error": null,
+        "usage": {
+          "prompt_tokens": 1685,
+          "completion_tokens": 20,
+          "cached_prompt_tokens": 1536
+        },
+        "cached": true,
+        "raw": "{\"modifications\":[ ]}"
+      }
+    },
+    {
+      "score": {
+        "case_id": "nikujaga-r1-meat-typo",
+        "error": false,
+        "expected_must_apply": 3,
+        "found_must_apply": 3,
+        "delivered_must_apply": 3,
+        "expected_must_not": 1,
+        "false_applied": 1,
+        "excluded_correctly": 0,
+        "intended_edits": 5,
+        "precise_edits": 3,
+        "applied_edits": 5,
+        "records": 5,
+        "noop_records": 0,
+        "applied_line_edits": 3,
+        "wrong_line_edits": 0,
+        "applied_adds": 1,
+        "contradictory_adds": 0,
+        "applied_ingredient_replaces": 3,
+        "quantity_dropped": 0,
+        "mods_returned": 3
+      },
+      "run": {
+        "case_id": "nikujaga-r1-meat-typo",
+        "outcomes": [
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "0.25 pound sirloin steak, thinly sliced",
+            "new_text": "1.0 pound sirloin steak, thinly sliced",
+            "line_ref": "I2",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 0,
+            "from_text": "0.25 pound sirloin steak, thinly sliced",
+            "to_text": "1.0 pound sirloin steak, thinly sliced",
+            "reason": ""
+          },
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "0.25 cup soy sauce",
+            "new_text": "0.5 cup soy sauce",
+            "line_ref": "I5",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 1,
+            "from_text": "0.25 cup soy sauce",
+            "to_text": "0.5 cup soy sauce",
+            "reason": ""
+          },
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "1 tablespoon white sugar",
+            "new_text": "2 tablespoons white sugar",
+            "line_ref": "I7",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 1,
+            "from_text": "1 tablespoon white sugar",
+            "to_text": "2 tablespoons white sugar",
+            "reason": ""
+          },
+          {
+            "target": "instructions",
+            "operation": "add_after",
+            "find": "",
+            "new_text": "If dashi is unavailable, beef broth/stock can be used instead of dashi.",
+            "line_ref": "S0",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 2,
+            "from_text": "",
+            "to_text": "If dashi is unavailable, beef broth/stock can be used instead of dashi.",
+            "reason": ""
+          },
+          {
+            "target": "ingredients",
+            "operation": "add_after",
+            "find": "",
+            "new_text": "Beef broth/stock can be used in place of the dashi soup.",
+            "line_ref": "I4",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 2,
+            "from_text": "",
+            "to_text": "Beef broth/stock can be used in place of the dashi soup.",
+            "reason": ""
+          }
+        ],
+        "mods_returned": 3,
+        "error": null,
+        "usage": {
+          "prompt_tokens": 1740,
+          "completion_tokens": 570,
+          "cached_prompt_tokens": 1280
+        },
+        "cached": true,
+        "raw": "{\"modifications\": [\n  {\n    \"summary\": \"meat amount corrected from 0.25 pound to about 1 pound\",\n    \"modification_type\": \"quantity_adjustment\",\n    \"reasoning\": \"Reviewer states 1/4 lb meat to serve 4 is typo and used a lil over 1 lb; implies increasing meat quantity\",\n    \"was_applied_by_reviewer\": true,\n    \"is_generalizable\": true,\n    \"edits\": [\n      {\n        \"target\": \"ingredients\",\n        \"operation\": \"replace\",\n        \"line_ref\": \"I2\",\n        \"find\": \"0.25 pound sirloin steak, thinly sliced\",\n        \"replace\": \"1.0 pound sirloin steak, thinly sliced\"\n     \n      ,\n        \"add\": \"\"\n      }\n    ]\n  },\n  {\n    \"summary\": \"increase soy sauce and sugar to adjust flavor after more meat\",\n    \"modification_type\": \"quantity_adjustment\",\n    \"reasoning\": \"Reviewer added extra soy and sugar because flavor was a little lite\",\n    \"was_applied_by_reviewer\": true,\n    \"is_generalizable\": true,\n    \"edits\": [\n      {\n        \"target\": \"ingredients\",\n        \"operation\": \"replace\",\n        \"line_ref\": \"I5\",\n        \"find\": \"0.25 cup soy sauce\",\n        \"replace\": \"0.5 cup soy sauce\"\n      ,\n        \"add\": \"\"\n      },\n      {\n        \"target\": \"ingredients\",\n        \"operation\": \"replace\",\n        \"line_ref\": \"I7\",\n        \"find\": \"1 tablespoon white sugar\",\n        \"replace\": \"2 tablespoons white sugar\"\n      ,\n        \"add\": \"\"\n      }\n    ]\n  },\n  {\n    \"summary\": \"option to use beef broth if dashi unavailable\",\n    \"modification_type\": \"addition\",\n    \"reasoning\": \"Reviewer suggests alternative if dashi cannot be found\",\n    \"was_applied_by_reviewer\": true,\n    \"is_generalizable\": true,\n    \"edits\": [\n      {\n        \"target\": \"instructions\",\n        \"operation\": \"add_after\",\n        \"line_ref\": \"S0\",\n        \"find\": \"\",\n        \"replace\": \"\",\n        \"add\": \"If dashi is unavailable, beef broth/stock can be used instead of dashi.\"\n      }\n      ,\n      {\n        \"target\": \"ingredients\",\n        \"operation\": \"add_after\",\n        \"line_ref\": \"I4\",\n        \"find\": \"\",\n        \"replace\": \"\",\n        \"add\": \"Beef broth/stock can be used in place of the dashi soup.\"\n      }\n    ]\n  }\n]}"
+      }
+    },
+    {
+      "score": {
+        "case_id": "nikujaga-r0-unflagged",
+        "error": false,
+        "expected_must_apply": 0,
+        "found_must_apply": 0,
+        "delivered_must_apply": 0,
+        "expected_must_not": 0,
+        "false_applied": 0,
+        "excluded_correctly": 0,
+        "intended_edits": 2,
+        "precise_edits": 2,
+        "applied_edits": 2,
+        "records": 2,
+        "noop_records": 0,
+        "applied_line_edits": 1,
+        "wrong_line_edits": 0,
+        "applied_adds": 1,
+        "contradictory_adds": 0,
+        "applied_ingredient_replaces": 1,
+        "quantity_dropped": 0,
+        "mods_returned": 2
+      },
+      "run": {
+        "case_id": "nikujaga-r0-unflagged",
+        "outcomes": [
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "0.25 pound sirloin steak, thinly sliced",
+            "new_text": "1 pound sirloin steak, thinly sliced",
+            "line_ref": "I2",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 0,
+            "from_text": "0.25 pound sirloin steak, thinly sliced",
+            "to_text": "1 pound sirloin steak, thinly sliced",
+            "reason": ""
+          },
+          {
+            "target": "ingredients",
+            "operation": "add_after",
+            "find": "",
+            "new_text": "Icarrots: 2 medium carrots, sliced",
+            "line_ref": "I8",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 1,
+            "from_text": "",
+            "to_text": "Icarrots: 2 medium carrots, sliced",
+            "reason": ""
+          }
+        ],
+        "mods_returned": 2,
+        "error": null,
+        "usage": {
+          "prompt_tokens": 1680,
+          "completion_tokens": 246,
+          "cached_prompt_tokens": 1536
+        },
+        "cached": true,
+        "raw": "{\"modifications\": [{\"summary\": \"increase beef amount from 0.25 pound to at least 1 pound\", \"modification_type\": \"quantity_adjustment\", \"reasoning\": \"Reviewer states you need at least a 1lb of beef for this\", \"was_applied_by_reviewer\": true, \"is_generalizable\": true, \"edits\": [{\"target\": \"ingredients\", \"operation\": \"replace\", \"line_ref\": \"I2\", \"find\": \"0.25 pound sirloin steak, thinly sliced\", \"replace\": \"1 pound sirloin steak, thinly sliced\", \"add\": \"\"}]}, {\"summary\": \"add carrots to the ingredients\", \"modification_type\": \"addition\", \"reasoning\": \"Reviewer says threw in carrots since I had them around\", \"was_applied_by_reviewer\": true, \"is_generalizable\": true, \"edits\": [{\"target\": \"ingredients\", \"operation\": \"add_after\", \"line_ref\": \"I8\", \"find\": \"\", \"replace\": \"\", \"add\": \"Icarrots: 2 medium carrots, sliced\"}]}]}"
+      }
+    },
+    {
+      "score": {
+        "case_id": "apple-r0-leftover-frosting",
+        "error": false,
+        "expected_must_apply": 0,
+        "found_must_apply": 0,
+        "delivered_must_apply": 0,
+        "expected_must_not": 2,
+        "false_applied": 2,
+        "excluded_correctly": 0,
+        "intended_edits": 2,
+        "precise_edits": 0,
+        "applied_edits": 2,
+        "records": 2,
+        "noop_records": 0,
+        "applied_line_edits": 2,
+        "wrong_line_edits": 0,
+        "applied_adds": 0,
+        "contradictory_adds": 0,
+        "applied_ingredient_replaces": 1,
+        "quantity_dropped": 0,
+        "mods_returned": 2
+      },
+      "run": {
+        "case_id": "apple-r0-leftover-frosting",
+        "outcomes": [
+          {
+            "target": "instructions",
+            "operation": "replace",
+            "find": "Confectioners&#39; sugar, 1/4 cup shortening, 1/4 teaspoon cinnamon, and nutmeg in a medium bowl. Beat until frosting is light and creamy. Beat in evaporated milk 1 tablespoon at a time until desired spreading consistency is reached. Spread over top of cooled cake.",
+            "new_text": "Confectioners&#39; sugar, 1/4 cup shortening, 1/4 teaspoon cinnamon, and nutmeg in a medium bowl. Beat until frosting is light and creamy. Beat in evaporated milk 1 tablespoon at a time until desired spreading consistency is reached. Spread over top of cooled cake.",
+            "line_ref": "S4",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 0,
+            "from_text": "Combine confectioners&#39; sugar, 1/4 cup shortening, 1/4 teaspoon cinnamon, and nutmeg in a medium bowl. Beat until frosting is light and creamy. Beat in evaporated milk 1 tablespoon at a time until desired spreading consistency is reached. Spread over top of cooled cake.",
+            "to_text": "Combine Confectioners&#39; sugar, 1/4 cup shortening, 1/4 teaspoon cinnamon, and nutmeg in a medium bowl. Beat until frosting is light and creamy. Beat in evaporated milk 1 tablespoon at a time until desired spreading consistency is reached. Spread over top of cooled cake.",
+            "reason": ""
+          },
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "2 cups apple - peeled, cored, and chopped",
+            "new_text": "3 cups apple - peeled, cored, and chopped",
+            "line_ref": "I12",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 1,
+            "from_text": "2 cups apple - peeled, cored, and chopped",
+            "to_text": "3 cups apple - peeled, cored, and chopped",
+            "reason": ""
+          }
+        ],
+        "mods_returned": 2,
+        "error": null,
+        "usage": {
+          "prompt_tokens": 1854,
+          "completion_tokens": 341,
+          "cached_prompt_tokens": 1280
+        },
+        "cached": true,
+        "raw": "{\"modifications\":[{\"summary\":\"used different frosting (leftover frosting from another cake)\",\"modification_type\":\"addition\",\"reasoning\":\"added frosting from another cake instead of the recipe's frosting\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[{\"target\":\"instructions\",\"operation\":\"replace\",\"line_ref\":\"S4\",\"find\":\"Confectioners&#39; sugar, 1/4 cup shortening, 1/4 teaspoon cinnamon, and nutmeg in a medium bowl. Beat until frosting is light and creamy. Beat in evaporated milk 1 tablespoon at a time until desired spreading consistency is reached. Spread over top of cooled cake.\",\"replace\":\"Confectioners&#39; sugar, 1/4 cup shortening, 1/4 teaspoon cinnamon, and nutmeg in a medium bowl. Beat until frosting is light and creamy. Beat in evaporated milk 1 tablespoon at a time until desired spreading consistency is reached. Spread over top of cooled cake.\" , \"add\":\"\"}]},{\"summary\":\"will add one more cup of apples (increase apples from 2 cups to 3 cups)\",\"modification_type\":\"quantity_adjustment\",\"reasoning\":\"more apples requested to be added in the next preparation; reviewer states more is better\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[{\"target\":\"ingredients\",\"operation\":\"replace\",\"line_ref\":\"I12\",\"find\":\"2 cups apple - peeled, cored, and chopped\",\"replace\":\"3 cups apple - peeled, cored, and chopped\",\"add\":\"\"}]}]}"
+      }
+    },
+    {
+      "score": {
+        "case_id": "apple-r1-preference",
+        "error": false,
+        "expected_must_apply": 0,
+        "found_must_apply": 0,
+        "delivered_must_apply": 0,
+        "expected_must_not": 1,
+        "false_applied": 1,
+        "excluded_correctly": 0,
+        "intended_edits": 1,
+        "precise_edits": 0,
+        "applied_edits": 0,
+        "records": 0,
+        "noop_records": 0,
+        "applied_line_edits": 0,
+        "wrong_line_edits": 0,
+        "applied_adds": 0,
+        "contradictory_adds": 0,
+        "applied_ingredient_replaces": 0,
+        "quantity_dropped": 0,
+        "mods_returned": 2
+      },
+      "run": {
+        "case_id": "apple-r1-preference",
+        "outcomes": [
+          {
+            "target": "ingredients",
+            "operation": "add_after",
+            "find": "2 cups apple - peeled, cored, and chopped",
+            "new_text": "2.5 cups apple - peeled, cored, and chopped",
+            "line_ref": "I12",
+            "status": "failed",
+            "intended": true,
+            "mod_index": 0,
+            "from_text": "",
+            "to_text": "",
+            "reason": "added ingredient duplicates existing line 12 ('2 cups apple - peeled, cored, and chopped'); use replace instead"
+          }
+        ],
+        "mods_returned": 2,
+        "error": null,
+        "usage": {
+          "prompt_tokens": 1838,
+          "completion_tokens": 193,
+          "cached_prompt_tokens": 1280
+        },
+        "cached": true,
+        "raw": "{\"modifications\": [\n {\"summary\": \"would prefer more apple chunks\", \"modification_type\": \"addition\", \"reasoning\": \"Reviewer wants more apple chunks; not currently in recipe\", \"was_applied_by_reviewer\": true, \"is_generalizable\": true,\n  \"edits\": [{\"target\": \"ingredients\", \"operation\": \"add_after\", \"line_ref\": \"I12\", \"find\": \"2 cups apple - peeled, cored, and chopped\", \"replace\": \"\", \"add\": \"2.5 cups apple - peeled, cored, and chopped\"}]}\n, {\"summary\": \"no other modifications documented\", \"modification_type\": \"addition\", \"reasoning\": \"No further edits described beyond preference for more apples\", \"was_applied_by_reviewer\": false, \"is_generalizable\": true,\n  \"edits\": []}\n]}"
+      }
+    },
+    {
+      "score": {
+        "case_id": "banana-r0-almond-milk",
+        "error": false,
+        "expected_must_apply": 0,
+        "found_must_apply": 0,
+        "delivered_must_apply": 0,
+        "expected_must_not": 0,
+        "false_applied": 0,
+        "excluded_correctly": 0,
+        "intended_edits": 1,
+        "precise_edits": 1,
+        "applied_edits": 0,
+        "records": 0,
+        "noop_records": 0,
+        "applied_line_edits": 0,
+        "wrong_line_edits": 0,
+        "applied_adds": 0,
+        "contradictory_adds": 0,
+        "applied_ingredient_replaces": 0,
+        "quantity_dropped": 0,
+        "mods_returned": 2
+      },
+      "run": {
+        "case_id": "banana-r0-almond-milk",
+        "outcomes": [
+          {
+            "target": "ingredients",
+            "operation": "add_after",
+            "find": "",
+            "new_text": "1 cup mashed overripe bananas, and 1 cup almond banana milk",
+            "line_ref": "I6",
+            "status": "failed",
+            "intended": true,
+            "mod_index": 0,
+            "from_text": "",
+            "to_text": "",
+            "reason": "added ingredient duplicates existing line 6 ('2.3333332538605 cups mashed overripe bananas'); use replace instead"
+          }
+        ],
+        "mods_returned": 2,
+        "error": null,
+        "usage": {
+          "prompt_tokens": 1676,
+          "completion_tokens": 196
+        },
+        "cached": true,
+        "raw": "{\"modifications\":[{\"summary\":\"reduce bananas from 2.333... cups to 1 cup and replace with almond banana milk plus mashed bananas\",\"modification_type\":\"addition\",\"reasoning\":\"Reviewer replaced part of banana量 with almond banana milk due to not enough bananas; not a simple substitution of ingredient amount\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[{\"target\":\"ingredients\",\"operation\":\"add_after\",\"line_ref\":\"I6\",\"find\":\"\",\"replace\":\"\",\"add\":\"I6: 1 cup mashed overripe bananas, and 1 cup almond banana milk\"}]},{\"summary\":\"keep original two eggs? (no change)\",\"modification_type\":\"addition\",\"reasoning\":\"No explicit change to eggs; reviewer did not mention eggs so nothing to edit\",\"was_applied_by_reviewer\":false,\"is_generalizable\":false,\"edits\":[]}]}"
+      }
+    },
+    {
+      "score": {
+        "case_id": "banana-r2-two-star",
+        "error": false,
+        "expected_must_apply": 0,
+        "found_must_apply": 0,
+        "delivered_must_apply": 0,
+        "expected_must_not": 4,
+        "false_applied": 4,
+        "excluded_correctly": 0,
+        "intended_edits": 4,
+        "precise_edits": 0,
+        "applied_edits": 4,
+        "records": 4,
+        "noop_records": 0,
+        "applied_line_edits": 1,
+        "wrong_line_edits": 0,
+        "applied_adds": 3,
+        "contradictory_adds": 0,
+        "applied_ingredient_replaces": 1,
+        "quantity_dropped": 0,
+        "mods_returned": 5
+      },
+      "run": {
+        "case_id": "banana-r2-two-star",
+        "outcomes": [
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "0.75 cup brown sugar",
+            "new_text": "1.0 cup brown sugar",
+            "line_ref": "I3",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 0,
+            "from_text": "0.75 cup brown sugar",
+            "to_text": "1.0 cup brown sugar",
+            "reason": ""
+          },
+          {
+            "target": "ingredients",
+            "operation": "add_after",
+            "find": "",
+            "new_text": "1 tablespoon ground cinnamon",
+            "line_ref": "I3",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 1,
+            "from_text": "",
+            "to_text": "1 tablespoon ground cinnamon",
+            "reason": ""
+          },
+          {
+            "target": "ingredients",
+            "operation": "add_after",
+            "find": "",
+            "new_text": "1.5 teaspoons vanilla",
+            "line_ref": "I3",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 2,
+            "from_text": "",
+            "to_text": "1.5 teaspoons vanilla",
+            "reason": ""
+          },
+          {
+            "target": "ingredients",
+            "operation": "add_after",
+            "find": "",
+            "new_text": "1 cup chopped walnuts",
+            "line_ref": "I3",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 3,
+            "from_text": "",
+            "to_text": "1 cup chopped walnuts",
+            "reason": ""
+          }
+        ],
+        "mods_returned": 5,
+        "error": null,
+        "usage": {
+          "prompt_tokens": 1718,
+          "completion_tokens": 370,
+          "cached_prompt_tokens": 1536
+        },
+        "cached": true,
+        "raw": "{\"modifications\":[{\"summary\":\"increase brown sugar amount\",\"modification_type\":\"quantity_adjustment\",\"reasoning\":\"Reviewer added extra brown sugar to make it sweeter\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[{\"target\":\"ingredients\",\"operation\":\"replace\",\"line_ref\":\"I3\",\"find\":\"0.75 cup brown sugar\",\"replace\":\"1.0 cup brown sugar\",\"add\":\"\"}]},{\"summary\":\"add cinnamon\",\"modification_type\":\"addition\",\"reasoning\":\"Reviewer added 1 tablespoon cinnamon to the batter\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[{\"target\":\"ingredients\",\"operation\":\"add_after\",\"line_ref\":\"I3\",\"find\":\"\",\"replace\":\"1 tablespoon ground cinnamon\",\"add\":\"\"}]},{\"summary\":\"add vanilla\",\"modification_type\":\"addition\",\"reasoning\":\"Reviewer added 1.5 teaspoons vanilla\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[{\"target\":\"ingredients\",\"operation\":\"add_after\",\"line_ref\":\"I3\",\"find\":\"\",\"replace\":\"1.5 teaspoons vanilla\",\"add\":\"\"}]},{\"summary\":\"add walnuts\",\"modification_type\":\"addition\",\"reasoning\":\"Reviewer added chopped walnuts to the batter\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[{\"target\":\"ingredients\",\"operation\":\"add_after\",\"line_ref\":\"I3\",\"find\":\"\",\"replace\":\"1 cup chopped walnuts\",\"add\":\"\"}]},{\"summary\":\"no explicit change to bananas or other ingredients beyond turbidity\",\"modification_type\":\"addition\",\"reasoning\":\"No further explicit changes documented other than those listed\",\"was_applied_by_reviewer\":false,\"is_generalizable\":false,\"edits\":[]}] }"
+      }
+    },
+    {
+      "score": {
+        "case_id": "banana-r6-honey",
+        "error": false,
+        "expected_must_apply": 1,
+        "found_must_apply": 1,
+        "delivered_must_apply": 1,
+        "expected_must_not": 0,
+        "false_applied": 0,
+        "excluded_correctly": 0,
+        "intended_edits": 1,
+        "precise_edits": 1,
+        "applied_edits": 1,
+        "records": 1,
+        "noop_records": 0,
+        "applied_line_edits": 1,
+        "wrong_line_edits": 0,
+        "applied_adds": 0,
+        "contradictory_adds": 0,
+        "applied_ingredient_replaces": 1,
+        "quantity_dropped": 0,
+        "mods_returned": 1
+      },
+      "run": {
+        "case_id": "banana-r6-honey",
+        "outcomes": [
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "0.75 cup brown sugar",
+            "new_text": "1/2 cup honey, or to taste",
+            "line_ref": "I3",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 0,
+            "from_text": "0.75 cup brown sugar",
+            "to_text": "1/2 cup honey, or to taste",
+            "reason": ""
+          }
+        ],
+        "mods_returned": 1,
+        "error": null,
+        "usage": {
+          "prompt_tokens": 1636,
+          "completion_tokens": 116,
+          "cached_prompt_tokens": 1536
+        },
+        "cached": true,
+        "raw": "{\"modifications\":[{\"summary\":\"used honey as sweetener instead of brown sugar\",\"modification_type\":\"ingredient_substitution\",\"reasoning\":\"Reviewer stated they used honey for the sweetener and it was perfect\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[{\"target\":\"ingredients\",\"operation\":\"replace\",\"line_ref\":\"I3\",\"find\":\"0.75 cup brown sugar\",\"replace\":\"1/2 cup honey, or to taste\",\"add\":\"\"}]}]}"
+      }
+    },
+    {
+      "score": {
+        "case_id": "banana-r7-bake-time",
+        "error": false,
+        "expected_must_apply": 1,
+        "found_must_apply": 1,
+        "delivered_must_apply": 1,
+        "expected_must_not": 0,
+        "false_applied": 0,
+        "excluded_correctly": 0,
+        "intended_edits": 2,
+        "precise_edits": 2,
+        "applied_edits": 2,
+        "records": 2,
+        "noop_records": 0,
+        "applied_line_edits": 2,
+        "wrong_line_edits": 0,
+        "applied_adds": 0,
+        "contradictory_adds": 0,
+        "applied_ingredient_replaces": 1,
+        "quantity_dropped": 0,
+        "mods_returned": 3
+      },
+      "run": {
+        "case_id": "banana-r7-bake-time",
+        "outcomes": [
+          {
+            "target": "instructions",
+            "operation": "replace",
+            "find": "Bake in the preheated oven until a toothpick inserted into the center comes out clean, about 60 minutes.",
+            "new_text": "Bake in the preheated oven until a toothpick inserted into the center comes out clean, about 45 minutes.",
+            "line_ref": "S3",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 0,
+            "from_text": "Bake in the preheated oven until a toothpick inserted into the center comes out clean, about 60 minutes.",
+            "to_text": "Bake in the preheated oven until a toothpick inserted into the center comes out clean, about 45 minutes.",
+            "reason": ""
+          },
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "2.3333332538605 cups mashed overripe bananas",
+            "new_text": "3 mashed overripe bananas",
+            "line_ref": "I6",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 1,
+            "from_text": "2.3333332538605 cups mashed overripe bananas",
+            "to_text": "3 mashed overripe bananas",
+            "reason": ""
+          }
+        ],
+        "mods_returned": 3,
+        "error": null,
+        "usage": {
+          "prompt_tokens": 1664,
+          "completion_tokens": 292,
+          "cached_prompt_tokens": 1536
+        },
+        "cached": true,
+        "raw": "{\"modifications\":[{\"summary\":\"Check doneness earlier, bake at ~45 minutes instead of 60\",\"modification_type\":\"technique_change\",\"reasoning\":\"Reviewer found bake time shorter (45 minutes) and avoided overbaking\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[{\"target\":\"instructions\",\"operation\":\"replace\",\"line_ref\":\"S3\",\"find\":\"Bake in the preheated oven until a toothpick inserted into the center comes out clean, about 60 minutes.\",\"replace\":\"Bake in the preheated oven until a toothpick inserted into the center comes out clean, about 45 minutes.\" ,\"add\":\"\"}]},{\"summary\":\"Use three ripe bananas instead of the specified amount\",\"modification_type\":\"ingredient_substitution\",\"reasoning\":\"Reviewer used three ripe bananas\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[{\"target\":\"ingredients\",\"operation\":\"replace\",\"line_ref\":\"I6\",\"find\":\"2.3333332538605 cups mashed overripe bananas\",\"replace\":\"3 mashed overripe bananas\",\"add\":\"\"}]},{\"summary\":\"Very tasty; no further changes\",\"modification_type\":\"addition\",\"reasoning\":\"Reviewer expressed positive outcome but did not propose further changes\",\"was_applied_by_reviewer\":true,\"is_generalizable\":false,\"edits\":[]}] }"
+      }
+    },
+    {
+      "score": {
+        "case_id": "banana-r8-unflagged-bake-time",
+        "error": false,
+        "expected_must_apply": 0,
+        "found_must_apply": 0,
+        "delivered_must_apply": 0,
+        "expected_must_not": 0,
+        "false_applied": 0,
+        "excluded_correctly": 0,
+        "intended_edits": 0,
+        "precise_edits": 0,
+        "applied_edits": 0,
+        "records": 0,
+        "noop_records": 0,
+        "applied_line_edits": 0,
+        "wrong_line_edits": 0,
+        "applied_adds": 0,
+        "contradictory_adds": 0,
+        "applied_ingredient_replaces": 0,
+        "quantity_dropped": 0,
+        "mods_returned": 0
+      },
+      "run": {
+        "case_id": "banana-r8-unflagged-bake-time",
+        "outcomes": [],
+        "mods_returned": 0,
+        "error": null,
+        "usage": {
+          "prompt_tokens": 1662,
+          "completion_tokens": 20,
+          "cached_prompt_tokens": 1536
+        },
+        "cached": true,
+        "raw": "{\"modifications\": []}"
+      }
+    },
+    {
+      "score": {
+        "case_id": "banana-r5-unflagged-whole-wheat",
+        "error": false,
+        "expected_must_apply": 0,
+        "found_must_apply": 0,
+        "delivered_must_apply": 0,
+        "expected_must_not": 0,
+        "false_applied": 0,
+        "excluded_correctly": 0,
+        "intended_edits": 0,
+        "precise_edits": 0,
+        "applied_edits": 0,
+        "records": 0,
+        "noop_records": 0,
+        "applied_line_edits": 0,
+        "wrong_line_edits": 0,
+        "applied_adds": 0,
+        "contradictory_adds": 0,
+        "applied_ingredient_replaces": 0,
+        "quantity_dropped": 0,
+        "mods_returned": 0
+      },
+      "run": {
+        "case_id": "banana-r5-unflagged-whole-wheat",
+        "outcomes": [],
+        "mods_returned": 0,
+        "error": null,
+        "usage": {
+          "prompt_tokens": 1666,
+          "completion_tokens": 20,
+          "cached_prompt_tokens": 1536
+        },
+        "cached": true,
+        "raw": "{\"modifications\": []}"
+      }
+    },
+    {
+      "score": {
+        "case_id": "soup-r0-yams-sprouts-cream",
+        "error": false,
+        "expected_must_apply": 1,
+        "found_must_apply": 1,
+        "delivered_must_apply": 1,
+        "expected_must_not": 0,
+        "false_applied": 0,
+        "excluded_correctly": 0,
+        "intended_edits": 4,
+        "precise_edits": 3,
+        "applied_edits": 4,
+        "records": 4,
+        "noop_records": 0,
+        "applied_line_edits": 1,
+        "wrong_line_edits": 0,
+        "applied_adds": 2,
+        "contradictory_adds": 0,
+        "applied_ingredient_replaces": 1,
+        "quantity_dropped": 0,
+        "mods_returned": 4
+      },
+      "run": {
+        "case_id": "soup-r0-yams-sprouts-cream",
+        "outcomes": [
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "1.5 pounds peeled raw sweet potatoes, cut into 1-inch chunks",
+            "new_text": "1.5 pounds canned yams, cut into chunks",
+            "line_ref": "I1",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 0,
+            "from_text": "1.5 pounds peeled raw sweet potatoes, cut into 1-inch chunks",
+            "to_text": "1.5 pounds canned yams, cut into chunks",
+            "reason": ""
+          },
+          {
+            "target": "ingredients",
+            "operation": "add_after",
+            "find": "",
+            "new_text": "Garnish: roasted Brussels sprouts",
+            "line_ref": "I12",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 1,
+            "from_text": "",
+            "to_text": "Garnish: roasted Brussels sprouts",
+            "reason": ""
+          },
+          {
+            "target": "ingredients",
+            "operation": "add_after",
+            "find": "",
+            "new_text": "Garnish: peppers (bell peppers)",
+            "line_ref": "I12",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 2,
+            "from_text": "",
+            "to_text": "Garnish: peppers (bell peppers)",
+            "reason": ""
+          },
+          {
+            "target": "instructions",
+            "operation": "add_after",
+            "find": "",
+            "new_text": "Drizzle heavy cream on top before serving.",
+            "line_ref": "S6",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 3,
+            "from_text": "",
+            "to_text": "Drizzle heavy cream on top before serving.",
+            "reason": ""
+          }
+        ],
+        "mods_returned": 4,
+        "error": null,
+        "usage": {
+          "prompt_tokens": 1906,
+          "completion_tokens": 387,
+          "cached_prompt_tokens": 1280
+        },
+        "cached": true,
+        "raw": "{\"modifications\":[{\"summary\":\"used canned yams instead of fresh sweet potatoes\",\"modification_type\":\"quantity_adjustment\",\"reasoning\":\"Substituted an ingredient by form\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[{\"target\":\"ingredients\",\"operation\":\"replace\",\"line_ref\":\"I1\",\"find\":\"1.5 pounds peeled raw sweet potatoes, cut into 1-inch chunks\",\"replace\":\"1.5 pounds canned yams, cut into chunks\",\"add\":\"\"}]},{\"summary\":\"added roasted Brussels sprouts\",\"modification_type\":\"addition\",\"reasoning\":\"Added a new ingredient not in original recipe\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[{\"target\":\"ingredients\",\"operation\":\"add_after\",\"line_ref\":\"I12\",\"find\":\"\",\"replace\":\"Garnish: roasted Brussels sprouts\",\"add\":\"Garnish: roasted Brussels sprouts\"}]},{\"summary\":\"added peppers (peppers, likely bell peppers)\",\"modification_type\":\"addition\",\"reasoning\":\"Added a new ingredient not in original recipe\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[{\"target\":\"ingredients\",\"operation\":\"add_after\",\"line_ref\":\"I12\",\"find\":\"\",\"replace\":\"Garnish: peppers (bell peppers)\",\"add\":\"Garnish: peppers (bell peppers)\"}]},{\"summary\":\"drizzled heavy cream at the end\",\"modification_type\":\"addition\",\"reasoning\":\"Added an extra ingredient/step not in original\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[{\"target\":\"instructions\",\"operation\":\"add_after\",\"line_ref\":\"S6\",\"find\":\"\",\"replace\":\"Drizzle heavy cream on top before serving.\",\"add\":\"Drizzle heavy cream on top before serving.\"}]}]}"
+      }
+    },
+    {
+      "score": {
+        "case_id": "soup-r2-fresh-ginger-next-time",
+        "error": false,
+        "expected_must_apply": 0,
+        "found_must_apply": 0,
+        "delivered_must_apply": 0,
+        "expected_must_not": 1,
+        "false_applied": 1,
+        "excluded_correctly": 0,
+        "intended_edits": 2,
+        "precise_edits": 0,
+        "applied_edits": 2,
+        "records": 2,
+        "noop_records": 0,
+        "applied_line_edits": 2,
+        "wrong_line_edits": 1,
+        "applied_adds": 0,
+        "contradictory_adds": 0,
+        "applied_ingredient_replaces": 2,
+        "quantity_dropped": 0,
+        "mods_returned": 2
+      },
+      "run": {
+        "case_id": "soup-r2-fresh-ginger-next-time",
+        "outcomes": [
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "2 tablespoons olive oil",
+            "new_text": "2 tablespoons olive oil\nNote: adjust serving size to yield 8 servings (no exact line edit; serving size change would require recipe scaling)?",
+            "line_ref": "I0",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 0,
+            "from_text": "2 tablespoons olive oil",
+            "to_text": "2 tablespoons olive oil\nNote: adjust serving size to yield 8 servings (no exact line edit; serving size change would require recipe scaling)?",
+            "reason": ""
+          },
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "1.5 teaspoons ground ginger",
+            "new_text": "2 tablespoons fresh ginger, grated",
+            "line_ref": "I6",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 1,
+            "from_text": "1.5 teaspoons ground ginger",
+            "to_text": "2 tablespoons fresh ginger, grated",
+            "reason": ""
+          }
+        ],
+        "mods_returned": 2,
+        "error": null,
+        "usage": {
+          "prompt_tokens": 1900,
+          "completion_tokens": 251,
+          "cached_prompt_tokens": 1280
+        },
+        "cached": true,
+        "raw": "{\"modifications\": [{\"summary\": \"portion size\", \"modification_type\": \"quantity_adjustment\", \"reasoning\": \"Reviewer notes portion serves 2-3 instead of 8; implies increasing servings\", \"was_applied_by_reviewer\": true, \"is_generalizable\": true, \"edits\": [{\"target\": \"ingredients\", \"operation\": \"replace\", \"line_ref\": \"I0\", \"find\": \"2 tablespoons olive oil\", \"replace\": \"2 tablespoons olive oil\\nNote: adjust serving size to yield 8 servings (no exact line edit; serving size change would require recipe scaling)?\" , \"add\": \"\"}]} , {\"summary\": \"fresh ginger\", \"modification_type\": \"ingredient_substitution\", \"reasoning\": \"Use fresh ginger to give more ginger flavor\", \"was_applied_by_reviewer\": true, \"is_generalizable\": true, \"edits\": [{\"target\": \"ingredients\", \"operation\": \"replace\", \"line_ref\": \"I6\", \"find\": \"1.5 teaspoons ground ginger\", \"replace\": \"2 tablespoons fresh ginger, grated\" , \"add\": \"\"}]}]}"
+      }
+    },
+    {
+      "score": {
+        "case_id": "soup-r3-white-potatoes-2pct",
+        "error": false,
+        "expected_must_apply": 1,
+        "found_must_apply": 1,
+        "delivered_must_apply": 1,
+        "expected_must_not": 0,
+        "false_applied": 0,
+        "excluded_correctly": 0,
+        "intended_edits": 2,
+        "precise_edits": 1,
+        "applied_edits": 2,
+        "records": 2,
+        "noop_records": 0,
+        "applied_line_edits": 2,
+        "wrong_line_edits": 0,
+        "applied_adds": 0,
+        "contradictory_adds": 0,
+        "applied_ingredient_replaces": 2,
+        "quantity_dropped": 0,
+        "mods_returned": 2
+      },
+      "run": {
+        "case_id": "soup-r3-white-potatoes-2pct",
+        "outcomes": [
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "1.5 pounds peeled raw sweet potatoes, cut into 1-inch chunks",
+            "new_text": "1 large sweet potato and 3 white potatoes, peeled and cut into 1-inch chunks",
+            "line_ref": "I1",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 0,
+            "from_text": "1.5 pounds peeled raw sweet potatoes, cut into 1-inch chunks",
+            "to_text": "1 large sweet potato and 3 white potatoes, peeled and cut into 1-inch chunks",
+            "reason": ""
+          },
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "1.5 cups half-and-half (or whole milk)",
+            "new_text": "1.5 cups 2% milk",
+            "line_ref": "I10",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 1,
+            "from_text": "1.5 cups half-and-half (or whole milk)",
+            "to_text": "1.5 cups 2% milk",
+            "reason": ""
+          }
+        ],
+        "mods_returned": 2,
+        "error": null,
+        "usage": {
+          "prompt_tokens": 1919,
+          "completion_tokens": 240,
+          "cached_prompt_tokens": 1792
+        },
+        "cached": true,
+        "raw": "{\"modifications\":[{\"summary\":\"used 1 large potato + 3 white potatoes instead of 2 large sweet potatoes\",\"modification_type\":\"quantity_adjustment\",\"reasoning\":\"Reviewer substituted different potato types/quantities\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[{\"target\":\"ingredients\",\"operation\":\"replace\",\"line_ref\":\"I1\",\"find\":\"1.5 pounds peeled raw sweet potatoes, cut into 1-inch chunks\",\"replace\":\"1 large sweet potato and 3 white potatoes, peeled and cut into 1-inch chunks\",\"add\":\"\"}]},{\"summary\":\"substituted 2% milk for half-and-half or whole milk\",\"modification_type\":\"ingredient_substitution\",\"reasoning\":\"Reviewer used 2% milk instead of specified dairy\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[{\"target\":\"ingredients\",\"operation\":\"replace\",\"line_ref\":\"I10\",\"find\":\"1.5 cups half-and-half (or whole milk)\",\"replace\":\"1.5 cups 2% milk\",\"add\":\"\"}]}]}"
+      }
+    },
+    {
+      "score": {
+        "case_id": "soup-r4-broth-next-time",
+        "error": false,
+        "expected_must_apply": 2,
+        "found_must_apply": 2,
+        "delivered_must_apply": 2,
+        "expected_must_not": 1,
+        "false_applied": 1,
+        "excluded_correctly": 0,
+        "intended_edits": 3,
+        "precise_edits": 2,
+        "applied_edits": 3,
+        "records": 3,
+        "noop_records": 0,
+        "applied_line_edits": 3,
+        "wrong_line_edits": 0,
+        "applied_adds": 0,
+        "contradictory_adds": 0,
+        "applied_ingredient_replaces": 2,
+        "quantity_dropped": 0,
+        "mods_returned": 3
+      },
+      "run": {
+        "case_id": "soup-r4-broth-next-time",
+        "outcomes": [
+          {
+            "target": "instructions",
+            "operation": "replace",
+            "find": "Add broth; bring to a simmer over medium-high heat. Reduce heat to low and simmer, partially covered, until sweet potatoes are tender, about 10 minutes.",
+            "new_text": "Add broth; bring to a simmer over medium-high heat. Reduce heat to low and simmer, partially covered, until sweet potatoes are tender, about 10 minutes. (If you prefer a thinner end result, add additional broth when finishing to reach the desired consistency.)",
+            "line_ref": "S4",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 0,
+            "from_text": "Add broth; bring to a simmer over medium-high heat. Reduce heat to low and simmer, partially covered, until sweet potatoes are tender, about 10 minutes.",
+            "to_text": "Add broth; bring to a simmer over medium-high heat. Reduce heat to low and simmer, partially covered, until sweet potatoes are tender, about 10 minutes. (If you prefer a thinner end result, add additional broth when finishing to reach the desired consistency.)",
+            "reason": ""
+          },
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "1.5 teaspoons ground ginger",
+            "new_text": "1.5 teaspoons fresh grated ginger",
+            "line_ref": "I6",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 1,
+            "from_text": "1.5 teaspoons ground ginger",
+            "to_text": "1.5 teaspoons fresh grated ginger",
+            "reason": ""
+          },
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "1.5 cups half-and-half (or whole milk)",
+            "new_text": "1.5 cups 2% milk",
+            "line_ref": "I10",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 2,
+            "from_text": "1.5 cups half-and-half (or whole milk)",
+            "to_text": "1.5 cups 2% milk",
+            "reason": ""
+          }
+        ],
+        "mods_returned": 3,
+        "error": null,
+        "usage": {
+          "prompt_tokens": 1893,
+          "completion_tokens": 437,
+          "cached_prompt_tokens": 1664
+        },
+        "cached": true,
+        "raw": "{\"modifications\": [\n  {\"summary\": \"kick and thickness noted; will use more broth next time\", \"modification_type\": \"technique_change\", \"reasoning\": \"Reviewer notes the soup is very thick and would use more broth next time\", \"was_applied_by_reviewer\": true, \"is_generalizable\": true, \"edits\": [{\"target\": \"instructions\", \"operation\": \"replace\", \"line_ref\": \"S4\", \"find\": \"Add broth; bring to a simmer over medium-high heat. Reduce heat to low and simmer, partially covered, until sweet potatoes are tender, about 10 minutes.\", \"replace\": \"Add broth; bring to a simmer over medium-high heat. Reduce heat to low and simmer, partially covered, until sweet potatoes are tender, about 10 minutes. (If you prefer a thinner end result, add additional broth when finishing to reach the desired consistency.)\", \"add\": \"\"}]},\n  {\"summary\": \"used fresh grated ginger\", \"modification_type\": \"ingredient_substitution\", \"reasoning\": \"Reviewer used fresh grated ginger; implies change from ground ginger\", \"was_applied_by_reviewer\": true, \"is_generalizable\": true, \"edits\": [{\"target\": \"ingredients\", \"operation\": \"replace\", \"line_ref\": \"I6\", \"find\": \"1.5 teaspoons ground ginger\", \"replace\": \"1.5 teaspoons fresh grated ginger\", \"add\": \"\"}]},\n  {\"summary\": \"used 2% milk instead of half-and-half or whole milk\", \"modification_type\": \"ingredient_substitution\", \"reasoning\": \"Reviewer used 2% milk; changes dairy option\", \"was_applied_by_reviewer\": true, \"is_generalizable\": true, \"edits\": [{\"target\": \"ingredients\", \"operation\": \"replace\", \"line_ref\": \"I10\", \"find\": \"1.5 cups half-and-half (or whole milk)\", \"replace\": \"1.5 cups 2% milk\", \"add\": \"\"}]}\n]}"
+      }
+    },
+    {
+      "score": {
+        "case_id": "soup-r5-cayenne-cream",
+        "error": false,
+        "expected_must_apply": 2,
+        "found_must_apply": 2,
+        "delivered_must_apply": 2,
+        "expected_must_not": 1,
+        "false_applied": 1,
+        "excluded_correctly": 0,
+        "intended_edits": 6,
+        "precise_edits": 3,
+        "applied_edits": 4,
+        "records": 4,
+        "noop_records": 0,
+        "applied_line_edits": 4,
+        "wrong_line_edits": 0,
+        "applied_adds": 0,
+        "contradictory_adds": 0,
+        "applied_ingredient_replaces": 2,
+        "quantity_dropped": 0,
+        "mods_returned": 4
+      },
+      "run": {
+        "case_id": "soup-r5-cayenne-cream",
+        "outcomes": [
+          {
+            "target": "instructions",
+            "operation": "replace",
+            "find": "Heat oil over medium-high heat in a large, deep saute pan until shimmering. Add sweet potatoes, then onion; saute, stirring very little at first, then more frequently, until vegetables start to turn golden brown, 7 to 8 minutes.",
+            "new_text": "Heat oil over medium-high heat in a large, deep saute pan until shimmering. Add sweet potatoes, then onion; saute, stirring very little at first, then more frequently, until vegetables start to turn golden brown, 7 to 8 minutes. Alternatively, roast vegetables in the oven until caramelized and golden.",
+            "line_ref": "S1",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 0,
+            "from_text": "Heat oil over medium-high heat in a large, deep saute pan until shimmering. Add sweet potatoes, then onion; saute, stirring very little at first, then more frequently, until vegetables start to turn golden brown, 7 to 8 minutes.",
+            "to_text": "Heat oil over medium-high heat in a large, deep saute pan until shimmering. Add sweet potatoes, then onion; saute, stirring very little at first, then more frequently, until vegetables start to turn golden brown, 7 to 8 minutes. Alternatively, roast vegetables in the oven until caramelized and golden.",
+            "reason": ""
+          },
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "0.125 teaspoon cayenne pepper",
+            "new_text": "0.25 teaspoon cayenne pepper",
+            "line_ref": "I8",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 1,
+            "from_text": "0.125 teaspoon cayenne pepper",
+            "to_text": "0.25 teaspoon cayenne pepper",
+            "reason": ""
+          },
+          {
+            "target": "instructions",
+            "operation": "replace",
+            "find": "until vegetables start to turn golden brown, 7 to 8 minutes.",
+            "new_text": "until vegetables start to turn golden brown, 7 to 8 minutes.",
+            "line_ref": "S1",
+            "status": "failed",
+            "intended": true,
+            "mod_index": 1,
+            "from_text": "",
+            "to_text": "",
+            "reason": "replacement text equals the original; nothing changed"
+          },
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "1.5 cups half-and-half (or whole milk)",
+            "new_text": "2 cups heavy cream",
+            "line_ref": "I10",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 1,
+            "from_text": "1.5 cups half-and-half (or whole milk)",
+            "to_text": "2 cups heavy cream",
+            "reason": ""
+          },
+          {
+            "target": "instructions",
+            "operation": "replace",
+            "find": "Return to pan (or a soup pot); add enough half-and-half so the mixture is souplike, yet thick enough to float garnish. Taste, and add salt and pepper if needed. Heat through, ladle into bowls, garnish and serve.",
+            "new_text": "Return to pan (or a soup pot); add enough heavy cream so the mixture is souplike, yet thick enough to float garnish. Taste, and adjust salt and pepper as needed. Heat through, ladle into bowls, garnish and serve.",
+            "line_ref": "S6",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 1,
+            "from_text": "Return to pan (or a soup pot); add enough half-and-half so the mixture is souplike, yet thick enough to float garnish. Taste, and add salt and pepper if needed. Heat through, ladle into bowls, garnish and serve.",
+            "to_text": "Return to pan (or a soup pot); add enough heavy cream so the mixture is souplike, yet thick enough to float garnish. Taste, and adjust salt and pepper as needed. Heat through, ladle into bowls, garnish and serve.",
+            "reason": ""
+          },
+          {
+            "target": "ingredients",
+            "operation": "add_after",
+            "find": "",
+            "new_text": "",
+            "line_ref": "I11",
+            "status": "failed",
+            "intended": true,
+            "mod_index": 2,
+            "from_text": "",
+            "to_text": "",
+            "reason": "add_after has no text to add"
+          }
+        ],
+        "mods_returned": 4,
+        "error": null,
+        "usage": {
+          "prompt_tokens": 1953,
+          "completion_tokens": 770,
+          "cached_prompt_tokens": 1664
+        },
+        "cached": true,
+        "raw": "{\"modifications\": [{\"summary\": \"caramelize vegetables using a different method (oven alternative)\", \"modification_type\": \"technique_change\", \"reasoning\": \"Reviewer suggests oven method as an alternative to the described stovetop caramelization\", \"was_applied_by_reviewer\": true, \"is_generalizable\": true, \"edits\": [{\"target\": \"instructions\", \"operation\": \"replace\", \"line_ref\": \"S1\", \"find\": \"Heat oil over medium-high heat in a large, deep saute pan until shimmering. Add sweet potatoes, then onion; saute, stirring very little at first, then more frequently, until vegetables start to turn golden brown, 7 to 8 minutes.\", \"replace\": \"Heat oil over medium-high heat in a large, deep saute pan until shimmering. Add sweet potatoes, then onion; saute, stirring very little at first, then more frequently, until vegetables start to turn golden brown, 7 to 8 minutes. Alternatively, roast vegetables in the oven until caramelized and golden.\" , \"add\": \"\"}]}, {\"summary\": \"increase cayenne and pepper; use heavy cream instead of half-and-half\", \"modification_type\": \"ingredient_substitution\", \"reasoning\": \"Reviewer added extra cayenne, more black pepper, and used heavy cream instead of half-and-half\", \"was_applied_by_reviewer\": true, \"is_generalizable\": true, \"edits\": [{\"target\": \"ingredients\", \"operation\": \"replace\", \"line_ref\": \"I8\", \"find\": \"0.125 teaspoon cayenne pepper\", \"replace\": \"0.25 teaspoon cayenne pepper\", \"add\": \"\"}, {\"target\": \"instructions\", \"operation\": \"replace\", \"line_ref\": \"S1\", \"find\": \"until vegetables start to turn golden brown, 7 to 8 minutes.\", \"replace\": \"until vegetables start to turn golden brown, 7 to 8 minutes.\", \"add\": \"\"}, {\"target\": \"ingredients\", \"operation\": \"replace\", \"line_ref\": \"I10\", \"find\": \"1.5 cups half-and-half (or whole milk)\", \"replace\": \"2 cups heavy cream\", \"add\": \"\"}, {\"target\": \"instructions\", \"operation\": \"replace\", \"line_ref\": \"S6\", \"find\": \"Return to pan (or a soup pot); add enough half-and-half so the mixture is souplike, yet thick enough to float garnish. Taste, and add salt and pepper if needed. Heat through, ladle into bowls, garnish and serve.\", \"replace\": \"Return to pan (or a soup pot); add enough heavy cream so the mixture is souplike, yet thick enough to float garnish. Taste, and adjust salt and pepper as needed. Heat through, ladle into bowls, garnish and serve.\" , \"add\": \"\"}]}, {\"summary\": \"increase black pepper usage\", \"modification_type\": \"ingredient_substitution\", \"reasoning\": \"Reviewer mentions lots of black pepper\", \"was_applied_by_reviewer\": true, \"is_generalizable\": true, \"edits\": [{\"target\": \"ingredients\", \"operation\": \"add_after\", \"line_ref\": \"I11\", \"find\": \"\", \"replace\": \"\", \"add\": \"\"}]}, {\"summary\": \"keep potatoes from being too sweet\", \"modification_type\": \"technique_change\", \"reasoning\": \"Reviewer found it not too sweet; no explicit change to sweetness in recipe, but could imply adjusting sweetness; not a concrete edit\" , \"was_applied_by_reviewer\": false, \"is_generalizable\": true, \"edits\": []}] }"
+      }
+    },
+    {
+      "score": {
+        "case_id": "soup-r1-unflagged-minced-ginger",
+        "error": false,
+        "expected_must_apply": 0,
+        "found_must_apply": 0,
+        "delivered_must_apply": 0,
+        "expected_must_not": 1,
+        "false_applied": 1,
+        "excluded_correctly": 0,
+        "intended_edits": 2,
+        "precise_edits": 0,
+        "applied_edits": 2,
+        "records": 2,
+        "noop_records": 0,
+        "applied_line_edits": 2,
+        "wrong_line_edits": 0,
+        "applied_adds": 0,
+        "contradictory_adds": 0,
+        "applied_ingredient_replaces": 2,
+        "quantity_dropped": 0,
+        "mods_returned": 2
+      },
+      "run": {
+        "case_id": "soup-r1-unflagged-minced-ginger",
+        "outcomes": [
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "1.5 teaspoons ground ginger",
+            "new_text": "1.5 teaspoons minced ginger",
+            "line_ref": "I6",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 0,
+            "from_text": "1.5 teaspoons ground ginger",
+            "to_text": "1.5 teaspoons minced ginger",
+            "reason": ""
+          },
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "1.5 teaspoons ground ginger",
+            "new_text": "1.5 teaspoons minced ginger",
+            "line_ref": "I6",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 1,
+            "from_text": "1.5 teaspoons ground ginger",
+            "to_text": "1.5 teaspoons minced ginger",
+            "reason": ""
+          }
+        ],
+        "mods_returned": 2,
+        "error": null,
+        "usage": {
+          "prompt_tokens": 1922,
+          "completion_tokens": 210,
+          "cached_prompt_tokens": 1792
+        },
+        "cached": true,
+        "raw": "{\"modifications\":[{\"summary\":\"Convert 1.5 pounds sweet potatoes to a different ginger type?\",\"modification_type\":\"ingredient_substitution\",\"reasoning\":\"Reviewer used minced ginger instead of ground ginger\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[{\"target\":\"ingredients\",\"operation\":\"replace\",\"line_ref\":\"I6\",\"find\":\"1.5 teaspoons ground ginger\",\"replace\":\"1.5 teaspoons minced ginger\",\"add\":\"\"}]},{\"summary\":\"Omitted ground ginger entirely and used minced; this is a substitution/change related to ginger-type\",\"modification_type\":\"ingredient_substitution\",\"reasoning\":\"Reviewer used minced ginger instead of ground ginger\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[{\"target\":\"ingredients\",\"operation\":\"replace\",\"line_ref\":\"I6\",\"find\":\"1.5 teaspoons ground ginger\",\"replace\":\"1.5 teaspoons minced ginger\",\"add\":\"\"}]}]}"
+      }
+    },
+    {
+      "score": {
+        "case_id": "syn-compound-sentence",
+        "error": false,
+        "expected_must_apply": 2,
+        "found_must_apply": 2,
+        "delivered_must_apply": 2,
+        "expected_must_not": 0,
+        "false_applied": 0,
+        "excluded_correctly": 0,
+        "intended_edits": 2,
+        "precise_edits": 2,
+        "applied_edits": 2,
+        "records": 2,
+        "noop_records": 0,
+        "applied_line_edits": 2,
+        "wrong_line_edits": 0,
+        "applied_adds": 0,
+        "contradictory_adds": 0,
+        "applied_ingredient_replaces": 2,
+        "quantity_dropped": 0,
+        "mods_returned": 2
+      },
+      "run": {
+        "case_id": "syn-compound-sentence",
+        "outcomes": [
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "2 eggs",
+            "new_text": "3 eggs",
+            "line_ref": "I3",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 0,
+            "from_text": "2 eggs",
+            "to_text": "3 eggs",
+            "reason": ""
+          },
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "1 cup white sugar",
+            "new_text": "1/2 cup white sugar",
+            "line_ref": "I1",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 1,
+            "from_text": "1 cup white sugar",
+            "to_text": "1/2 cup white sugar",
+            "reason": ""
+          }
+        ],
+        "mods_returned": 2,
+        "error": null,
+        "usage": {
+          "prompt_tokens": 1687,
+          "completion_tokens": 181,
+          "cached_prompt_tokens": 1536
+        },
+        "cached": true,
+        "raw": "{\"modifications\":[{\"summary\":\"added an egg (egg count)\",\"modification_type\":\"quantity_adjustment\",\"reasoning\":\"Reviewer added one more egg to the batter\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[{\"target\":\"ingredients\",\"operation\":\"replace\",\"line_ref\":\"I3\",\"find\":\"2 eggs\",\"replace\":\"3 eggs\",\"add\":\"\"}]},{\"summary\":\"halved the white sugar\",\"modification_type\":\"quantity_adjustment\",\"reasoning\":\"Reviewer reduced white sugar to half of original amount\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[{\"target\":\"ingredients\",\"operation\":\"replace\",\"line_ref\":\"I1\",\"find\":\"1 cup white sugar\",\"replace\":\"1/2 cup white sugar\",\"add\":\"\"}]}]}"
+      }
+    },
+    {
+      "score": {
+        "case_id": "syn-fraction-phrasing",
+        "error": false,
+        "expected_must_apply": 1,
+        "found_must_apply": 1,
+        "delivered_must_apply": 1,
+        "expected_must_not": 0,
+        "false_applied": 0,
+        "excluded_correctly": 0,
+        "intended_edits": 1,
+        "precise_edits": 1,
+        "applied_edits": 1,
+        "records": 1,
+        "noop_records": 0,
+        "applied_line_edits": 1,
+        "wrong_line_edits": 0,
+        "applied_adds": 0,
+        "contradictory_adds": 0,
+        "applied_ingredient_replaces": 1,
+        "quantity_dropped": 0,
+        "mods_returned": 2
+      },
+      "run": {
+        "case_id": "syn-fraction-phrasing",
+        "outcomes": [
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "0.5 teaspoon salt",
+            "new_text": "1.5 teaspoons salt",
+            "line_ref": "I7",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 0,
+            "from_text": "0.5 teaspoon salt",
+            "to_text": "1.5 teaspoons salt",
+            "reason": ""
+          }
+        ],
+        "mods_returned": 2,
+        "error": null,
+        "usage": {
+          "prompt_tokens": 1689,
+          "completion_tokens": 188
+        },
+        "cached": true,
+        "raw": "{\"modifications\":[{\"summary\":\"salt amount set to 1 1/2 tsp instead of 1/2 tsp\",\"modification_type\":\"quantity_adjustment\",\"reasoning\":\"Reviewer found the cookies finally tasted like something with more salt\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[{\"target\":\"ingredients\",\"operation\":\"replace\",\"line_ref\":\"I7\",\"find\":\"0.5 teaspoon salt\",\"replace\":\"1.5 teaspoons salt\",\"add\":\"\"}]},{\"summary\":\"implied taste improvement with increased salt; no explicit other changes\",\"modification_type\":\"addition\",\"reasoning\":\"Reviewer mentions improved taste due to salt increase but did not specify additional ingredient or step; cannot derive a concrete addition without changing the recipe\",\"was_applied_by_reviewer\":false,\"is_generalizable\":false,\"edits\":[]}]}"
+      }
+    },
+    {
+      "score": {
+        "case_id": "syn-temp-and-time",
+        "error": false,
+        "expected_must_apply": 2,
+        "found_must_apply": 2,
+        "delivered_must_apply": 2,
+        "expected_must_not": 0,
+        "false_applied": 0,
+        "excluded_correctly": 0,
+        "intended_edits": 2,
+        "precise_edits": 2,
+        "applied_edits": 2,
+        "records": 2,
+        "noop_records": 0,
+        "applied_line_edits": 2,
+        "wrong_line_edits": 0,
+        "applied_adds": 0,
+        "contradictory_adds": 0,
+        "applied_ingredient_replaces": 0,
+        "quantity_dropped": 0,
+        "mods_returned": 1
+      },
+      "run": {
+        "case_id": "syn-temp-and-time",
+        "outcomes": [
+          {
+            "target": "instructions",
+            "operation": "replace",
+            "find": "Preheat the oven to 350 degrees F (175 degrees C). Beat butter, white sugar, and brown sugar with an electric mixer in a large bowl until smooth.",
+            "new_text": "Preheat the oven to 375 degrees F (190 degrees C). Beat butter, white sugar, and brown sugar with an electric mixer in a large bowl until smooth.",
+            "line_ref": "S1",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 0,
+            "from_text": "Preheat the oven to 350 degrees F (175 degrees C). Beat butter, white sugar, and brown sugar with an electric mixer in a large bowl until smooth.",
+            "to_text": "Preheat the oven to 375 degrees F (190 degrees C). Beat butter, white sugar, and brown sugar with an electric mixer in a large bowl until smooth.",
+            "reason": ""
+          },
+          {
+            "target": "instructions",
+            "operation": "replace",
+            "find": "Bake in the preheated oven until edges are nicely browned, about 10 minutes.",
+            "new_text": "Bake in the preheated oven until edges are nicely browned, about 8 minutes.",
+            "line_ref": "S6",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 0,
+            "from_text": "Bake in the preheated oven until edges are nicely browned, about 10 minutes.",
+            "to_text": "Bake in the preheated oven until edges are nicely browned, about 8 minutes.",
+            "reason": ""
+          }
+        ],
+        "mods_returned": 1,
+        "error": null,
+        "usage": {
+          "prompt_tokens": 1692,
+          "completion_tokens": 265,
+          "cached_prompt_tokens": 1536
+        },
+        "cached": true,
+        "raw": "{\"modifications\": [{\"summary\": \"adjust oven temperature 350 F to 375 F\", \"modification_type\": \"technique_change\", \"reasoning\": \"Baked at 375 for 8 minutes instead of 350 for 10; achieved crispy edges and gooey middle\", \"was_applied_by_reviewer\": true, \"is_generalizable\": true, \"edits\": [{\"target\": \"instructions\", \"operation\": \"replace\", \"line_ref\": \"S1\", \"find\": \"Preheat the oven to 350 degrees F (175 degrees C). Beat butter, white sugar, and brown sugar with an electric mixer in a large bowl until smooth.\", \"replace\": \"Preheat the oven to 375 degrees F (190 degrees C). Beat butter, white sugar, and brown sugar with an electric mixer in a large bowl until smooth.\", \"add\": \"\"}, {\"target\": \"instructions\", \"operation\": \"replace\", \"line_ref\": \"S6\", \"find\": \"Bake in the preheated oven until edges are nicely browned, about 10 minutes.\", \"replace\": \"Bake in the preheated oven until edges are nicely browned, about 8 minutes.\", \"add\": \"\"}]}]}"
+      }
+    },
+    {
+      "score": {
+        "case_id": "syn-pure-intent",
+        "error": false,
+        "expected_must_apply": 0,
+        "found_must_apply": 0,
+        "delivered_must_apply": 0,
+        "expected_must_not": 2,
+        "false_applied": 2,
+        "excluded_correctly": 0,
+        "intended_edits": 3,
+        "precise_edits": 0,
+        "applied_edits": 3,
+        "records": 3,
+        "noop_records": 0,
+        "applied_line_edits": 2,
+        "wrong_line_edits": 1,
+        "applied_adds": 1,
+        "contradictory_adds": 0,
+        "applied_ingredient_replaces": 1,
+        "quantity_dropped": 0,
+        "mods_returned": 2
+      },
+      "run": {
+        "case_id": "syn-pure-intent",
+        "outcomes": [
+          {
+            "target": "ingredients",
+            "operation": "add_after",
+            "find": "",
+            "new_text": "1 cup rolled oats",
+            "line_ref": "I9",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 0,
+            "from_text": "",
+            "to_text": "1 cup rolled oats",
+            "reason": ""
+          },
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "2 cups semisweet chocolate chips",
+            "new_text": "1 cup semisweet chocolate chips",
+            "line_ref": "I9",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 1,
+            "from_text": "2 cups semisweet chocolate chips",
+            "to_text": "1 cup semisweet chocolate chips",
+            "reason": ""
+          },
+          {
+            "target": "ingredients",
+            "operation": "remove",
+            "find": "1 cup chopped walnuts",
+            "new_text": "",
+            "line_ref": "I10",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 1,
+            "from_text": "1 cup chopped walnuts",
+            "to_text": "",
+            "reason": ""
+          }
+        ],
+        "mods_returned": 2,
+        "error": null,
+        "usage": {
+          "prompt_tokens": 1689,
+          "completion_tokens": 258,
+          "cached_prompt_tokens": 1536
+        },
+        "cached": true,
+        "raw": "{\"modifications\": [{\"summary\": \"add oats\", \"modification_type\": \"addition\", \"reasoning\": \"Reviewer suggests adding a cup of oats to the recipe\", \"was_applied_by_reviewer\": true, \"is_generalizable\": true, \"edits\": [{\"target\": \"ingredients\", \"operation\": \"add_after\", \"line_ref\": \"I9\", \"find\": \"\", \"replace\": \"\", \"add\": \"I10: 1 cup rolled oats\"}]}, {\"summary\": \"halve the chocolate chips\", \"modification_type\": \"quantity_adjustment\", \"reasoning\": \"Reviewer suggests cutting the amount of chocolate chips in half\", \"was_applied_by_reviewer\": true, \"is_generalizable\": true, \"edits\": [{\"target\": \"ingredients\", \"operation\": \"replace\", \"line_ref\": \"I9\", \"find\": \"2 cups semisweet chocolate chips\", \"replace\": \"1 cup semisweet chocolate chips\", \"add\": \"\"}, {\"target\": \"ingredients\", \"operation\": \"remove\", \"line_ref\": \"I10\", \"find\": \"1 cup chopped walnuts\", \"replace\": \"\", \"add\": \"\"}]}]}"
+      }
+    },
+    {
+      "score": {
+        "case_id": "syn-personal-circumstance",
+        "error": false,
+        "expected_must_apply": 0,
+        "found_must_apply": 0,
+        "delivered_must_apply": 0,
+        "expected_must_not": 2,
+        "false_applied": 2,
+        "excluded_correctly": 0,
+        "intended_edits": 2,
+        "precise_edits": 0,
+        "applied_edits": 2,
+        "records": 2,
+        "noop_records": 0,
+        "applied_line_edits": 2,
+        "wrong_line_edits": 0,
+        "applied_adds": 0,
+        "contradictory_adds": 0,
+        "applied_ingredient_replaces": 1,
+        "quantity_dropped": 0,
+        "mods_returned": 3
+      },
+      "run": {
+        "case_id": "syn-personal-circumstance",
+        "outcomes": [
+          {
+            "target": "ingredients",
+            "operation": "remove",
+            "find": "1 teaspoon vanilla extract",
+            "new_text": "",
+            "line_ref": "I4",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 0,
+            "from_text": "2 teaspoons vanilla extract",
+            "to_text": "",
+            "reason": ""
+          },
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "1 cup butter, softened",
+            "new_text": "1 cup margarine, softened",
+            "line_ref": "I0",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 1,
+            "from_text": "1 cup butter, softened",
+            "to_text": "1 cup margarine, softened",
+            "reason": ""
+          }
+        ],
+        "mods_returned": 3,
+        "error": null,
+        "usage": {
+          "prompt_tokens": 1693,
+          "completion_tokens": 244,
+          "cached_prompt_tokens": 1536
+        },
+        "cached": true,
+        "raw": "{\"modifications\":[{\"summary\":\"omit vanilla extract (I left out vanilla)\", \"modification_type\":\"removal\",\"reasoning\":\"Reviewer didn't have vanilla and left it out, still worked\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[{\"target\":\"ingredients\",\"operation\":\"remove\",\"line_ref\":\"I4\",\"find\":\"1 teaspoon vanilla extract\",\"replace\":\"\",\"add\":\"\"}]},{\"summary\":\"used margarine instead of butter\",\"modification_type\":\"ingredient_substitution\",\"reasoning\":\"Used margarine because that was on hand; altered fat source\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[{\"target\":\"ingredients\",\"operation\":\"replace\",\"line_ref\":\"I0\",\"find\":\"1 cup butter, softened\",\"replace\":\"1 cup margarine, softened\",\"add\":\"\"}]},{\"summary\":\"no change to other ingredients/instructions besides vanilla and fat\",\"modification_type\":\"technique_change\",\"reasoning\":\"No other edits stated; assumption of no further changes\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[]}]}"
+      }
+    },
+    {
+      "score": {
+        "case_id": "syn-reverted-tweak",
+        "error": false,
+        "expected_must_apply": 0,
+        "found_must_apply": 0,
+        "delivered_must_apply": 0,
+        "expected_must_not": 1,
+        "false_applied": 1,
+        "excluded_correctly": 0,
+        "intended_edits": 2,
+        "precise_edits": 0,
+        "applied_edits": 1,
+        "records": 1,
+        "noop_records": 0,
+        "applied_line_edits": 1,
+        "wrong_line_edits": 0,
+        "applied_adds": 0,
+        "contradictory_adds": 0,
+        "applied_ingredient_replaces": 1,
+        "quantity_dropped": 0,
+        "mods_returned": 2
+      },
+      "run": {
+        "case_id": "syn-reverted-tweak",
+        "outcomes": [
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "2 teaspoons vanilla extract",
+            "new_text": "1 teaspoon vanilla extract",
+            "line_ref": "I4",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 0,
+            "from_text": "2 teaspoons vanilla extract",
+            "to_text": "1 teaspoon vanilla extract",
+            "reason": ""
+          },
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "1 teaspoon vanilla extract",
+            "new_text": "2 teaspoons vanilla extract",
+            "line_ref": "I4",
+            "status": "failed",
+            "intended": true,
+            "mod_index": 1,
+            "from_text": "",
+            "to_text": "",
+            "reason": "replacement text equals the original; nothing changed"
+          }
+        ],
+        "mods_returned": 2,
+        "error": null,
+        "usage": {
+          "prompt_tokens": 1697,
+          "completion_tokens": 203,
+          "cached_prompt_tokens": 1536
+        },
+        "cached": true,
+        "raw": "{\"modifications\":[{\"summary\":\"vanilla amount halved from doubled to original 1 teaspoon?\",\"modification_type\":\"quantity_adjustment\",\"reasoning\":\"Reviewer experimented with vanilla amount: doubled initially then returned to original amount because overpowering\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[{\"target\":\"ingredients\",\"operation\":\"replace\",\"line_ref\":\"I4\",\"find\":\"2 teaspoons vanilla extract\",\"replace\":\"1 teaspoon vanilla extract\",\"add\":\"\"}]},{\"summary\":\"reverted vanilla to original amount after overpowering result\",\"modification_type\":\"quantity_adjustment\",\"reasoning\":\"Reverting to original amount after overpowered by doubling\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[{\"target\":\"ingredients\",\"operation\":\"replace\",\"line_ref\":\"I4\",\"find\":\"1 teaspoon vanilla extract\",\"replace\":\"2 teaspoons vanilla extract\",\"add\":\"\"}]}]}"
+      }
+    },
+    {
+      "score": {
+        "case_id": "syn-substitution-keeps-quantity",
+        "error": false,
+        "expected_must_apply": 1,
+        "found_must_apply": 1,
+        "delivered_must_apply": 1,
+        "expected_must_not": 0,
+        "false_applied": 0,
+        "excluded_correctly": 0,
+        "intended_edits": 2,
+        "precise_edits": 2,
+        "applied_edits": 2,
+        "records": 2,
+        "noop_records": 0,
+        "applied_line_edits": 2,
+        "wrong_line_edits": 0,
+        "applied_adds": 0,
+        "contradictory_adds": 0,
+        "applied_ingredient_replaces": 2,
+        "quantity_dropped": 0,
+        "mods_returned": 2
+      },
+      "run": {
+        "case_id": "syn-substitution-keeps-quantity",
+        "outcomes": [
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "1 cup chopped walnuts",
+            "new_text": "1 cup chopped pecans",
+            "line_ref": "I10",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 0,
+            "from_text": "1 cup chopped walnuts",
+            "to_text": "1 cup chopped pecans",
+            "reason": ""
+          },
+          {
+            "target": "ingredients",
+            "operation": "replace",
+            "find": "1 cup chopped walnuts",
+            "new_text": "1 cup chopped pecans",
+            "line_ref": "I10",
+            "status": "applied",
+            "intended": true,
+            "mod_index": 1,
+            "from_text": "1 cup chopped walnuts",
+            "to_text": "1 cup chopped pecans",
+            "reason": ""
+          }
+        ],
+        "mods_returned": 2,
+        "error": null,
+        "usage": {
+          "prompt_tokens": 1680,
+          "completion_tokens": 203,
+          "cached_prompt_tokens": 1536
+        },
+        "cached": true,
+        "raw": "{\"modifications\":[{\"summary\":\"swap walnuts for pecans\",\"modification_type\":\"removal\",\"reasoning\":\"Reviewer swapped walnuts for pecans and found it nicer with pecans, in the recipe context this is a nut substitution.\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[{\"target\":\"ingredients\",\"operation\":\"replace\",\"line_ref\":\"I10\",\"find\":\"1 cup chopped walnuts\",\"replace\":\"1 cup chopped pecans\",\"add\":\"\"}]},{\"summary\":\"note: walnuts removed not strictly removing but substituting with pecans\",\"modification_type\":\"ingredient_substitution\",\"reasoning\":\"Direct substitution of one ingredient for another\",\"was_applied_by_reviewer\":true,\"is_generalizable\":true,\"edits\":[{\"target\":\"ingredients\",\"operation\":\"replace\",\"line_ref\":\"I10\",\"find\":\"1 cup chopped walnuts\",\"replace\":\"1 cup chopped pecans\",\"add\":\"\"}]}]}"
+      }
+    }
+  ]
+}

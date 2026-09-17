@@ -139,7 +139,7 @@ def score_case(case: dict, run: CaseRun, ingredients: list[str]) -> CaseScore:
                 s.excluded_correctly += 1
 
     acceptable = [e for e in expected if e["applied_by_reviewer"] and e["generalizable"]]
-    all_lines = {ln for e in expected for ln in e.get("lines", [])}
+    all_lines = {ln for e in expected for ln in e.get("lines", []) + e.get("steps", [])}
     ingredient_keys = {ingredient_key(x) for x in ingredients}
 
     for o in intended:

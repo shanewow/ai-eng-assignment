@@ -1,0 +1,27 @@
+{
+  "request": {
+    "model": "gpt-3.5-turbo",
+    "messages": [
+      {
+        "role": "user",
+        "content": "You are an expert recipe analyst. Your job is to extract structured recipe modifications from user reviews.\n\nWhen a user shares their experience modifying a recipe, you need to:\n1. Identify exactly what changes they made\n2. Understand why they made those changes\n3. Convert their modifications into structured edit operations\n\nYou must output valid JSON that matches the ModificationObject schema.\n\nCategories:\n- \"ingredient_substitution\": Replacing one ingredient with another\n- \"quantity_adjustment\": Changing amounts of existing ingredients\n- \"technique_change\": Altering cooking method, temperature, time\n- \"addition\": Adding new ingredients or steps\n- \"removal\": Removing ingredients or steps\n\nEdit operations:\n- \"replace\": Find existing text and replace it\n- \"add_after\": Add new text after finding target text\n- \"remove\": Remove text that matches the find pattern\n\nBe precise with text matching - use the exact text from the original recipe when possible.\n\nOriginal Recipe:\nTitle: Spicy Apple Cake\nIngredients: ['1.5 cups all-purpose flour', '1 teaspoon ground cinnamon', '1 teaspoon baking powder', '0.5 teaspoon baking soda', '0.5 teaspoon salt', '0.5 teaspoon ground nutmeg', '1 cup brown sugar', '0.5 cup shortening', '0.25 cup white sugar', '2 eggs', '1 teaspoon vanilla extract', '0.5 cup milk', '2 cups apple - peeled, cored, and chopped', \"2 cups sifted confectioners' sugar\", '0.25 cup shortening', '0.25 teaspoon ground cinnamon', '1 pinch ground nutmeg', '0.25 cup evaporated milk']\nInstructions: ['Preheat the oven to 350 degrees F (175 degrees C). Grease and flour a 9-inch square pan.', 'Sift together flour, 1 teaspoon cinnamon, baking powder, baking soda, salt, and nutmeg. Set aside.', 'Cream brown sugar, 1/2 cup shortening, and white sugar together in a large bowl until light and fluffy. Beat in eggs one at a time, then stir in vanilla. Beat in flour mixture alternately with milk, mixing until just combined. Stir in chopped apples.', 'Spread batter evenly in the prepared pan. Bake in the preheated oven until a toothpick inserted into the center of cake comes out clean, 35 to 40 minutes. Let cool.', 'Combine confectioners&#39; sugar, 1/4 cup shortening, 1/4 teaspoon cinnamon, and nutmeg in a medium bowl. Beat until frosting is light and creamy. Beat in evaporated milk 1 tablespoon at a time until desired spreading consistency is reached. Spread over top of cooled cake.']\n\nUser Review: \"Mmmm, this cake was so good. I made it exactly as directed except I used a different frosting only because I had some leftover from another cake. The next time I make this I will add one more cup of apples because more is better right?!\"\n\nExtract the recipe modifications from this review. The user has made changes to improve the recipe.\n\nOutput a JSON object with this structure:\n{\n    \"modification_type\": \"quantity_adjustment|ingredient_substitution|technique_change|addition|removal\",\n    \"reasoning\": \"Brief explanation of why this modification improves the recipe\",\n    \"edits\": [\n        {\n            \"target\": \"ingredients|instructions\",\n            \"operation\": \"replace|add_after|remove\",\n            \"find\": \"exact text to find\",\n            \"replace\": \"replacement text (for replace operations)\",\n            \"add\": \"text to add (for add_after operations)\"\n        }\n    ]\n}\n\nFocus on concrete changes the user actually made, not general suggestions."
+      }
+    ],
+    "response_format": {
+      "type": "json_object"
+    },
+    "params": {
+      "temperature": 0.1,
+      "max_tokens": 1000
+    }
+  },
+  "response": {
+    "content": "{\n    \"modification_type\": \"quantity_adjustment\",\n    \"reasoning\": \"Adding one more cup of apples will enhance the apple flavor and texture of the cake.\",\n    \"edits\": [\n        {\n            \"target\": \"ingredients\",\n            \"operation\": \"replace\",\n            \"find\": \"2 cups apple - peeled, cored, and chopped\",\n            \"replace\": \"3 cups apple - peeled, cored, and chopped\"\n        }\n    ]\n}",
+    "model": "gpt-3.5-turbo-0125",
+    "usage": {
+      "prompt_tokens": 776,
+      "completion_tokens": 95
+    },
+    "created_at": "2026-09-17T19:14:44.661123+00:00"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "request": {
+    "model": "gpt-3.5-turbo",
+    "messages": [
+      {
+        "role": "user",
+        "content": "You are an expert recipe analyst. Your job is to extract structured recipe modifications from user reviews.\n\nWhen a user shares their experience modifying a recipe, you need to:\n1. Identify exactly what changes they made\n2. Understand why they made those changes\n3. Convert their modifications into structured edit operations\n\nYou must output valid JSON that matches the ModificationObject schema.\n\nCategories:\n- \"ingredient_substitution\": Replacing one ingredient with another\n- \"quantity_adjustment\": Changing amounts of existing ingredients\n- \"technique_change\": Altering cooking method, temperature, time\n- \"addition\": Adding new ingredients or steps\n- \"removal\": Removing ingredients or steps\n\nEdit operations:\n- \"replace\": Find existing text and replace it\n- \"add_after\": Add new text after finding target text\n- \"remove\": Remove text that matches the find pattern\n\nBe precise with text matching - use the exact text from the original recipe when possible.\n\nOriginal Recipe:\nTitle: Best Chocolate Chip Cookies\nIngredients: ['1 cup butter, softened', '1 cup white sugar', '1 cup packed brown sugar', '2 eggs', '2 teaspoons vanilla extract', '1 teaspoon baking soda', '2 teaspoons hot water', '0.5 teaspoon salt', '3 cups all-purpose flour', '2 cups semisweet chocolate chips', '1 cup chopped walnuts']\nInstructions: ['Gather your ingredients, making sure your butter is softened, and your eggs are room temperature.', 'Preheat the oven to 350 degrees F (175 degrees C). Beat butter, white sugar, and brown sugar with an electric mixer in a large bowl until smooth.', 'Beat in eggs, one at a time, then stir in vanilla.', 'Dissolve baking soda in hot water. Add to batter along with salt.', 'Stir in flour, chocolate chips, and walnuts.', 'Drop spoonfuls of dough 2 inches apart onto ungreased baking sheets.', 'Bake in the preheated oven until edges are nicely browned, about 10 minutes.', 'Cool on the baking sheets briefly before removing to a wire rack to cool completely.', 'Store in an airtight container or serve immediately and enjoy!']\n\nUser Review: \"I baked them at 375 for 8 minutes instead of 350 for 10. Crispy edges, gooey middle.\"\n\nExtract the recipe modifications from this review. The user has made changes to improve the recipe.\n\nOutput a JSON object with this structure:\n{\n    \"modification_type\": \"quantity_adjustment|ingredient_substitution|technique_change|addition|removal\",\n    \"reasoning\": \"Brief explanation of why this modification improves the recipe\",\n    \"edits\": [\n        {\n            \"target\": \"ingredients|instructions\",\n            \"operation\": \"replace|add_after|remove\",\n            \"find\": \"exact text to find\",\n            \"replace\": \"replacement text (for replace operations)\",\n            \"add\": \"text to add (for add_after operations)\"\n        }\n    ]\n}\n\nFocus on concrete changes the user actually made, not general suggestions."
+      }
+    ],
+    "response_format": {
+      "type": "json_object"
+    },
+    "params": {
+      "temperature": 0.1,
+      "max_tokens": 1000
+    }
+  },
+  "response": {
+    "content": "{\n    \"modification_type\": \"technique_change\",\n    \"reasoning\": \"The user adjusted the baking temperature and time to achieve a specific texture for the cookies.\",\n    \"edits\": [\n        {\n            \"target\": \"instructions\",\n            \"operation\": \"replace\",\n            \"find\": \"Preheat the oven to 350 degrees F (175 degrees C). Bake in the preheated oven until edges are nicely browned, about 10 minutes.\",\n            \"replace\": \"Preheat the oven to 375 degrees F (190 degrees C). Bake at 375 for 8 minutes for crispy edges and gooey middle.\"\n        }\n    ]\n}",
+    "model": "gpt-3.5-turbo-0125",
+    "usage": {
+      "prompt_tokens": 637,
+      "completion_tokens": 134
+    },
+    "created_at": "2026-09-17T19:14:06.782923+00:00"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "request": {
+    "model": "gpt-3.5-turbo",
+    "messages": [
+      {
+        "role": "user",
+        "content": "You are an expert recipe analyst. Your job is to extract structured recipe modifications from user reviews.\n\nWhen a user shares their experience modifying a recipe, you need to:\n1. Identify exactly what changes they made\n2. Understand why they made those changes\n3. Convert their modifications into structured edit operations\n\nYou must output valid JSON that matches the ModificationObject schema.\n\nCategories:\n- \"ingredient_substitution\": Replacing one ingredient with another\n- \"quantity_adjustment\": Changing amounts of existing ingredients\n- \"technique_change\": Altering cooking method, temperature, time\n- \"addition\": Adding new ingredients or steps\n- \"removal\": Removing ingredients or steps\n\nEdit operations:\n- \"replace\": Find existing text and replace it\n- \"add_after\": Add new text after finding target text\n- \"remove\": Remove text that matches the find pattern\n\nBe precise with text matching - use the exact text from the original recipe when possible.\n\nOriginal Recipe:\nTitle: Nikujaga (Japanese-Style Meat and Potatoes)\nIngredients: ['8 snow peas', '1 tablespoon vegetable oil', '0.25 pound sirloin steak, thinly sliced', '4 potatoes, cut into bite sized pieces', '2 cups dashi soup', '0.25 cup soy sauce', '0.25 cup sake', '1 tablespoon white sugar', '1 onion, chopped']\nInstructions: ['Put the snow peas in a small saucepan with enough water to cover; bring to a boil and immediately remove from heat. Drain and set aside.', 'Heat the oil in a large skillet over medium heat; cook the beef in the oil until browned. Add the potatoes; cook and stir until soft, 5 to 7 minutes. Stir the dashi soup, soy sauce, sake, and sugar into the mixture; simmer for 10 minutes.', 'Reduce heat to low and scatter the chopped onion over the mixture; allow to simmer until the liquid is nearly completely evaporated, about 15 minutes more. Top the mixture with the snow peas to serve.']\n\nUser Review: \"Great recipe and not hard, even for someone like me who never cooks. The taste is really good, but i agree with everyone else about the measurements. You need at least a 1lb of beef for this. Also, I threw in carrots since i had them around.\"\n\nExtract the recipe modifications from this review. The user has made changes to improve the recipe.\n\nOutput a JSON object with this structure:\n{\n    \"modification_type\": \"quantity_adjustment|ingredient_substitution|technique_change|addition|removal\",\n    \"reasoning\": \"Brief explanation of why this modification improves the recipe\",\n    \"edits\": [\n        {\n            \"target\": \"ingredients|instructions\",\n            \"operation\": \"replace|add_after|remove\",\n            \"find\": \"exact text to find\",\n            \"replace\": \"replacement text (for replace operations)\",\n            \"add\": \"text to add (for add_after operations)\"\n        }\n    ]\n}\n\nFocus on concrete changes the user actually made, not general suggestions."
+      }
+    ],
+    "response_format": {
+      "type": "json_object"
+    },
+    "params": {
+      "temperature": 0.1,
+      "max_tokens": 1000
+    }
+  },
+  "response": {
+    "content": "{\n    \"modification_type\": \"quantity_adjustment\",\n    \"reasoning\": \"Increasing the amount of beef will provide more protein and flavor to the dish.\",\n    \"edits\": [\n        {\n            \"target\": \"ingredients\",\n            \"operation\": \"replace\",\n            \"find\": \"0.25 pound sirloin steak, thinly sliced\",\n            \"replace\": \"1 pound sirloin steak, thinly sliced\"\n        }\n    ]\n}",
+    "model": "gpt-3.5-turbo-0125",
+    "usage": {
+      "prompt_tokens": 634,
+      "completion_tokens": 91
+    },
+    "created_at": "2026-09-17T19:14:42.903389+00:00"
+  }
+}

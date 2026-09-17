@@ -1,0 +1,27 @@
+{
+  "request": {
+    "model": "gpt-3.5-turbo",
+    "messages": [
+      {
+        "role": "user",
+        "content": "You are an expert recipe analyst. Your job is to extract structured recipe modifications from user reviews.\n\nWhen a user shares their experience modifying a recipe, you need to:\n1. Identify exactly what changes they made\n2. Understand why they made those changes\n3. Convert their modifications into structured edit operations\n\nYou must output valid JSON that matches the ModificationObject schema.\n\nCategories:\n- \"ingredient_substitution\": Replacing one ingredient with another\n- \"quantity_adjustment\": Changing amounts of existing ingredients\n- \"technique_change\": Altering cooking method, temperature, time\n- \"addition\": Adding new ingredients or steps\n- \"removal\": Removing ingredients or steps\n\nEdit operations:\n- \"replace\": Find existing text and replace it\n- \"add_after\": Add new text after finding target text\n- \"remove\": Remove text that matches the find pattern\n\nBe precise with text matching - use the exact text from the original recipe when possible.\n\nOriginal Recipe:\nTitle: Banana Banana Bread\nIngredients: ['2 cups all-purpose flour', '1 teaspoon baking soda', '0.25 teaspoon salt', '0.75 cup brown sugar', '0.5 cup butter', '2 eggs, beaten', '2.3333332538605 cups mashed overripe bananas']\nInstructions: ['Gather all ingredients. Preheat the oven to 350 degrees F (175 degrees C). Lightly grease a 9x5-inch loaf pan.', 'Combine flour, baking soda, and salt in a large bowl. Beat brown sugar and butter with an electric mixer in a separate large bowl until smooth. Stir in eggs and mashed bananas until well blended. Stir banana mixture into flour mixture until just combined.', 'Pour batter into the prepared loaf pan.', 'Bake in the preheated oven until a toothpick inserted into the center comes out clean, about 60 minutes.', 'Let bread cool in pan for 10 minutes, then turn out onto a wire rack to cool completely.', 'Enjoy!']\n\nUser Review: \"Disappointing and I made 3 loaves! I added a tad extra brown sugar (yes, I pack it) along with 1 T cinnamon and 1.5 t vanilla, plus chopped walnuts. I am eating some right now and it just isn't great. It's also not sweet enough. I used very overripe bananas, so that is not the issue with the lack of sweetness/flavor.I made this because I misplaced my recipe binder with the oldie but goodies from my grandmother.\"\n\nExtract the recipe modifications from this review. The user has made changes to improve the recipe.\n\nOutput a JSON object with this structure:\n{\n    \"modification_type\": \"quantity_adjustment|ingredient_substitution|technique_change|addition|removal\",\n    \"reasoning\": \"Brief explanation of why this modification improves the recipe\",\n    \"edits\": [\n        {\n            \"target\": \"ingredients|instructions\",\n            \"operation\": \"replace|add_after|remove\",\n            \"find\": \"exact text to find\",\n            \"replace\": \"replacement text (for replace operations)\",\n            \"add\": \"text to add (for add_after operations)\"\n        }\n    ]\n}\n\nFocus on concrete changes the user actually made, not general suggestions."
+      }
+    ],
+    "response_format": {
+      "type": "json_object"
+    },
+    "params": {
+      "temperature": 0.1,
+      "max_tokens": 1000
+    }
+  },
+  "response": {
+    "content": "{\n    \"modification_type\": \"quantity_adjustment\",\n    \"reasoning\": \"To enhance sweetness and flavor\",\n    \"edits\": [\n        {\n            \"target\": \"ingredients\",\n            \"operation\": \"add_after\",\n            \"find\": \"0.75 cup brown sugar\",\n            \"add\": \" (plus a tad extra brown sugar, packed)\"\n        }\n    ]\n}",
+    "model": "gpt-3.5-turbo-0125",
+    "usage": {
+      "prompt_tokens": 668,
+      "completion_tokens": 78
+    },
+    "created_at": "2026-09-17T19:14:50.421931+00:00"
+  }
+}

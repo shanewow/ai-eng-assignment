@@ -1,0 +1,27 @@
+{
+  "request": {
+    "model": "gpt-3.5-turbo",
+    "messages": [
+      {
+        "role": "user",
+        "content": "You are an expert recipe analyst. Your job is to extract structured recipe modifications from user reviews.\n\nWhen a user shares their experience modifying a recipe, you need to:\n1. Identify exactly what changes they made\n2. Understand why they made those changes\n3. Convert their modifications into structured edit operations\n\nYou must output valid JSON that matches the ModificationObject schema.\n\nCategories:\n- \"ingredient_substitution\": Replacing one ingredient with another\n- \"quantity_adjustment\": Changing amounts of existing ingredients\n- \"technique_change\": Altering cooking method, temperature, time\n- \"addition\": Adding new ingredients or steps\n- \"removal\": Removing ingredients or steps\n\nEdit operations:\n- \"replace\": Find existing text and replace it\n- \"add_after\": Add new text after finding target text\n- \"remove\": Remove text that matches the find pattern\n\nBe precise with text matching - use the exact text from the original recipe when possible.\n\nOriginal Recipe:\nTitle: Creamy Sweet Potato With Ginger Soup\nIngredients: ['2 tablespoons olive oil', '1.5 pounds peeled raw sweet potatoes, cut into 1-inch chunks', '1 large onion, cut into large dice', '1 tablespoon butter', '1 pinch sugar', '3 large garlic cloves, thickly sliced', '1.5 teaspoons ground ginger', '0.5 teaspoon ground nutmeg', '0.125 teaspoon cayenne pepper', '3 cups chicken broth, homemade or from a carton or can', '1.5 cups half-and-half (or whole milk)', 'Salt and freshly ground pepper, to taste', 'Garnish: chopped honey-roasted peanuts']\nInstructions: ['Gather the ingredients.', 'Heat oil over medium-high heat in a large, deep saute pan until shimmering. Add sweet potatoes, then onion; saute, stirring very little at first, then more frequently, until vegetables start to turn golden brown, 7 to 8 minutes.', 'Reduce heat to low and add butter, sugar and garlic; continue cooking until all vegetables are a rich spotty caramel color, about 10 minutes longer.', 'Add ginger, nutmeg and cayenne pepper; continue to saute until fragrant, 30 seconds to 1 minute longer.', 'Add broth; bring to a simmer over medium-high heat. Reduce heat to low and simmer, partially covered, until sweet potatoes are tender, about 10 minutes.', 'Using an immersion blender or traditional blender, puree until very smooth, 30 seconds to 1 minute. (If using a traditional blender, vent it either by removing the lid&#39;s pop-out center or by lifting one edge of the lid. Drape the blender canister with a kitchen towel. To &#39;clean&#39; the canister, pour in a little half-and-half, blend briefly, then add to the soup.)', 'Return to pan (or a soup pot); add enough half-and-half so the mixture is souplike, yet thick enough to float garnish. Taste, and add salt and pepper if needed. Heat through, ladle into bowls, garnish and serve.']\n\nUser Review: \"Great soup! The vegetables caramelize beautifully with this method (though I think it would also work fine in the oven, which would take longer but keep my hands free for other things). I added extra cayenne pepper, lots of black pepper, and used heavy cream instead of 1/2 & 1/2; otherwise followed as written. I didn't find it at all too sweet - these are sweet potatoes, after all. Thanks for the recipe!\"\n\nExtract the recipe modifications from this review. The user has made changes to improve the recipe.\n\nOutput a JSON object with this structure:\n{\n    \"modification_type\": \"quantity_adjustment|ingredient_substitution|technique_change|addition|removal\",\n    \"reasoning\": \"Brief explanation of why this modification improves the recipe\",\n    \"edits\": [\n        {\n            \"target\": \"ingredients|instructions\",\n            \"operation\": \"replace|add_after|remove\",\n            \"find\": \"exact text to find\",\n            \"replace\": \"replacement text (for replace operations)\",\n            \"add\": \"text to add (for add_after operations)\"\n        }\n    ]\n}\n\nFocus on concrete changes the user actually made, not general suggestions."
+      }
+    ],
+    "response_format": {
+      "type": "json_object"
+    },
+    "params": {
+      "temperature": 0.1,
+      "max_tokens": 1000
+    }
+  },
+  "response": {
+    "content": "{\n    \"modification_type\": \"quantity_adjustment\",\n    \"reasoning\": \"The user prefers a spicier soup with more heat and richness.\",\n    \"edits\": [\n        {\n            \"target\": \"ingredients\",\n            \"operation\": \"replace\",\n            \"find\": \"1.5 cups half-and-half (or whole milk)\",\n            \"replace\": \"1.5 cups heavy cream\"\n        },\n        {\n            \"target\": \"ingredients\",\n            \"operation\": \"add_after\",\n            \"find\": \"0.125 teaspoon cayenne pepper\",\n            \"add\": \"0.25 teaspoon extra cayenne pepper\"\n        }\n    ]\n}",
+    "model": "gpt-3.5-turbo-0125",
+    "usage": {
+      "prompt_tokens": 897,
+      "completion_tokens": 135
+    },
+    "created_at": "2026-09-17T19:15:05.633398+00:00"
+  }
+}

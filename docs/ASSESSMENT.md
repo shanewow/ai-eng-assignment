@@ -2,11 +2,9 @@
 
 Shane Kearney, September 2026
 
-<!-- Sections marked TODO are filled in during the build. Keep them honest: numbers come from eval/results, not from memory. -->
-
 ## 1. Summary
 
-TODO after the build. Three sentences: what was broken, what I did, what the numbers say now.
+The inherited pipeline runs, reports success, and corrupts four of the five recipes it touches: it applies one random review per recipe, cannot represent more than one change from that review, applies wishes and personal circumstances as if they were improvements, and its matcher silently rewrites the wrong line or reports changes it did not make. I built a labelled evaluation first, then rewrote the three layers the numbers pointed at: extraction (many modifications per review, each with "did they do it" and "would it help anyone else" flags, strict schema), application (exact-first matching with per-edit status), and composition (every review, ranked, with conflicts surfaced as alternatives). On 28 labelled cases the share of expected modifications that reach the output went from 57% to 93%, the rate of applying stated intent or personal circumstance went from 65% to 24%, silent no-ops and wrong-line edits are at 0% and 3%, and the cheapest model turned out to be unusable for this task, which is the kind of thing an eval exists to find.
 
 ## 2. Assumptions
 
@@ -15,7 +13,7 @@ TODO after the build. Three sentences: what was broken, what I did, what the num
 - A review can contain many discrete modifications, of different kinds. Not all of them belong in an enhanced recipe. Some are intent rather than action ("next time I will use fresh ginger"), and some are personal circumstance rather than an improvement anyone could reuse ("I used a different frosting because I had leftover"). A modification should be applied only if the reviewer actually made it and it would help someone else making this recipe.
 - The scraped data in `data/` is representative of what a scraper would produce at scale, including its noise. I did not fix the scraper beyond noting its problems.
 - Keeping the OpenAI provider from the starter is the right call for a four-hour exercise; graders can run it with their own key. Model choice is a measured decision, not a default (see Results).
-- Four hours is a guideline for attention budgeting. I logged actual time in section 9.
+- Four hours is a guideline for attention budgeting. I logged actual time in section 10.
 
 ## 3. Problem analysis
 
@@ -78,13 +76,14 @@ That is the shape of the real problem. The code is not missing features. It is m
 
 ## 4. Approach
 
-TODO during the build. The shape:
+Eval first, then fix what the numbers say, then re-measure. In order:
 
-1. **Measure first.** Hand-label every modification review in the data set with its discrete modifications, then build an eval that scores modification recall, precision against hallucinated or hypothetical changes, edit apply rate, no-op rate, and wrong-line rate. Run it on the inherited code to get a baseline.
-2. **Fix the apply layer.** Exact substring first, then normalized matching (fractions and decimals, unit synonyms, case), fuzzy only as a guarded fallback with an ambiguity check. Verify the text actually changed. Return per-edit status instead of fake change records.
-3. **Fix the extraction layer.** Many modifications per review, one category each. Numbered recipe lines in the prompt. Explicit "did the reviewer actually do this" flag. Strict structured outputs.
-4. **Fix selection and composition.** Process every modification review, ranked featured first then by rating. Detect conflicts per target line and keep the higher-ranked one, recording the loser as skipped with a reason.
-5. **Re-measure.** Same eval, same cases, two models.
+1. **Freeze the inherited code** as `llm_pipeline.legacy` so the baseline can be re-measured and re-run after the rewrite, and pin the three apply-layer defects as failing tests.
+2. **Label and measure.** 28 cases: every scraper-flagged review, five unflagged reviews that contain modifications, one negative control ("I followed it EXACTLY"), and seven synthetic edge cases (compound sentence, fraction phrasing, temperature plus time, pure intent, personal circumstance, a reverted tweak, a substitution that must keep its quantity). Each expected modification carries the two apply flags and the line refs a correct edit would touch. The harness scores edit outcomes, so the same scorer runs against the inherited code and the rewrite. Baseline recorded before any pipeline code changed.
+3. **Apply layer.** Line reference, then exact substring, then normalized (fractions, mixed numbers, unit synonyms, HTML entities), then fuzzy only as a guarded fallback with an ambiguity margin. Every edit returns applied, failed, or ambiguous with a reason. A change record is never written for a change that did not happen.
+4. **Extraction layer.** Every review is screened. Many modifications per review, one category each, two flags each, edits that name numbered lines and copy their text verbatim. Strict JSON schema output; a validation failure is fed back into one retry.
+5. **Composition.** Rank featured, then rating, then recency. Apply only when both flags are true. Same-line conflicts keep the winner and attach the loser as an alternative. Everything not applied is in the output with a reason. Recipes with nothing applicable emit a `no_tweaks` record.
+6. **Re-measure** on four configurations: the inherited code on gpt-3.5-turbo, and the rewrite on gpt-5-nano, gpt-5-mini and gpt-4.1-mini.
 
 ## 5. Technical decisions
 
@@ -157,11 +156,108 @@ The looser alternative would still have produced the apple cake failure, because
 
 ## 6. Implementation details and challenges
 
-TODO during the build.
+### 6.1 The eval harness
+
+`eval/run_eval.py` runs each case through an adapter and scores the edit outcomes. The legacy adapter reproduces the inherited extractor call exactly (same prompt builder, same model, `json_object` mode, temperature 0.1) and applies the result through the frozen modifier, recording for each edit which line it resolved to and whether the text changed. The pipeline adapter runs the rewritten extractor and applies each modification independently against the original recipe. Ranking and conflicts are covered by unit tests instead, because they are cross-review behaviour and the cases are per review.
+
+The metrics, all defined in `eval/scoring.py`:
+
+| Metric | Question it answers |
+|---|---|
+| Modification recall | Of the modifications that should be applied, how many did extraction find? |
+| Modification delivered | How many of those are actually in the output? Recall minus application failures. |
+| Edit precision | Of the edits the system meant to apply, how many correspond to a labelled acceptable modification? |
+| False-apply rate | Of the labelled must-not-apply modifications (intent, circumstance, judged worse), how many were applied anyway? |
+| Found and correctly excluded | How many of those did the extractor find and deliberately exclude? This is the "considered, not applied" panel. |
+| Edit apply rate, no-op rate | Did the edits change text? Were change records emitted for edits that changed nothing? |
+| Wrong-line rate | Applied replace or remove edits on a line no label mentions. |
+| Contradictory-add, quantity-dropped | The two corruption shapes from section 3.3: a second soy sauce line, a ginger line with no amount. |
+
+Labels have an `optional` flag for the twelve modifications where I judged either decision defensible (canned yams for raw sweet potatoes, whole wheat flour, an ice cream scoop). The scorer accepts either outcome for those. They are excluded from the recall denominator so the headline numbers rest on the 29 must-apply and 17 must-not-apply modifications where the label is firm.
+
+Every model response is cached under `data/cache/llm/` by a hash of model, messages and parameters, and the cache is committed. The eval and the pipeline share it, so a full pipeline run after an eval run costs nothing, and a grader can reproduce every number in section 7 without a key.
+
+### 6.2 The matcher
+
+The inherited matcher compared the model's `find` string against whole lines with `SequenceMatcher`. The replacement locates `find` within a line and returns a character span, so a short phrase inside a long instruction resolves. Normalization is done per token with the original spans preserved, so "1/2 tsp salt" finds "0.5 teaspoon salt" and the replacement lands on exactly those characters, and "walnuts" inside "and walnuts." replaces the word and leaves the period. Mixed numbers ("1 1/2") are merged into one token during normalization. Fuzzy matching compares the normalized find text with token windows of each line, needs 0.85, and is rejected when the runner-up line is within 0.05.
+
+Three guards refuse edits rather than record them: a replacement whose result equals the original; an insert whose ingredient, with quantity and unit stripped, already exists as a line (the nikujaga corruption); and a whole-line ingredient replacement that removes the quantity (the ginger corruption). The refusals appear in the output as `edits_failed` with the reason.
+
+### 6.3 Extraction
+
+The prompt numbers every line (`I3: 2 eggs`, `S6: Bake ...`) and asks for edits that name a line and copy its text. The recipe comes before the review so provider-side prompt caching can hit on the shared prefix. Output is OpenAI strict `json_schema` mode, which needs every field present, so unused strings are empty and mapped to `None` after parsing.
+
+The gpt-5 family are reasoning models with a different parameter set (`max_completion_tokens`, no temperature, `reasoning_effort`), so `llm_client.py` maps one set of arguments to whichever family the model belongs to. `reasoning_effort=low` on gpt-5-nano was tried and was worse than `minimal` on every metric that matters (76% delivered, 65% false-apply, one case that hit the token cap with an empty answer, four times the completion tokens), so the reasoning models run at minimal effort.
+
+Small models misuse the schema in ways the schema cannot prevent: the added text placed in `replace` instead of `add`, line ids written into text fields (`S5.5: Chill the batter`), two ingredients in one `add`, inserts with no anchor. The cleaning step in `tweak_extractor.py` normalizes each of these and the prompt names them, which moved the nano apply rate from 80% to 91%. What the cleaning cannot fix is judgment: gpt-5-nano at any setting set `is_generalizable` to true for every one of the 17 must-not-apply cases.
+
+### 6.4 Composition
+
+Lines carry their original index through composition, so a conflict is detected against the original recipe even after earlier edits have inserted or removed lines. Conflicts are resolved at the modification level: if any edit of a modification lands on a claimed line, the whole modification becomes an alternative and none of its edits apply. The alternative is the safer choice for coherence. Its cost is visible in the cookies output: the three-star reviewer's "omit the walnuts" edits the ingredient line and the step that names it, the step was already claimed by the higher-ranked "refrigerate the batter" edit, so the walnut removal is shown as an alternative on that step instead of being applied. An edit-level policy would apply the ingredient removal and leave the step contradicting it. Section 9 has the better fix.
+
+### 6.5 What went wrong along the way
+
+- **Label leakage.** My first pass listed the ingredient line and the step that names it together as the lines a modification touches. That let one modification's step edit satisfy another modification's recall. The step lines now sit in a separate `steps` field that counts for the wrong-line check only.
+- **A composer bug the eval could not see.** The eval applies each modification against the original recipe; the composer applies them in sequence. The insert path re-resolved its anchor against text an earlier modification had already changed and dropped a valid add. It showed up on the first full pipeline run over the real data, which is the argument for running both.
+- **The wrapper hid the failure it was written to test.** The inherited `test_pipeline.py` counts a recipe with zero reviews as a failure and a corrupted recipe as a success. The run summary now has three states and exits non-zero only on the first.
 
 ## 7. Results
 
-TODO. Before and after eval tables, two models, with the per-recipe enhanced output linked.
+### 7.1 Eval
+
+28 cases, 58 labelled modifications (29 must apply, 17 must not, 12 optional). One run per configuration; responses are cached, so the numbers reproduce exactly from the committed cache. Result files are in `eval/results/`.
+
+| Metric | Inherited (gpt-3.5-turbo) | Rewrite (gpt-5-nano) | Rewrite (gpt-5-mini) | Rewrite (gpt-4.1-mini) |
+|---|---:|---:|---:|---:|
+| Modification recall (extracted) | 75% | 100% | 93% | 93% |
+| Modification delivered (in output) | 57% | 100% | 93% | 93% |
+| Edit precision | 69% | 57% | 84% | 81% |
+| False-apply rate (intent / circumstance) | 65% | 100% | 24% | 29% |
+| Found and correctly excluded | 0% | 0% | 24% | 24% |
+| Edit apply rate | 92% | 91% | 100% | 100% |
+| Silent no-op rate | 3% | 0% | 0% | 0% |
+| Wrong-line rate | 7% | 6% | 3% | 0% |
+| Contradictory-add rate | 0% | 0% | 0% | 0% |
+| Quantity-dropped rate | 0% | 0% | 0% | 0% |
+| Modifications returned | 28 | 64 | 53 | 51 |
+
+Reading the table:
+
+- **The inherited pipeline returns exactly one modification for every review, including the negative control.** "I followed it EXACTLY" got an inserted line of milk chocolate chips. The prompt tells the model the reviewer made changes, so the model invents one. The synthetic personal-circumstance case replaced the vanilla line with "1 cup margarine".
+- **gpt-5-nano finds everything and applies everything.** 100% recall, 100% false-apply. It never set an apply flag to false in 17 chances. For this task the cheapest model is not a bargain, and without the eval it would have looked like the best column.
+- **gpt-5-mini and gpt-4.1-mini are close.** Both deliver 93%. gpt-5-mini is slightly better at excluding what should be excluded, gpt-4.1-mini has no wrong-line edits. Per-review cost is within 10% (section 8.4). gpt-5-mini is the default.
+- **The residual false-applies are mostly one case.** The two-star banana bread review lists four changes and then says the result "just isn't great". Both good models applied all four. The reviewer's own negative verdict is the signal they miss, and it is deterministic enough to fix without a model (section 9). The other residual is gpt-4.1-mini applying "will use more broth next time".
+- **Recall misses are judgment calls the output makes visible.** gpt-5-mini marked "I omitted the water" from the four-tweak cookie review as not generalizable. It appears in the output as considered with that reason, where a reader can disagree with it. The inherited pipeline dropped the same change silently.
+
+### 7.2 The recipes
+
+Full run over the seven recipes, gpt-5-mini, every review screened:
+
+| Recipe | Inherited pipeline | Rewrite |
+|---|---|---|
+| Best chocolate chip cookies | 1 review, 2 changes, both sugars merged into one line | 9 reviews screened, 8 modifications applied, 10 line changes, 5 considered; two conflicts shown as alternatives |
+| Nikujaga | 1 review, duplicate soy sauce and sugar lines | 2 reviews screened, 3 applied (meat quantity, more soy sauce, more sugar), 3 considered; the dashi note excluded as not applied by the reviewer |
+| Spicy apple cake | 1 review, frosting step replaced with a non-instruction | `no_tweaks`: 2 modifications found, neither both applied and generalizable; both listed with reasons |
+| Banana banana bread | 1 review, brown sugar replaced with honey | 9 reviews screened, 5 applied, 6 considered; the two-star review's additions are applied, ranked last |
+| Creamy sweet potato soup | 1 review, ginger line lost its quantity, a "next time" wish applied | 6 reviews screened, 5 applied, 8 considered; three reviewers disagree about the half-and-half line and the two losers are attached to it as alternatives |
+| Plum jam, mango marinade | "Failed", counted against the success rate | `no_tweaks`, reason "recipe has no reviews" |
+
+Before: `data/enhanced/baseline/` (seeded re-run of the inherited pipeline; the original unseeded run is described in section 3.3). After: `data/enhanced/`. `uv run python -m llm_pipeline show <file>` prints either as a diff.
+
+The soup line is the product moment. The applied change and its alternatives, as the output records them:
+
+```
+- I10: 1.5 cups half-and-half (or whole milk)
++ I10: 1.5 cups half-and-half (or whole milk); extra heavy cream for drizzling at the end, to taste
+  alt (5★): 1.5 cups 2% milk (or half-and-half or whole milk)
+  alt (4★): 1.5 cups heavy cream
+```
+
+Three reviewers, three opinions about the dairy, one line. The inherited pipeline would have picked one at random and hidden the other two.
+
+### 7.3 What the numbers do not say
+
+The eval is small: 28 cases, one run per configuration, no variance estimate. gpt-5-mini versus gpt-4.1-mini is within the noise of a single case. The labels were drafted by the coding agent and reviewed by hand, and eleven of the label decisions were revised during the build when the first scoring pass exposed ambiguity, so the labels are not independent of the system that was scored against them. A second labeller would tighten this. What the eval does establish is not in doubt: the inherited pipeline fails on most of the cases that matter, the rewrite does not, and one of the three candidate models is unfit.
 
 ## 8. Production shape: running this at scale
 
@@ -214,23 +310,30 @@ The Batch API halves any of these for backfill work. Two caveats on the numbers:
 
 ## 9. Future improvements
 
-TODO after the build. Candidates, to be pruned to what I would actually do next:
+In the order I would do them.
 
-- Servings-level and yield changes (a reviewer who says "1/4 lb of meat to serve 4 has to be a typo, I used a pound") have no representation in the edit model.
-- Unit and quantity normalization as a first-class step, so "1/2 tsp" and "0.5 teaspoon" are the same token before matching.
-- Nutrition recompute after quantity changes.
-- Scraper hardening: rate limiting, retries, and a real modification classifier instead of regex.
-- The diff-inspection UI, built on the per-edit status and line indices this pipeline now emits.
+1. **A rating floor on generalizability.** The residual false-applies come from a two-star review whose author says the result was not good. The reviewer's rating is already in the data; a modification from a review rated 2 or below should be excluded with reason "reviewer rated the result poorly" before the model's flag is consulted. Deterministic, one line in the composer, and it removes the largest remaining error class. I left it out because adding a rule after seeing the eval case is exactly the kind of fitting the eval is meant to catch; it belongs in with a second labelling pass and more cases.
+2. **Grow the eval.** 28 cases is enough to rank three models and reject one, not enough to separate the two survivors. A second labeller on the existing cases, then fifty more reviews from more recipes, then three runs per configuration for a variance estimate. The harness already supports all of this.
+3. **Edit-level conflict resolution.** Conflicts are resolved per modification (section 6.4). The better policy: apply the non-conflicting edits, and for the conflicting edit on a step, re-derive the step text from the winner's version rather than the original. That needs a small model call per conflicting step and would let "omit the walnuts" coexist with "refrigerate the batter".
+4. **Servings and yield.** "1/4 lb of meat to serve 4 has to be a typo" is an error correction, and "an ice cream scoop makes 16 big cookies" changes the yield. Neither has a representation beyond editing a line. A `servings` target in the edit model, and a recompute of the yield line, is the next schema change.
+5. **Async extraction and the production shape in section 8.** The extract step is already per review and cached by hash; running a recipe's reviews concurrently with the async client and a semaphore is a contained change, and it is the difference between seconds and minutes per recipe at scale.
+6. **The diff-inspection UI.** Every field it needs is now in the output: original line index, before and after text, alternatives with their source reviews, and considered-not-applied with reasons.
+7. **Scraper.** Rate limiting and retries (four of five URLs returned 403), capture of helpful-vote counts so ranking has the signal the product premise describes, and dropping the `has_modification` regex, which the pipeline no longer reads.
+8. **Nutrition recompute** after quantity changes. Useful, mechanical, and last, because it is only as good as the edits above it.
 
 ## 10. Time log
 
-TODO. Actual time by phase, including the part that went over the four-hour guideline if any did, and what was cut to fit.
+Wall-clock, from commit timestamps and the agent transcript. The diagnosis and the first half of this report were done on 3 and 4 September; the build was one session on 17 September, driven from a written plan with Claude Code as the coding agent (`AGENT_TRAJECTORY.md`). That split is why the build column is short: the hours went into deciding what to build and how to measure it, and the agent executed the plan with me reviewing each step.
 
 | Phase | Time |
 |---|---|
-| Diagnosis, no-LLM repro, baseline run | |
-| Eval cases and harness | |
-| Apply layer | |
-| Extraction layer | |
-| Selection and composition | |
-| Re-measure, docs, video | |
+| Read the starter, run it, no-LLM repro, baseline runs, sections 2, 3, 5 and 8 of this report, plan and locked decisions | about 1.5 to 2 h (3 and 4 September) |
+| Package, failing tests, freeze the inherited code | 5 min |
+| Eval cases and harness, baseline measurement | 10 min |
+| Apply layer and matcher tests | 5 min |
+| Extraction layer, composition, CLI, composer tests, seeded baseline outputs | 10 min |
+| Eval runs on four configurations, label fixes, two bugs found by the runs | 10 min |
+| README, sections 1, 4, 6, 7, 9 and 10, trajectory export | about 20 min |
+| **Total** | **about 2.5 to 3 h**, under the four-hour guideline |
+
+Not done, deliberately: the UI, a deploy, the scraper, servings and yield changes, nutrition recompute, a second labelling pass. Each is in section 9 with the reason. The video (5 to 7 minutes) is recorded separately and is not counted here.

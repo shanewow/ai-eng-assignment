@@ -1,106 +1,113 @@
 # Recipe Enhancement Platform
 
-Automatically enhances recipes by analyzing and applying community-tested modifications from AllRecipes.com. Uses LLM processing to extract meaningful recipe tweaks and apply them with full citation tracking.
+Enhances recipes by applying community-tested modifications from AllRecipes reviews, with line-level attribution back to the review that motivated each change. The pipeline is the backend for a diff-inspection experience: an enhanced recipe, the changes made to it, the alternatives the community disagreed about, and the tweaks that were considered and not applied.
 
-## Installation
-
-This project uses [`uv`](https://docs.astral.sh/uv/) for fast, reliable Python package management.
-
-### Prerequisites
-
-- Python 3.13+
-- `uv` package manager
+**Read [docs/ASSESSMENT.md](docs/ASSESSMENT.md) first.** It is the write-up for this take-home: what the inherited pipeline actually did, the evaluation that measures it, the fixes, the numbers before and after, and what I would do next.
 
 ## Setup
 
+Python 3.13 and [`uv`](https://docs.astral.sh/uv/).
+
 ```bash
-# Install dependencies
-uv venv
-source .venv/bin/activate
-uv pip sync pyproject.toml
+uv sync                       # installs dependencies and the llm_pipeline package
+cp .env.example .env          # then put your key in it
 ```
 
-### Environment Variables
-
-Create a `.env` file in the project root:
+`.env` at the repo root:
 
 ```env
-OPENAI_API_KEY=your-openai-api-key-here
+OPENAI_API_KEY=sk-...
+OPENAI_MODEL=gpt-5-mini       # optional; the default
 ```
 
-## Usage
+## Run
 
-### 1. Scrape Recipes (Optional - data already provided)
+All commands run from the repo root.
 
 ```bash
-uv run python src/scraper_v2.py
+# See the inherited defects with no API key
+uv run python scripts/repro_inherited_defects.py
+
+# Tests (no API key)
+uv run pytest
+
+# Enhance one recipe, or all of them, into data/enhanced/
+uv run python -m llm_pipeline run --recipe data/recipe_10813_best-chocolate-chip-cookies.json
+uv run python -m llm_pipeline run --all
+
+# Read an enhanced recipe as a diff
+uv run python -m llm_pipeline show data/enhanced/enhanced_10813_best-chocolate-chip-cookies.json
+
+# Evaluate the rewritten pipeline, the inherited one, or another model
+uv run python -m eval.run_eval
+uv run python -m eval.run_eval --legacy
+uv run python -m eval.run_eval --model gpt-4.1-mini
+uv run python -m eval.run_eval --compare eval/results/*.json
 ```
 
-### 2. Run Recipe Enhancement Pipeline
+Every model response is cached under `data/cache/llm/` by request hash, and the cache is committed. Re-running the eval or the pipeline on the committed data makes no API calls; new reviews or a new model or prompt version do. `--no-cache` bypasses it.
 
-```bash
-cd src
+`src/test_pipeline.py single|all` still works as a thin wrapper.
 
-# Test single recipe (chocolate chip cookies)
-uv run python test_pipeline.py single
+## What it does
 
-# Process all recipes
-uv run python test_pipeline.py all
-```
+1. **Extract, per review.** Every review is sent to the model with the numbered recipe lines and comes back as zero or more discrete modifications. Each has one category, two flags (did the reviewer actually make it, would it help someone else), and edits that reference exact recipe lines. Strict JSON schema output.
+2. **Compose, per recipe.** No model call. Modifications are ranked (featured tweak first, then rating, then recency) and applied only when both flags are true. Two modifications that target the same line are a conflict: the higher-ranked one is applied and the other is attached to that line as an alternative with its source review. Everything not applied stays in the output with a reason.
+3. **Emit.** `data/enhanced/enhanced_<id>_<slug>.json`, plus `pipeline_summary_report.json` for a full run. A recipe with nothing applicable still emits, with status `no_tweaks` and a reason. `failed` is reserved for genuine faults.
 
-## Output
-
-### Enhanced Recipes
-
-Enhanced recipes are saved in `src/data/enhanced/`:
-
-- `enhanced_[recipe_id]_[recipe-name].json` - Individual enhanced recipes with modifications applied
-- `pipeline_summary_report.json` - Summary of all processing results
-
-### Data Structure
-
-Original scraped recipes in `data/` directory contain reviews with `has_modification: true` flags. Enhanced recipes include:
+Output shape, abbreviated:
 
 ```json
 {
-  "recipe_id": "10813_enhanced",
   "title": "Best Chocolate Chip Cookies (Community Enhanced)",
-  "ingredients": ["1 cup butter", "1 additional egg yolk", ...],
+  "ingredients": ["1 cup butter, softened", "0.5 cup white sugar", "..."],
+  "instructions": ["..."],
   "modifications_applied": [
     {
-      "source_review": {
-        "text": "I added an extra egg yolk for chewier texture",
-        "rating": 5
-      },
-      "modification_type": "addition",
-      "reasoning": "Improves texture and chewiness",
-      "changes_made": [...]
+      "source_review": {"text": "...", "rating": 5, "is_featured": true},
+      "modification_type": "quantity_adjustment",
+      "summary": "use 0.5 cup white sugar and 1.5 cups brown sugar",
+      "changes_made": [
+        {"type": "ingredient", "operation": "replace", "line_index": 2,
+         "from_text": "1 cup packed brown sugar", "to_text": "1.5 cups packed brown sugar",
+         "alternatives": [{"source_review": {"rating": 5}, "proposed_text": "0.5 cup packed brown sugar", "summary": "brown sugar 1 cup -> 1/2 cup"}]}
+      ],
+      "edits_failed": []
     }
   ],
-  "enhancement_summary": {
-    "total_changes": 1,
-    "change_types": ["addition"],
-    "expected_impact": "Chewier texture and improved consistency"
-  }
+  "modifications_considered": [
+    {"summary": "next time add one more cup of apples", "reason": "not applied by the reviewer (stated intent or suggestion)"}
+  ],
+  "enhancement_summary": {"status": "enhanced", "total_changes": 10, "reviews_screened": 9, "modifications_applied": 8, "modifications_considered": 5}
 }
 ```
 
-## How It Works
+## Layout
 
-The LLM Analysis Pipeline processes recipes in 3 steps:
-
-1. **Tweak Extraction**: Selects one random review with modifications and uses GPT-4o-mini to extract structured changes
-2. **Recipe Modification**: Applies changes to the original recipe using fuzzy string matching
-3. **Enhanced Recipe Generation**: Creates enhanced version with full citation tracking back to source review
-
-Each run produces one enhanced recipe per original recipe, with complete attribution showing exactly what changed and why.
-
-## Development
-
-```bash
-# Add dependencies
-uv add <package_name>
-
-# Run tests
-cd src && uv run python test_pipeline.py single
 ```
+src/llm_pipeline/
+  prompts.py            prompt, strict output schema, prompt version
+  tweak_extractor.py    step 1: review -> modifications (LLM, cached)
+  recipe_modifier.py    matcher: line ref -> exact -> normalized -> guarded fuzzy; per-edit status
+  composer.py           step 2: rank, resolve conflicts, apply (no LLM)
+  enhanced_recipe_generator.py, pipeline.py, __main__.py
+  llm_client.py         OpenAI wrapper with the response cache and gpt-5 parameter mapping
+  legacy/               frozen copy of the inherited pipeline, for the baseline
+eval/
+  cases.json            28 labelled cases (21 real reviews, 7 synthetic)
+  run_eval.py, adapters.py, scoring.py
+  results/              one JSON per configuration
+tests/                  matcher, composer, and the three inherited defects
+scripts/
+  repro_inherited_defects.py   no-key reproduction of the inherited apply-layer defects
+  run_legacy_baseline.py       regenerate the inherited pipeline's outputs (seeded)
+data/
+  recipe_*.json         scraped input
+  enhanced/             current outputs; enhanced/baseline/ holds the inherited pipeline's
+  cache/llm/            committed model responses
+docs/ASSESSMENT.md      the write-up
+```
+
+## Scraper
+
+`uv run python src/scraper_v2.py` is the inherited scraper, unchanged. AllRecipes returned 403 for four of five URLs when I tried it; `data/recipe_20144_banana-banana-bread.json` is the one that succeeded. Its `has_modification` flag is regex noise and is not used by the pipeline.

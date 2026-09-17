@@ -16,9 +16,9 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from loguru import logger  # noqa: E402
 
-from llm_pipeline.models import ModificationEdit, ModificationObject, Recipe  # noqa: E402
-from llm_pipeline.prompts import FEW_SHOT_EXAMPLES  # noqa: E402
-from llm_pipeline.recipe_modifier import RecipeModifier  # noqa: E402
+from llm_pipeline.legacy.models import ModificationEdit, ModificationObject, Recipe  # noqa: E402
+from llm_pipeline.legacy.prompts import FEW_SHOT_EXAMPLES  # noqa: E402
+from llm_pipeline.legacy.recipe_modifier import RecipeModifier  # noqa: E402
 
 logger.remove()  # the modifier logs at INFO; we want only our own report
 

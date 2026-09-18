@@ -1,6 +1,6 @@
 # Agent trajectory
 
-Claude Code session transcript, exported 2026-09-18 10:32 from `0437d864-e727-4a34-ae38-a1b0eadac16a.jsonl`.
+Claude Code session transcript, exported 2026-09-18 10:34 from `0437d864-e727-4a34-ae38-a1b0eadac16a.jsonl`.
 The session was started fresh inside this repository; the first message is the kickoff prompt.
 Tool inputs and results are truncated for readability. The export itself and its commit happened after the last entry.
 
@@ -4823,5 +4823,136 @@ Right. What can go today is the repo and the write-up; the video follows. Let me
 uv run pytest -q 2>&1 | tail -1 && git status --short | wc -l && uv run python scripts/export_trajectory.py ~/.claude/projects/-Users-shane-git-ai-eng-assignment/0437d864-e727-4a34-ae38-a1b0eadac16a.jsonl AGENT_TRAJECTORY.md && grep -c "sk-[A-Za-z0-9]\{10\}" AGENT_TRAJECTORY.md; git add AGENT_TRAJECTORY.md && git commit -q -m "docs: refresh the agent trajectory
 
 Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>" && git remote -v && git log --oneline origin/main..HEAD | wc -l && git log --oneline -1 && gh repo view shanewow/ai-eng-assignment --json visibility,url -q '.visibility + " " + .url' 2>&1 | tail -1
+```
+
+*Tool result:*
+
+```
+37 passed in 1.55s
+       0
+wrote AGENT_TRAJECTORY.md (209 KB, 17 user turns)
+0
+origin	https://github.com/shanewow/ai-eng-assignment.git (fetch)
+origin	https://github.com/shanewow/ai-eng-assignment.git (push)
+upstream	https://github.com/Casper-Studios/ai-eng-assignment.git (fetch)
+upstream	https://github.com/Casper-Studios/ai-eng-assignment.git (push)
+      25
+55779cb docs: refresh the agent trajectory
+PRIVATE https://github.com/shanewow/ai-eng-assignment
+```
+
+<details><summary>Assistant thinking</summary>
+
+
+
+</details>
+
+**Tool: Write** `/Users/shane/.claude/projects/-Users-shane-git-ai-eng-assignment/memory/casper-takehome-status.md`
+
+```
+---
+name: casper-takehome-status
+description: State of Shane's Casper Studios recipe-pipeline take-home as of 2026-09-18, and what remains before submission
+metadata:
+  type: project
+---
+
+Build finished 2026-09-17; video tooling added 2026-09-17/18. Local `main` is 25 commits ahead of `origin/main` (shanewow/ai-eng-assignment, private). Report `docs/ASSESSMENT.md` is complete. Default model chosen by eval: gpt-5-mini. Casper contact is "Chan"; Shane plans to send the repo first and the video later.
+
+Video pipeline: `video/SCRIPT.md` is the narration (timings derive from it at 2.1 words/s); `scripts/render_broll.py` -> b-roll MP4s, `scripts/render_prompter.py` -> teleprompter MP4 + timing.txt, `scripts/assemble_video.py camera.mov` -> final cut. Rendered files are gitignored. Shane has not recorded himself yet; discussed avatar options and recommended a real recording with a one-line disclosure if an avatar is used.
+
+Remaining: Shane's hand review of `eval/cases.json` (the report says labels were reviewed), push (Shane asked to be consulted before any push), add Casper collaborators, record and assemble the video, submit via Ashby.
+
+**Why:** the user asked to be consulted before pushing and wants the video kept separate from the code hand-off.
+**How to apply:** do not push without an explicit go; re-renders are free and offline.
+```
+
+*Tool result:*
+
+```
+The file /Users/shane/.claude/projects/-Users-shane-git-ai-eng-assignment/memory/casper-takehome-status.md has been updated successfully.
+```
+
+### Assistant 14:33:01
+
+The repo is ready to send: tests green, tree clean, trajectory refreshed as the last commit, 25 commits waiting to go to the private `shanewow/ai-eng-assignment` remote. I need three things from you before it moves, and none of them can come from the repo:
+
+1. **Go-ahead to push.** You asked me to check first. Say "push" and it goes to `origin/main`.
+2. **Chan's GitHub username or email**, and anyone else at Casper who should have access. The repo is private, so they need to be added as collaborators; a username works directly, an email works if it is attached to a GitHub account.
+3. **Where the note goes.** The Ashby form wants the video attached, so today's hand-off is better as a reply to Chan's invite email with the repo link and a date for the video. Tell me the date you can commit to and I will draft the note.
+
+Draft of the note, for you to adjust once I have the date:
+
+> Hi Chan, the take-home repo is ready and shared with you: https://github.com/shanewow/ai-eng-assignment. Start with `docs/ASSESSMENT.md`; the README has the commands, and every result in the report reproduces offline from the committed cache without an API key. The coding-agent transcript is in `AGENT_TRAJECTORY.md`. The walkthrough video is recorded separately and I will submit it through the Ashby link by [date]. Happy to walk through any of it live.
+
+One thing the report claims that has not happened yet: section 5.7 and 6.1 say the eval labels were reviewed by hand. If you cannot do that pass before pushing, I will soften those two sentences to "drafted by the agent, hand review pending" so nothing in the write-up is ahead of the truth. Say which way you want it.
+
+## Turn 18 — User 14:33:41
+
+push it and soften the label review sentences
+
+**Tool: Bash** — Find the label-review claims to soften
+
+```bash
+grep -n "reviewed and corrected by hand\|reviewed by hand\|then reviewed and corrected" docs/ASSESSMENT.md eval/cases.json
+```
+
+*Tool result:*
+
+```
+docs/ASSESSMENT.md:151:**Decision.** Gold labels for the evaluation set were drafted with model assistance and then reviewed and corrected by hand, and the set includes synthetic cases for edge conditions that the sample data does not cover.
+docs/ASSESSMENT.md:260:The eval is small: 28 cases, one run per configuration, no variance estimate. gpt-5-mini versus gpt-4.1-mini is within the noise of a single case. The labels were drafted by the coding agent and reviewed by hand, and eleven of the label decisions were revised during the build when the first scoring pass exposed ambiguity, so the labels are not independent of the system that was scored against them. A second labeller would tighten this. What the eval does establish is not in doubt: the inherited pipeline fails on most of the cases that matter, the rewrite does not, and one of the three candidate models is unfit.
+eval/cases.json:13:    "method": "Drafted by the coding agent from a read of every review, then reviewed and corrected by hand (Shane Kearney). See docs/ASSESSMENT.md 5.7."
+```
+
+**Tool: Bash** — Soften the label-review claims, commit, push to origin
+
+```bash
+python3 - <<'EOF'
+from pathlib import Path
+p=Path('docs/ASSESSMENT.md'); s=p.read_text()
+s=s.replace("**Decision.** Gold labels for the evaluation set were drafted with model assistance and then reviewed and corrected by hand, and the set includes synthetic cases for edge conditions that the sample data does not cover.",
+"**Decision.** Gold labels for the evaluation set were drafted with model assistance, to be reviewed and corrected by hand, and the set includes synthetic cases for edge conditions that the sample data does not cover. As submitted, the labels are the agent's draft with my corrections from the build; a full independent pass over all 58 is still owed and is the first item in section 9.")
+s=s.replace("The labels were drafted by the coding agent and reviewed by hand, and eleven of the label decisions were revised during the build when the first scoring pass exposed ambiguity, so the labels are not independent of the system that was scored against them. A second labeller would tighten this.",
+"The labels were drafted by the coding agent, and eleven of them were revised during the build when the first scoring pass exposed ambiguity, so they are not independent of the system that was scored against them. They have not yet had a full hand review; that pass, and a second labeller, would tighten this.")
+s=s.replace("Labels have an `optional` flag for the twelve modifications where I judged either decision defensible","Labels have an `optional` flag for the twelve modifications where the drafting pass judged either decision defensible")
+s=s.replace("1. **A rating floor on generalizability.**","1. **Finish the label review, then a rating floor on generalizability.** The 58 labels need one careful human pass before the numbers are quoted anywhere that matters; the `optional` flags are where I expect that pass to change things. Then: ")
+p.write_text(s)
+p=Path('eval/cases.json'); s=p.read_text()
+s=s.replace('"method": "Drafted by the coding agent from a read of every review, then reviewed and corrected by hand (Shane Kearney). See docs/ASSESSMENT.md 5.7."','"method": "Drafted by the coding agent from a read of every review, corrected during the build where scoring exposed ambiguity. A full hand review is still pending. See docs/ASSESSMENT.md 5.7 and 7.3."')
+p.write_text(s)
+EOF
+grep -n "hand review\|hand pass\|drafting pass" docs/ASSESSMENT.md eval/cases.json | cut -c1-140 && uv run pytest -q 2>&1 | tail -1 && git add docs/ASSESSMENT.md eval/cases.json &&
+… [202 more characters]
+```
+
+*Tool result:*
+
+```
+eval/cases.json:13:    "method": "Drafted by the coding agent from a read of every review, corrected during the build where scoring exposed 
+docs/ASSESSMENT.md:176:Labels have an `optional` flag for the twelve modifications where the drafting pass judged either decision defensible
+docs/ASSESSMENT.md:260:The eval is small: 28 cases, one run per configuration, no variance estimate. gpt-5-mini versus gpt-4.1-mini is withi
+37 passed in 1.71s
+To https://github.com/shanewow/ai-eng-assignment.git
+   573d928..57f73ea  main -> main
+## main...origin/main
+```
+
+<details><summary>Assistant thinking</summary>
+
+
+
+</details>
+
+### Assistant 14:34:10
+
+Pushed: `main` is at `57f73ea` on the private remote, in sync. The trajectory export predates the softening commit, so one more refresh and push so the transcript includes it.
+
+**Tool: Bash** — Refresh trajectory, commit, push
+
+```bash
+uv run python scripts/export_trajectory.py ~/.claude/projects/-Users-shane-git-ai-eng-assignment/0437d864-e727-4a34-ae38-a1b0eadac16a.jsonl AGENT_TRAJECTORY.md && grep -c "sk-[A-Za-z0-9]\{10\}" AGENT_TRAJECTORY.md; git add AGENT_TRAJECTORY.md && git commit -q -m "docs: refresh the agent trajectory
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>" && git push origin main 2>&1 | tail -1 && git status -sb | head -1
 ```
 

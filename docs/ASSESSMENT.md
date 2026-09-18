@@ -148,7 +148,7 @@ The looser alternative would still have produced the apple cake failure, because
 
 ### 5.7 Evaluation labels are model-drafted and human-verified
 
-**Decision.** Gold labels for the evaluation set were drafted with model assistance and then reviewed and corrected by hand, and the set includes synthetic cases for edge conditions that the sample data does not cover.
+**Decision.** Gold labels for the evaluation set were drafted with model assistance, to be reviewed and corrected by hand, and the set includes synthetic cases for edge conditions that the sample data does not cover. As submitted, the labels are the agent's draft with my corrections from the build; a full independent pass over all 58 is still owed and is the first item in section 9.
 
 **Alternative.** Hand-label everything from scratch, or skip gold labels and use a judge model to score extractions against the review text.
 
@@ -173,7 +173,7 @@ The metrics, all defined in `eval/scoring.py`:
 | Wrong-line rate | Applied replace or remove edits on a line no label mentions. |
 | Contradictory-add, quantity-dropped | The two corruption shapes from section 3.3: a second soy sauce line, a ginger line with no amount. |
 
-Labels have an `optional` flag for the twelve modifications where I judged either decision defensible (canned yams for raw sweet potatoes, whole wheat flour, an ice cream scoop). The scorer accepts either outcome for those. They are excluded from the recall denominator so the headline numbers rest on the 29 must-apply and 17 must-not-apply modifications where the label is firm.
+Labels have an `optional` flag for the twelve modifications where the drafting pass judged either decision defensible (canned yams for raw sweet potatoes, whole wheat flour, an ice cream scoop). The scorer accepts either outcome for those. They are excluded from the recall denominator so the headline numbers rest on the 29 must-apply and 17 must-not-apply modifications where the label is firm.
 
 Every model response is cached under `data/cache/llm/` by a hash of model, messages and parameters, and the cache is committed. The eval and the pipeline share it, so a full pipeline run after an eval run costs nothing, and a grader can reproduce every number in section 7 without a key.
 
@@ -257,7 +257,7 @@ Three reviewers, three opinions about the dairy, one line. The inherited pipelin
 
 ### 7.3 What the numbers do not say
 
-The eval is small: 28 cases, one run per configuration, no variance estimate. gpt-5-mini versus gpt-4.1-mini is within the noise of a single case. The labels were drafted by the coding agent and reviewed by hand, and eleven of the label decisions were revised during the build when the first scoring pass exposed ambiguity, so the labels are not independent of the system that was scored against them. A second labeller would tighten this. What the eval does establish is not in doubt: the inherited pipeline fails on most of the cases that matter, the rewrite does not, and one of the three candidate models is unfit.
+The eval is small: 28 cases, one run per configuration, no variance estimate. gpt-5-mini versus gpt-4.1-mini is within the noise of a single case. The labels were drafted by the coding agent, and eleven of them were revised during the build when the first scoring pass exposed ambiguity, so they are not independent of the system that was scored against them. They have not yet had a full hand review; that pass, and a second labeller, would tighten this. What the eval does establish is not in doubt: the inherited pipeline fails on most of the cases that matter, the rewrite does not, and one of the three candidate models is unfit.
 
 ## 8. Production shape: running this at scale
 
@@ -312,7 +312,7 @@ The Batch API halves any of these for backfill work. Two caveats on the numbers:
 
 In the order I would do them.
 
-1. **A rating floor on generalizability.** The residual false-applies come from a two-star review whose author says the result was not good. The reviewer's rating is already in the data; a modification from a review rated 2 or below should be excluded with reason "reviewer rated the result poorly" before the model's flag is consulted. Deterministic, one line in the composer, and it removes the largest remaining error class. I left it out because adding a rule after seeing the eval case is exactly the kind of fitting the eval is meant to catch; it belongs in with a second labelling pass and more cases.
+1. **Finish the label review, then a rating floor on generalizability.** The 58 labels need one careful human pass before the numbers are quoted anywhere that matters; the `optional` flags are where I expect that pass to change things. Then:  The residual false-applies come from a two-star review whose author says the result was not good. The reviewer's rating is already in the data; a modification from a review rated 2 or below should be excluded with reason "reviewer rated the result poorly" before the model's flag is consulted. Deterministic, one line in the composer, and it removes the largest remaining error class. I left it out because adding a rule after seeing the eval case is exactly the kind of fitting the eval is meant to catch; it belongs in with a second labelling pass and more cases.
 2. **Grow the eval.** 28 cases is enough to rank three models and reject one, not enough to separate the two survivors. A second labeller on the existing cases, then fifty more reviews from more recipes, then three runs per configuration for a variance estimate. The harness already supports all of this.
 3. **Edit-level conflict resolution.** Conflicts are resolved per modification (section 6.4). The better policy: apply the non-conflicting edits, and for the conflicting edit on a step, re-derive the step text from the winner's version rather than the original. That needs a small model call per conflicting step and would let "omit the walnuts" coexist with "refrigerate the batter".
 4. **Servings and yield.** "1/4 lb of meat to serve 4 has to be a typo" is an error correction, and "an ice cream scoop makes 16 big cookies" changes the yield. Neither has a representation beyond editing a line. A `servings` target in the edit model, and a recompute of the yield line, is the next schema change.

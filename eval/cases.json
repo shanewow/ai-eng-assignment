@@ -10,7 +10,7 @@
       "added_contains": "lower-case keywords; an add or replacement whose new text contains one of these counts as a hit",
       "steps": "secondary line refs, usually the step that names the ingredient, that a correct edit may also touch; they count for the wrong-line check but not for finding the modification"
     },
-    "method": "Drafted by the coding agent from a read of every review, then reviewed and corrected by hand (Shane Kearney). See docs/ASSESSMENT.md 5.7."
+    "method": "Drafted by the coding agent from a read of every review, corrected during the build where scoring exposed ambiguity. A full hand review is still pending. See docs/ASSESSMENT.md 5.7 and 7.3."
   },
   "cases": [
     {

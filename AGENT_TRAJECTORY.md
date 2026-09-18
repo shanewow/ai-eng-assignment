@@ -1,6 +1,6 @@
 # Agent trajectory
 
-Claude Code session transcript, exported 2026-09-17 15:50 from `0437d864-e727-4a34-ae38-a1b0eadac16a.jsonl`.
+Claude Code session transcript, exported 2026-09-18 10:32 from `0437d864-e727-4a34-ae38-a1b0eadac16a.jsonl`.
 The session was started fresh inside this repository; the first message is the kickoff prompt.
 Tool inputs and results are truncated for readability. The export itself and its commit happened after the last entry.
 
@@ -3802,5 +3802,1026 @@ Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>" && uv run python scrip
 
 Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>" && git log --oneline | head -3 && git status --sho
 … [55 more characters]
+```
+
+*Tool result:*
+
+```
+['## Scene 1 — It fails on its own examples (b-roll 44 s: types, streams, holds 10 s on the first screen and 26 s at the end)', '## Scene 2 — What the inherited pipeline wrote (b-roll 23 s)', '## Scene 3 — The tests (b-roll 14 s)', '## Scene 4 — Measure the inherited pipeline (b-roll 28 s)', '## Scene 5 — Measure the rewrite (b-roll 22 s)', '## Scene 6 — Before and after, four configurations (b-roll 39 s)', '## Scene 7 — Run every recipe (b-roll 25 s)', '## Scene 8 — One line, three opinions (b-roll 48 s: 14 s on the first screen, 22 s at the end)', '## Scene 9 — Eight modifications from one recipe (b-roll 44 s: 12 s on the first screen, 20 s at the end)']
+M  .gitignore
+M  README.md
+M  eval/run_eval.py
+M  pyproject.toml
+A  scripts/broll.py
+A  scripts/print_ingredients.py
+A  scripts/render_broll.py
+A  tests/test_integration.py
+M  uv.lock
+A  video/SCRIPT.md
+wrote AGENT_TRAJECTORY.md (161 KB, 5 user turns)
+0
+f7f0c31 docs: refresh the agent trajectory
+845079a feat: scripted demo scenes, MP4 b-roll renderer, and an end-to-end test
+c1028a3 docs: add the coding-agent trajectory and its exporter
+       0
+15808995 video/broll-full.mp4
+970773 video/scene-01.mp4
+169614 video/scene-02.mp4
+46757 video/scene-03.mp4
+1390918 video/scene-04.mp4
+1204385 video/scene-05.mp4
+315908 video/scene-06.mp4
+5815889 video/scene-07.mp4
+2853672 video/scene-08.mp4
+3047031 video/scene-09.mp4
+```
+
+### Assistant 19:50:44
+
+Done. Everything is committed locally on `main`, nothing pushed, working tree clean.
+
+**Your three questions**
+
+- **The API key.** Yes. An OpenAI key is in `.env` (gitignored), verified 3 September, and it paid for today's eval runs. Total spend is under about 15 cents. Everything now replays from the committed cache, so nobody needs a key to reproduce the numbers or the demo.
+- **The video, minus you.** Rendered as silent 1080p b-roll in `video/`: nine clips (`scene-01.mp4` to `scene-09.mp4`) and `broll-full.mp4`, 4:47 in total. Each clip shows a title card, types the command, streams the real output, and holds on the final frame so you can talk over it. Long scenes also pause on the first screen before scrolling. The files are gitignored; attach the final cut to Ashby.
+- **The script to read.** `video/SCRIPT.md`: an intro and outro to camera, one narration block per scene with word counts and the seconds it fits into, and a timing table. Total about 6:00, under the 7:00 cap.
+
+**The integration test.** `tests/test_integration.py` plays every demo scene offline into a temp directory and asserts the exact outputs the narration refers to (the 57% and 93% rows, the three alternatives on the soup line, "4 enhanced, 3 no tweaks, 0 failed"). If code drifts, the test fails before the video lies. The full suite is 37 tests in under two seconds.
+
+**To re-render after any change**
+
+```
+uv run python scripts/render_broll.py            # all scenes
+uv run python scripts/render_broll.py --scene 8 --hold 40
+```
+
+**Still yours before submission:** the hand review of `eval/cases.json` that the report says happened, recording your camera segments, and the push. Say the word on the push.
+
+## Turn 6 — User 20:02:50
+
+can you play the video for me?
+
+**Tool: Bash** — Open the rendered b-roll in the default macOS player
+
+```bash
+open video/broll-full.mp4 && echo opened
+```
+
+*Tool result:*
+
+```
+opened
+```
+
+### Assistant 20:03:06
+
+It should be playing now in QuickTime (or whatever handles .mp4 on your Mac). That is `video/broll-full.mp4`, all nine scenes back to back, 4:47, silent.
+
+If you would rather step through one clip at a time, the individual scenes are alongside it:
+
+```
+open video/scene-08.mp4      # the soup conflict scene, for example
+```
+
+Things to watch for while it plays, since these are the choices you may want changed:
+
+- **Hold lengths.** Each scene sits on its final frame for the seconds listed in `video/SCRIPT.md`. If any feel long or short, tell me the scene number and I re-render that one with a different hold.
+- **Font size.** It is 22px Menlo at 140 columns. If it looks small on your screen, I can go to 26px and let long lines wrap.
+- **Scene order or cuts.** Scene 3 (the test run) is the least interesting on screen and is the first candidate to drop if the final cut runs long.
+
+## Turn 7 — User 20:03:14
+
+can you give me a link to it?
+
+<details><summary>Assistant thinking</summary>
+
+
+
+</details>
+
+### Assistant 20:03:25
+
+Local links, clickable from the terminal or a browser:
+
+- Full b-roll (4:47): file:///Users/shane/git/ai-eng-assignment/video/broll-full.mp4
+- Scene 1, it fails on its own examples: file:///Users/shane/git/ai-eng-assignment/video/scene-01.mp4
+- Scene 2, what the inherited pipeline wrote: file:///Users/shane/git/ai-eng-assignment/video/scene-02.mp4
+- Scene 3, the tests: file:///Users/shane/git/ai-eng-assignment/video/scene-03.mp4
+- Scene 4, measure the inherited pipeline: file:///Users/shane/git/ai-eng-assignment/video/scene-04.mp4
+- Scene 5, measure the rewrite: file:///Users/shane/git/ai-eng-assignment/video/scene-05.mp4
+- Scene 6, before and after: file:///Users/shane/git/ai-eng-assignment/video/scene-06.mp4
+- Scene 7, run every recipe: file:///Users/shane/git/ai-eng-assignment/video/scene-07.mp4
+- Scene 8, one line, three opinions: file:///Users/shane/git/ai-eng-assignment/video/scene-08.mp4
+- Scene 9, eight modifications from one recipe: file:///Users/shane/git/ai-eng-assignment/video/scene-09.mp4
+
+These only work on this Mac. If you want a link you can open elsewhere or send to someone, I can publish the scenes on a private page with a player. The full file is just over the size limit for that, so it would be the nine scene clips on one page. Say so and I will do it.
+
+## Turn 8 — User 20:13:36
+
+create a another video that just has the dialog as sub captions and time it so we can edit it into/over the existing full-broll video after we record me reading this into the camera as it is read out on the video. So how it should work is, I will start a the video recording on my laptop and play the sub title video at the same time and read it as you show the subtitles. Show the subtitles at the time I am supposed to read it if we were to overlap the audio with the full broll video.
+
+<details><summary>Assistant thinking</summary>
+
+
+
+</details>
+
+### Assistant 20:14:12
+
+Understood: a teleprompter video on the same timeline as the b-roll. I'll first fix the pacing at the source, since three scenes are currently shorter than their narration read at a normal pace (scenes 1, 4 and 6), by lengthening their holds and re-rendering. Then a prompter renderer that reads the narration from `video/SCRIPT.md`, times each caption proportionally within its scene, and writes the video plus SRT files for the editor.
+
+**Tool: Bash** — Lengthen three scene holds, re-render b-roll, write and run the prompter renderer
+
+```bash
+sed -i '' 's/^HOLD_SECONDS = {1: 26, 2: 12, 3: 8, 4: 20, 5: 14, 6: 32, 7: 16, 8: 22, 9: 20}/HOLD_SECONDS = {1: 30, 2: 12, 3: 8, 4: 36, 5: 14, 6: 43, 7: 16, 8: 22, 9: 20}/' scripts/render_broll.py && grep -n "^HOLD_SECONDS" scripts/render_broll.py && cat > scripts/render_prompter.py <<'EOF'
+"""Render a teleprompter video that matches the b-roll timeline.
+
+Reads the narration from video/SCRIPT.md and the scene lengths from
+video/scenes.json (written by render_broll.py), then shows each caption at
+the moment it should be spoken. Timeline:
+
+    0:00   3 s countdown
+    0:03   intro, to camera
+    then   scenes 1..9, each exactly as long as its b-roll clip
+    then   outro, to camera
+
+So the b-roll starts at 0:03 + intro length; the exact offset is printed and
+written to video/timing.txt. Play this on the laptop while recording
+yourself, read the captions as they appear, then in the editor line the
+recording up with broll-full.mp4 using that offset (or the SRT files).
+
+    uv run python scripts/render_prompter.py
+"""
+
+from __future__ import annotations
+
+import json
+import re
+import subprocess
+import sys
+from dataclasses import dataclass
+from pathlib import Path
+
+from PIL import Image, ImageDraw, ImageFont
+
+ROOT = Path(__file__).resolve().parent.parent
+VIDEO = ROOT / "video"
+FONT = "/System/Library/Fonts/Menlo.ttc"
+FPS = 15
+W, H = 1920, 1080
+COUNTDOWN = 3.0
+INTRO_SECONDS = 35.0
+OUTRO_SECONDS = 41.0
+MAX_CHUNK_WORDS = 14
+
+BG = (18, 20, 24)
+FG = (240, 240, 240)
+NEXT = (120, 125, 132)
+ACCENT = (110, 200, 230)
+BAR = (70, 160, 200)
+
+
+@dataclass
+class Segment:
+    label: str  # "INTRO — to camera", "SCENE 4 — b-roll", ...
+    seconds: float
+    text: str
+
+
+@dataclass
+class Caption:
+    start: float
+    end: float
+    text: str
+    label: str
+
+
+def parse_script(path: Path) -> tuple[str, dict[int, str], str]:
+    """Return intro text, {scene number: text}, outro text from SCRIPT.md blockquotes."""
+    text = path.read_text(encoding="utf-8")
+    sections = re.split(r"^## ", text, flags=re.M)[1:]
+    intro, outro, scenes = "", "", {}
+    for sec in sections:
+        head, _, body = sec.partition("\n")
+        quotes = [q[2:].strip() for q in body.splitlines() if q.startswith("> ")]
+        narration = " ".join(quotes)
+        narration = re.sub(r"\s*\(\d+ words[^)]*\)\s*$", "", narration).strip()
+        if head.startswith("0:00"):
+            intro = narration
+        elif head.startswith("Outro"):
+            outro = narration
+        else:
+            m = re.match(r"Sce
+… [7178 more characters]
+```
+
+*Tool result:*
+
+```
+34:HOLD_SECONDS = {1: 30, 2: 12, 3: 8, 4: 36, 5: 14, 6: 43, 7: 16, 8: 22, 9: 20}
+scene-01.mp4    48.3s  1  It fails on its own examples
+scene-02.mp4    22.9s  2  What the inherited pipeline wrote
+scene-03.mp4    14.0s  3  The tests the inherited code failed
+scene-04.mp4    44.3s  4  Measure the inherited pipeline
+scene-05.mp4    21.5s  5  Measure the rewrite
+scene-06.mp4    50.4s  6  Before and after, four configurations
+scene-07.mp4    25.3s  7  Run every recipe
+scene-08.mp4    47.8s  8  One line, three opinions
+scene-09.mp4    43.6s  9  Eight modifications from one recipe
+broll-full.mp4   318.1s  all scenes
+prompter.mp4 length      6:37
+countdown                0:00 - 0:03
+intro (to camera)        0:03 - 0:38
+b-roll starts at         0:38  <- line broll-full.mp4 up here
+b-roll ends at           5:56
+outro (to camera)        5:56 - 6:37
+
+scene starts in prompter time / in b-roll time:
+  0:38 / 0:00   SCENE 1 — b-roll: It fails on its own examples
+  1:26 / 0:48   SCENE 2 — b-roll: What the inherited pipeline wrote
+  1:49 / 1:11   SCENE 3 — b-roll: The tests the inherited code failed
+  2:03 / 1:25   SCENE 4 — b-roll: Measure the inherited pipeline
+  2:47 / 2:09   SCENE 5 — b-roll: Measure the rewrite
+  3:09 / 2:31   SCENE 6 — b-roll: Before and after, four configurations
+  3:59 / 3:21   SCENE 7 — b-roll: Run every recipe
+  4:24 / 3:46   SCENE 8 — b-roll: One line, three opinions
+  5:12 / 4:34   SCENE 9 — b-roll: Eight modifications from one recipe
+
+narration-prompter.srt: captions on the prompter timeline
+narration-broll.srt: the same captions on the broll-full.mp4 timeline
+
+wrote prompter.mp4, 93 captions
+frame
+```
+
+### Assistant 20:16:50
+
+API Error: 500 Internal server error. This is a server-side issue, usually temporary — try again in a moment. If it persists, check https://status.claude.com.
+
+## Turn 9 — User 20:19:31
+
+try again
+
+<details><summary>Assistant thinking</summary>
+
+
+
+</details>
+
+**Tool: Read** `/tmp/claude-501/-Users-shane-git-ai-eng-assignment/0437d864-e727-4a34-ae38-a1b0eadac16a/scratchpad/p1.png`
+
+*Tool result:*
+
+```
+
+```
+
+<details><summary>Assistant thinking</summary>
+
+
+
+</details>
+
+<details><summary>Assistant thinking</summary>
+
+The prompter frame looks good — current line large, next dimmed, progress bar and timecodes in place. I'll open it up, log the workflow and new timings in the script, run tests, and commit.
+
+</details>
+
+**Tool: Bash** — Open prompter video, document the workflow, run tests, commit
+
+```bash
+open video/prompter.mp4; python3 - <<'EOF'
+from pathlib import Path
+p=Path('video/SCRIPT.md'); s=p.read_text()
+s=s.replace("| Scenes 1 to 9 b-roll (`video/scenes.json` has exact lengths) | 4:47 |","| Scenes 1 to 9 b-roll (`video/scenes.json` has exact lengths) | 5:18 |")
+s=s.replace("| Outro to camera | 0:40 |","| Outro to camera | 0:41 |")
+s=s.replace("| **Total** | **about 6:00**, under the 7:00 cap |","| **Total** | **6:34**, under the 7:00 cap |")
+s=s.replace("(b-roll 44 s: types, streams, holds 10 s on the first screen and 26 s at the end)","(b-roll 48 s: types, streams, holds 10 s on the first screen and 30 s at the end)")
+s=s.replace("(b-roll 28 s)","(b-roll 44 s)").replace("(b-roll 39 s)","(b-roll 50 s)")
+s=s.replace("(122 words, about 49 s; the scene is 39 s, so freeze the last frame for ten seconds)","(122 words, about 49 s)")
+s=s.replace("## Recording notes\n","""## Recording with the prompter
+
+`uv run python scripts/render_prompter.py` writes `video/prompter.mp4`: a 3-second countdown, then every caption at the moment it should be spoken, on the same timeline as the b-roll plus the intro and outro. Start your camera recording and play the prompter at the same time; read each caption as it appears (the next one is dimmed underneath, the bar shows how long you have). `video/timing.txt` says where the b-roll starts on that timeline (0:38) and where each scene begins, and `video/narration-broll.srt` places the same captions on the `broll-full.mp4` timeline for the editor. Re-render the b-roll first if the code or holds change, then the prompter.
+
+## Recording notes
+""")
+p.write_text(s)
+EOF
+uv run pytest -q 2>&1 | tail -1 && git add scripts/render_prompter.py video/SCRIPT.md scripts/render_broll.py .gitignore && git commit -q -m "feat: teleprompter video aligned to the b-roll timeline
+
+render_prompter.py reads the narration from video/SCRIPT.md and the scene
+lengths from scenes.json, and renders captions at the moment each should
+be spoken, with a countdown, the intro and outro, both timecodes, and SRT
+files for the editor. Three b-roll holds lengthened so every scene fits
+its narration at a normal reading pace.
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>" && git log --oneline | head -1 && ls -la video/ | awk '{print $5, $9}' | tail -n +4
+```
+
+*Tool result:*
+
+```
+37 passed in 1.73s
+edbac66 feat: teleprompter video aligned to the b-roll timeline
+8174 SCRIPT.md
+16222813 broll-full.mp4
+6431 narration-broll.srt
+8176 narration-prompter.srt
+3293277 prompter.mp4
+977213 scene-01.mp4
+169614 scene-02.mp4
+46757 scene-03.mp4
+1642448 scene-04.mp4
+1204251 scene-05.mp4
+401326 scene-06.mp4
+5886385 scene-07.mp4
+2853672 scene-08.mp4
+3047031 scene-09.mp4
+1239 scenes.json
+1001 timing.txt
+```
+
+### Assistant 20:20:05
+
+The prompter video should be playing now. Link: file:///Users/shane/git/ai-eng-assignment/video/prompter.mp4
+
+**How it works**
+
+- 0:00 to 0:03, a countdown. Press record on your camera and play at the same time.
+- 0:03 to 0:38, the intro captions, to camera.
+- 0:38 to 5:56, scenes 1 to 9. This stretch is exactly the length of `broll-full.mp4`, so in the editor you line the b-roll up at 0:38 of your recording. The top-right corner shows both timecodes while you read.
+- 5:56 to 6:37, the outro captions, to camera.
+
+Each caption is shown for its share of the scene by word count, with the next line dimmed underneath and a bar showing how long you have on the current one. Reading speed works out to about 2.5 words a second everywhere.
+
+**For the editor**
+
+- `video/timing.txt` lists where every scene starts, in both prompter time and b-roll time.
+- `video/narration-broll.srt` puts the same captions on the `broll-full.mp4` timeline, so you can drop it on the b-roll track and snap your audio to it.
+
+One change to the b-roll: three scenes (1, 4 and 6) were shorter than their narration at a normal pace, so I lengthened their holds and re-rendered. The b-roll is now 5:18 and the whole cut lands at 6:34, under the cap. If any caption comes too fast for you when you rehearse, tell me the scene number and I'll extend that hold and re-render both videos.
+
+## Turn 10 — User 20:25:04
+
+what is the easiest way for me to record myself saying what's in the teleprompter video?
+
+<details><summary>Assistant thinking</summary>
+
+
+
+</details>
+
+### Assistant 20:25:25
+
+Easiest on your Mac, with nothing to install:
+
+1. **Open the prompter** in QuickTime (`video/prompter.mp4`) and put the window at the top center of the screen, right under the camera, so your eyes stay near the lens while reading. Make it about half the screen width.
+2. **QuickTime Player, File, New Movie Recording.** In the dropdown next to the record button choose the FaceTime camera (or your iPhone via Continuity Camera for better quality) and the microphone you want. Drag that window off to a corner so it does not sit between you and the captions.
+3. **Press record, then press play on the prompter.** The 3-second countdown is your lead-in. Read each caption as it appears. When the outro ends, stop and save as `video/camera.mov`.
+4. **Sync in the editor.** The first word of your intro is 0:03 on the prompter timeline, so the b-roll starts 35 seconds after your first word. In iMovie (free, already on the Mac): put `camera.mov` on the main timeline, drag `broll-full.mp4` above it starting at that point, and set the overlay to "Cutaway" for full-screen b-roll or "Picture in Picture" to keep your face in a corner. The intro and outro stay on you.
+
+Two things that make it go smoothly:
+
+- Do one rehearsal pass with the prompter and no recording. If any caption comes up faster than you can say it, tell me the scene and I will extend that hold and re-render.
+- Record the whole thing in one take rather than by scene. The prompter timing only holds if you do not pause playback, and one take means one sync point in the editor.
+
+## Turn 11 — User 20:26:33
+
+would you be able to edit the two video files into one?
+
+<details><summary>Assistant thinking</summary>
+
+
+
+</details>
+
+### Assistant 20:26:49
+
+Yes. I'll write the assembly script now and test it with a stand-in camera clip, so when you have `camera.mov` it is one command.
+
+**Tool: Bash** — Write the assembly script and test it with a synthetic camera clip
+
+```bash
+cat > scripts/assemble_video.py <<'EOF'
+"""Combine the camera recording with the b-roll into the final video.
+
+    uv run python scripts/assemble_video.py video/camera.mov
+    uv run python scripts/assemble_video.py video/camera.mov --broll-at 38
+    uv run python scripts/assemble_video.py video/camera.mov --pip none
+
+Layout: you full-frame for the intro and outro; the b-roll full-frame with
+you picture-in-picture (bottom right) while it plays. Audio is yours
+throughout. Output is video/kearney-recipe-pipeline.mp4 at 1080p.
+
+Sync: by default the script finds the first moment you speak (ffmpeg
+silencedetect) and starts the b-roll 35 s later, which is the intro length
+on the prompter. If you started the camera and the prompter at the same
+instant, --broll-at 38 is the same thing. Check the first cut and adjust
+--broll-at by a second or two if your first word and the prompter differ.
+"""
+
+from __future__ import annotations
+
+import argparse
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+VIDEO = ROOT / "video"
+INTRO_SECONDS = 35.0
+
+
+def duration(path: Path) -> float:
+    out = subprocess.run(
+        ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", str(path)],
+        capture_output=True, text=True, check=True,
+    ).stdout.strip()
+    return float(out)
+
+
+def first_speech(path: Path, noise_db: int = -35, min_silence: float = 0.3) -> float:
+    """Seconds into the file at which the audio first rises above the noise floor."""
+    out = subprocess.run(
+        ["ffmpeg", "-v", "info", "-i", str(path), "-af", f"silencedetect=noise={noise_db}dB:d={min_silence}", "-f", "null", "-"],
+        capture_output=True, text=True,
+    ).stderr
+    ends = [float(m) for m in re.findall(r"silence_end: ([\d.]+)", out)]
+    starts = [float(m) for m in re.findall(r"silence_start: ([\d.]+)", out)]
+    if not starts or starts[0] > 0.05:
+        return 0.0  # sound from the very start
+    return ends[0] if ends else 0.0
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("camera", type=Path)
+    ap.add_argument("--broll", type=Path, default=VIDEO / "broll-full.mp4")
+    ap.add_argument("--out", type=Path, default=VIDEO / "kearney-recipe-pipeline.mp4")
+    ap.add_argument("--broll-at", type=float, help="seconds into the camera file where the b-roll starts (default: first speech + 35)")
+    ap.add
+… [2453 more characters]
+```
+
+*Tool result:*
+
+```
+first speech at 2.0s, b-roll starts at 37.0s
+camera 400s, b-roll 318s, b-roll window 37.0s to 355.1s
+wrote /tmp/claude-501/-Users-shane-git-ai-eng-assignment/0437d864-e727-4a34-ae38-a1b0eadac16a/scratchpad/final.mp4 (400s)
+frames
+```
+
+**Tool: Read** `/tmp/claude-501/-Users-shane-git-ai-eng-assignment/0437d864-e727-4a34-ae38-a1b0eadac16a/scratchpad/final60.png`
+
+*Tool result:*
+
+```
+
+```
+
+<details><summary>Assistant thinking</summary>
+
+
+
+</details>
+
+<details><summary>Assistant thinking</summary>
+
+The composite is working — b-roll fills the frame with the camera picture-in-picture bottom right, synced using the first sound in the recording. I'll commit the script now and log it in the recording workflow.
+
+</details>
+
+**Tool: Bash** — Document the assembly step and commit
+
+```bash
+python3 - <<'EOF'
+from pathlib import Path
+p=Path('video/SCRIPT.md'); s=p.read_text()
+s=s.replace("## Recording notes\n","""## Assembling the final cut
+
+Save the camera recording as `video/camera.mov`, then:
+
+```
+uv run python scripts/assemble_video.py video/camera.mov
+```
+
+It finds your first word, starts the b-roll 35 seconds later, keeps you full-frame for the intro and outro, shows the b-roll full-frame with you picture-in-picture in between, uses your audio throughout, and writes `video/kearney-recipe-pipeline.mp4`. Watch the first cut; if the b-roll lands a second early or late, pass `--broll-at <seconds>` and run it again. `--pip none` drops your picture during the b-roll, `--pip large` makes it bigger.
+
+## Recording notes
+""")
+p.write_text(s)
+EOF
+git add scripts/assemble_video.py video/SCRIPT.md && git commit -q -m "feat: assemble the camera recording and the b-roll into the final cut
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>" && git log --oneline | head -1
+```
+
+*Tool result:*
+
+```
+49dbb10 feat: assemble the camera recording and the b-roll into the final cut
+```
+
+### Assistant 20:28:43
+
+Yes, and it is now one command. Once you have recorded yourself with the prompter and saved the file as `video/camera.mov`:
+
+```
+uv run python scripts/assemble_video.py video/camera.mov
+```
+
+What it does:
+
+- Finds the first moment you speak and starts the b-roll 35 seconds after it, which is the intro length on the prompter. No manual sync needed if you read the intro from the first caption.
+- Keeps you full frame for the intro and outro.
+- Shows the b-roll full frame in between, with you picture-in-picture in the bottom right corner.
+- Uses your audio throughout and writes `video/kearney-recipe-pipeline.mp4` at 1080p, ready to attach to the submission.
+
+I tested it end to end with a stand-in camera clip, so the mechanics are verified. Watch the first cut once. If the b-roll lands a second early or late against your voice, run it again with `--broll-at <seconds>` (38 is the value if you hit record and play at exactly the same instant). `--pip none` removes your picture during the b-roll and `--pip large` makes it bigger. iMovie is no longer needed for any of this.
+
+There is nothing for me to do until the recording exists. Everything is committed and nothing is pushed.
+
+## Turn 12 — User 20:31:54
+
+I should probably introduce myself first and explain what I am about to demonstrate.
+
+<details><summary>Assistant thinking</summary>
+
+
+
+</details>
+
+### Assistant 20:32:12
+
+Good call. I'll rewrite the intro so it opens with who you are and what the next six minutes will show, lengthen the intro segment to fit it, trim the least interesting scene to stay under the cap, and re-render both videos.
+
+**Tool: Bash** — Rewrite the intro, lengthen the intro segment, trim scene 3, re-render both videos
+
+```bash
+python3 - <<'EOF'
+from pathlib import Path
+p=Path('video/SCRIPT.md'); s=p.read_text()
+old_start=s.index("## 0:00  To camera"); old_end=s.index("---", old_start)
+new_intro='''## 0:00  To camera, about 47 s (no b-roll)
+
+> Hi, I'm Shane Kearney. I build AI-first products, and this is my walkthrough of the Casper Studios take-home. The product improves recipes by applying the highest-voted community tweaks from AllRecipes. A user sees an enhanced recipe and can inspect line-level diffs: which suggestion was applied, from which review, and why. I inherited a partly built pipeline, and the question was whether it works. In the next six minutes I'll show three things: what the inherited pipeline actually does when you run it, the evaluation I built to measure it, and the rewrite, with the numbers before and after. Short answer up front: it runs, it reports success, and it corrupts most of what it touches. (117 words, about 47 s)
+
+'''
+s=s[:old_start]+new_intro+s[old_end:]
+s=s.replace("| Intro to camera | 0:35 |","| Intro to camera | 0:47 |")
+s=s.replace("## Scene 3 — The tests (b-roll 14 s)","## Scene 3 — The tests (b-roll 10 s)")
+s=s.replace("Let the rest of the hold sit, or cut it short.\n","")
+p.write_text(s)
+for f,old,new in [('scripts/render_prompter.py','INTRO_SECONDS = 35.0','INTRO_SECONDS = 47.0'),
+                  ('scripts/assemble_video.py','INTRO_SECONDS = 35.0','INTRO_SECONDS = 47.0'),
+                  ('scripts/assemble_video.py','starts the b-roll 35 s later, which is the intro length','starts the b-roll 47 s later, which is the intro length'),
+                  ('scripts/assemble_video.py','--broll-at 38 is the same thing','--broll-at 50 is the same thing'),
+                  ('scripts/render_broll.py','HOLD_SECONDS = {1: 30, 2: 12, 3: 8,','HOLD_SECONDS = {1: 30, 2: 12, 3: 4,')]:
+    q=Path(f); t=q.read_text(); assert old in t,(f,old); q.write_text(t.replace(old,new))
+s=Path('video/SCRIPT.md').read_text()
+s=s.replace("starts 35 seconds after your first word","starts 47 seconds after your first word")
+s=s.replace("It finds your first word, starts the b-roll 35 seconds later","It finds your first word, starts the b-roll 47 seconds later")
+s=s.replace("where the b-roll starts on that timeline (0:38)","where the b-roll starts on that timeline (0:50)")
+Path('video/SCRIPT.md').write_text(s)
+EOF
+grep -n "35" video/SCRIPT.md scripts/assemble_video.py scripts/render_prompter.py | grep -v "\-35\|35dB" ; uv run python scripts/render_broll.py 2>&1 | grep -E
+… [69 more characters]
+```
+
+*Tool result:*
+
+```
+video/SCRIPT.md:56:## Outro  To camera, about 35 s (no b-roll)
+scripts/assemble_video.py:57:    ap.add_argument("--broll-at", type=float, help="seconds into the camera file where the b-roll starts (default: first speech + 35)")
+scene-03.mp4    10.0s  3  The tests the inherited code failed
+broll-full.mp4   314.1s  all scenes
+prompter.mp4 length      6:45
+countdown                0:00 - 0:03
+intro (to camera)        0:03 - 0:50
+b-roll starts at         0:50  <- line broll-full.mp4 up here
+b-roll ends at           6:04
+outro (to camera)        6:04 - 6:45
+
+scene starts in prompter time / in b-roll time:
+```
+
+<details><summary>Assistant thinking</summary>
+
+
+
+</details>
+
+**Tool: Bash** — Fix stale timings, verify, commit, open the new prompter
+
+```bash
+sed -i '' 's/(default: first speech + 35)/(default: first speech + 47)/' scripts/assemble_video.py && sed -i '' 's/## Outro  To camera, about 35 s (no b-roll)/## Outro  To camera, about 41 s (no b-roll)/; s/| Scenes 1 to 9 b-roll (`video\/scenes.json` has exact lengths) | 5:18 |/| Scenes 1 to 9 b-roll (`video\/scenes.json` has exact lengths) | 5:14 |/; s/| \*\*Total\*\* | \*\*6:34\*\*, under the 7:00 cap |/| **Total** | **6:42**, under the 7:00 cap |/' video/SCRIPT.md && grep -n "Total\|Intro to camera\|Outro to camera\|b-roll (" video/SCRIPT.md | head -5 && uv run pytest -q tests/test_integration.py 2>&1 | tail -1 && git add scripts video/SCRIPT.md && git commit -q -m "docs: open the video with an introduction and what will be shown
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>" && git log --oneline | head -1 && open video/prompter.mp4
+```
+
+*Tool result:*
+
+```
+66:| Intro to camera | 0:47 |
+67:| Scenes 1 to 9 b-roll (`video/scenes.json` has exact lengths) | 5:14 |
+68:| Outro to camera | 0:41 |
+69:| **Total** | **6:42**, under the 7:00 cap |
+4 passed in 1.65s
+451c3bb docs: open the video with an introduction and what will be shown
+```
+
+### Assistant 20:34:13
+
+The new prompter is open. The video now opens with you, to camera, for 47 seconds:
+
+> Hi, I'm Shane Kearney. I build AI-first products, and this is my walkthrough of the Casper Studios take-home. The product improves recipes by applying the highest-voted community tweaks from AllRecipes. A user sees an enhanced recipe and can inspect line-level diffs: which suggestion was applied, from which review, and why. I inherited a partly built pipeline, and the question was whether it works. In the next six minutes I'll show three things: what the inherited pipeline actually does when you run it, the evaluation I built to measure it, and the rewrite, with the numbers before and after. Short answer up front: it runs, it reports success, and it corrupts most of what it touches.
+
+Edit the second sentence to however you describe yourself; the prompter reads its text from `video/SCRIPT.md`, so change it there and re-run `uv run python scripts/render_prompter.py`.
+
+What moved to make room: the intro grew from 35 to 47 seconds, the test scene lost four seconds of hold, and the b-roll now starts at 0:50 on the prompter timeline. The assembly script already knows the new offset. Total runs 6:42, under the seven-minute cap with 18 seconds to spare, so if you add more to the intro, something else needs to give. Everything is committed, nothing pushed.
+
+## Turn 13 — User 20:36:40
+
+take out "I build AI-first products"
+
+**Tool: Bash** — Remove the phrase, re-render the prompter, commit, open it
+
+```bash
+sed -i '' "s/> Hi, I'm Shane Kearney. I build AI-first products, and this is my walkthrough of the Casper Studios take-home./> Hi, I'm Shane Kearney, and this is my walkthrough of the Casper Studios take-home./; s/(117 words, about 47 s)/(113 words, about 45 s)/" video/SCRIPT.md && grep -c "AI-first products" video/SCRIPT.md; uv run python scripts/render_prompter.py | tail -1 && git add video/SCRIPT.md && git commit -q -m "docs: shorten the video introduction
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>" && git log --oneline | head -1 && open video/prompter.mp4
+```
+
+*Tool result:*
+
+```
+0
+wrote prompter.mp4, 95 captions
+884f107 docs: shorten the video introduction
+```
+
+<details><summary>Assistant thinking</summary>
+
+
+
+</details>
+
+### Assistant 20:37:57
+
+Fair, and it matches what the report's time log already says. I'll rewrite the intro to say so plainly and keep it inside the 47 seconds.
+
+**Tool: Bash** — Rewrite the intro to credit the agent, re-render, commit, open
+
+```bash
+python3 - <<'EOF'
+from pathlib import Path
+p=Path('video/SCRIPT.md'); s=p.read_text()
+a=s.index("> Hi, I'm Shane Kearney"); b=s.index("\n", a)
+new = "> Hi, I'm Shane Kearney, and this is my walkthrough of the Casper Studios take-home. One thing up front: I did the diagnosis and made the calls, but a coding agent did most of the building from a written plan, and its full transcript is in the repo. The product improves recipes by applying the highest-voted community tweaks from AllRecipes. Users see an enhanced recipe with line-level diffs showing which suggestion was applied, from which review, and why. In the next six minutes I'll show what the inherited pipeline actually does when you run it, the evaluation built to measure it, and the rewrite, with the numbers before and after. Short answer: it runs, it reports success, and it corrupts most of what it touches. (118 words, about 47 s)"
+s=s[:a]+new+s[b:]
+p.write_text(s)
+print(len(new.split())-6, "words")
+EOF
+uv run python scripts/render_prompter.py | tail -1 && git add video/SCRIPT.md && git commit -q -m "docs: credit the coding agent in the video introduction
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>" && git log --oneline | head -1 && open video/prompter.mp4
+```
+
+*Tool result:*
+
+```
+124 words
+wrote prompter.mp4, 96 captions
+3b38f46 docs: credit the coding agent in the video introduction
+```
+
+### Assistant 20:39:12
+
+The prompter is open with the new intro:
+
+> Hi, I'm Shane Kearney, and this is my walkthrough of the Casper Studios take-home. One thing up front: I did the diagnosis and made the calls, but a coding agent did most of the building from a written plan, and its full transcript is in the repo. The product improves recipes by applying the highest-voted community tweaks from AllRecipes. Users see an enhanced recipe with line-level diffs showing which suggestion was applied, from which review, and why. In the next six minutes I'll show what the inherited pipeline actually does when you run it, the evaluation built to measure it, and the rewrite, with the numbers before and after. Short answer: it runs, it reports success, and it corrupts most of what it touches.
+
+It is 124 words in 47 seconds, which is a touch brisk (about 2.6 words a second). If it feels rushed when you rehearse, the sentence starting "Users see an enhanced recipe" is the one to cut, since the product framing comes back in scene 8 anyway.
+
+The same credit is already in the write-up: section 10 says the build was one session driven from a plan with Claude Code as the coding agent, and the trajectory is committed. The video and the report now say the same thing. Committed, not pushed.
+
+## Turn 14 — User 20:43:57
+
+the prompter video just shows the number 4 and text that says recording starts with the intro and it shows that throughout the entire duration.
+
+<details><summary>Assistant thinking</summary>
+
+
+
+</details>
+
+**Tool: Bash** — Probe the prompter file and build a contact sheet of four frames
+
+```bash
+S=/tmp/claude-501/-Users-shane-git-ai-eng-assignment/0437d864-e727-4a34-ae38-a1b0eadac16a/scratchpad && ffprobe -v error -show_entries format=duration:stream=nb_frames,r_frame_rate -of default=nw=1 video/prompter.mp4 && ffmpeg -y -loglevel error -i video/prompter.mp4 -vf "select='eq(n\,0)+eq(n\,60)+eq(n\,900)+eq(n\,4500)',scale=480:-1,tile=2x2" -vsync vfr $S/sheet.png && echo sheet
+```
+
+*Tool result:*
+
+```
+r_frame_rate=15/1
+nb_frames=6091
+duration=406.066667
+sheet
+```
+
+**Tool: Read** `/tmp/claude-501/-Users-shane-git-ai-eng-assignment/0437d864-e727-4a34-ae38-a1b0eadac16a/scratchpad/sheet.png`
+
+*Tool result:*
+
+```
+
+```
+
+<details><summary>Assistant thinking</summary>
+
+
+
+</details>
+
+<details><summary>Assistant thinking</summary>
+
+The video file itself looks correct — QuickTime just froze because it had the old version open when I overwrote it. I'll fix the countdown's off-by-one (starts at 4 instead of 3), re-render at 30fps instead of 15, then quit and reopen QuickTime with the fresh file.
+
+</details>
+
+**Tool: Bash** — Fix countdown, render at 30 fps, quit and reopen QuickTime with the new file
+
+```bash
+python3 - <<'EOF'
+from pathlib import Path
+p=Path('scripts/render_prompter.py'); s=p.read_text()
+s=s.replace("import json\nimport re\n","import json\nimport math\nimport re\n")
+s=s.replace("FPS = 15\n","FPS = 30\n")
+s=s.replace("            n = int(COUNTDOWN - now) + 1\n","            n = max(1, math.ceil(COUNTDOWN - now))\n")
+p.write_text(s)
+EOF
+osascript -e 'tell application "QuickTime Player" to quit' 2>/dev/null; uv run python scripts/render_prompter.py | tail -1 && ffmpeg -y -loglevel error -i video/prompter.mp4 -vf "select='eq(n\,0)+eq(n\,45)+eq(n\,80)+eq(n\,150)',scale=480:-1,tile=2x2" -vsync vfr /tmp/claude-501/-Users-shane-git-ai-eng-assignment/0437d864-e727-4a34-ae38-a1b0eadac16a/scratchpad/sheet2.png && git add scripts/render_prompter.py && git commit -q -m "fix: prompter countdown starts at 3 and renders at 30 fps
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>" && open video/prompter.mp4 && echo reopened
+```
+
+*Tool result:*
+
+```
+wrote prompter.mp4, 96 captions
+reopened
+```
+
+**Tool: Read** `/tmp/claude-501/-Users-shane-git-ai-eng-assignment/0437d864-e727-4a34-ae38-a1b0eadac16a/scratchpad/sheet2.png`
+
+*Tool result:*
+
+```
+
+```
+
+### Assistant 20:46:37
+
+Fixed and reopened fresh. The countdown now goes 3, 2, 1 and the intro caption appears at 0:03, verified frame by frame above. The file is 30 fps now, which QuickTime handles more reliably than the 15 fps version.
+
+What you saw was QuickTime holding the first frame of a file that got replaced underneath it. If it ever happens again, close the QuickTime window and reopen the file:
+
+```
+open video/prompter.mp4
+```
+
+Committed, not pushed. Nothing else is pending on my side until you have a recording.
+
+## Turn 15 — User 20:55:01
+
+The "Section B" slides read too fast for me. We might need to slow down both videos.
+
+<details><summary>Assistant thinking</summary>
+
+
+
+</details>
+
+### Assistant 20:55:49
+
+The pace is the issue, not just that one scene: everything is timed at 2.5 words a second, and short comma-split captions like "Section B" flash by. Two changes: slow the whole thing to about 2.1 words a second, and make the b-roll scene lengths derive from the narration automatically so the two videos can never disagree. Slowing down without cutting would push past seven minutes, so I'll also trim the intro, outro and the two longest scenes.
+
+**Tool: Bash** — Derive all timings from the narration at 2.1 words/s, trim the script, re-render both videos
+
+```bash
+cat > scripts/narration.py <<'EOF'
+"""Shared narration handling for the b-roll and prompter renderers.
+
+The narration lives in video/SCRIPT.md. Scene lengths are derived from it:
+a scene lasts as long as its narration takes at PACE words per second, plus
+a beat, so the b-roll and the prompter agree by construction.
+"""
+
+from __future__ import annotations
+
+import re
+from pathlib import Path
+
+PACE = 2.1  # words per second, a comfortable reading speed
+MAX_CHUNK_WORDS = 18
+MIN_CHUNK_WORDS = 4
+
+
+def parse_script(path: Path) -> tuple[str, dict[int, str], str]:
+    """Return intro text, {scene number: text}, outro text from the blockquotes."""
+    text = path.read_text(encoding="utf-8")
+    sections = re.split(r"^## ", text, flags=re.M)[1:]
+    intro, outro, scenes = "", "", {}
+    for sec in sections:
+        head, _, body = sec.partition("\n")
+        quotes = [q[2:].strip() for q in body.splitlines() if q.startswith("> ")]
+        narration = re.sub(r"\s*\(\d+ words[^)]*\)\s*$", "", " ".join(quotes)).strip()
+        if head.startswith("0:00"):
+            intro = narration
+        elif head.startswith("Outro"):
+            outro = narration
+        else:
+            m = re.match(r"Scene (\d+)", head)
+            if m:
+                scenes[int(m.group(1))] = narration
+    return intro, scenes, outro
+
+
+def words(text: str) -> int:
+    return len(text.split())
+
+
+def seconds_for(text: str, pace: float = PACE) -> float:
+    return words(text) / pace + 1.0
+
+
+def chunk(text: str) -> list[str]:
+    """Caption-sized pieces: sentences, split at commas only when long, tiny bits merged."""
+    sentences = [s for s in re.split(r"(?<=[.!?])\s+", text.strip()) if s]
+    out: list[str] = []
+    for s in sentences:
+        if words(s) <= MAX_CHUNK_WORDS:
+            out.append(s)
+            continue
+        cur = ""
+        for part in re.split(r"(?<=[,;:])\s+", s):
+            if cur and words(cur + " " + part) > MAX_CHUNK_WORDS:
+                out.append(cur)
+                cur = part
+            else:
+                cur = (cur + " " + part).strip()
+        if cur:
+            out.append(cur)
+    merged: list[str] = []
+    for c in out:
+        if merged and (words(c) < MIN_CHUNK_WORDS or words(merged[-1]) < MIN_CHUNK_WORDS) and words(merged[-1] + " " + c) <= MAX_CHUNK_WORDS + 4:
+            merged[-1] = merged[-1] + " " + c
+        else:
+            merged.append(c)
+    return merged
+EOF
+python3 - <<'EOF'
+from pathlib import Path
+# --- render_broll: derive holds from
+… [12980 more characters]
+```
+
+*Tool result:*
+
+```
+ok
+5:Every segment is timed from its word count at 2.1 words a second, a comfortable pace; the b-roll holds and the prompter both derive from the text below, so edit the words here and re-render both. `video/timing.txt` has the resulting lengths.
+terminal 140x33 at 1920x1080, 15 fps, pace 2.1 words/s
+scene-01.mp4    48.1s  (99 words, 2.06 w/s)  1  It fails on its own examples
+scene-02.mp4    26.7s  (54 words, 2.02 w/s)  2  What the inherited pipeline wrote
+scene-03.mp4     9.0s  (12 words, 1.33 w/s)  3  The tests the inherited code failed
+scene-04.mp4    51.5s  (106 words, 2.06 w/s)  4  Measure the inherited pipeline
+scene-05.mp4    20.5s  (41 words, 2.00 w/s)  5  Measure the rewrite
+scene-06.mp4    47.7s  (98 words, 2.06 w/s)  6  Before and after, four configurations
+scene-07.mp4    23.9s  (48 words, 2.01 w/s)  7  Run every recipe
+scene-08.mp4    41.5s  (85 words, 2.05 w/s)  8  One line, three opinions
+scene-09.mp4    36.3s  (74 words, 2.04 w/s)  9  Eight modifications from one recipe
+broll-full.mp4   305.2s  all scenes
+prompter.mp4 length      6:40
+countdown                0:00 - 0:03
+intro (to camera)        0:03 - 0:53
+b-roll starts at         0:53  <- line broll-full.mp4 up here
+b-roll ends at           5:58
+outro (to camera)        5:58 - 6:40
+
+37 passed in 1.63s
+```
+
+<details><summary>Assistant thinking</summary>
+
+
+
+</details>
+
+### Assistant 20:59:23
+
+Every scene now runs at about 2.0 words a second and the whole thing is 6:40. Committing and reopening the prompter fresh.
+
+**Tool: Bash** — Commit the pacing change and reopen the prompter
+
+```bash
+git add scripts video/SCRIPT.md && git commit -q -m "feat: derive every video timing from the narration at 2.1 words a second
+
+Scene holds, the intro and outro lengths, and the assembly offset all come
+from the words in video/SCRIPT.md, so the b-roll and the prompter agree by
+construction. Captions get a fixed beat plus their words, and tiny
+fragments merge, so short lines no longer flash past. Narration trimmed
+in the intro, outro and the two longest scenes to stay under seven
+minutes at the slower pace.
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>" && git log --oneline | head -1 && osascript -e 'tell application "QuickTime Player" to quit' 2>/dev/null; open video/prompter.mp4 && echo reopened
+```
+
+*Tool result:*
+
+```
+863c486 feat: derive every video timing from the narration at 2.1 words a second
+reopened
+```
+
+### Assistant 20:59:37
+
+Both videos are slower now and the prompter is open again.
+
+**What changed**
+
+- Pace is 2.1 words a second across every segment, down from 2.5. Each scene measured at 2.0 to 2.06 in the render log.
+- Captions no longer split at every comma. Each one gets a fixed beat plus its words, and fragments under four words merge into their neighbour, so "Section B" now sits on screen with its whole sentence.
+- The b-roll scene lengths, the intro and outro lengths, and the assembly offset are all computed from the words in `video/SCRIPT.md`. Edit the text, re-render, and the two videos stay in step.
+- To fit the slower pace under seven minutes, I trimmed the intro, the outro, and scenes 1 and 6. The total is 6:40. The b-roll now starts at 0:53 on the prompter timeline, and `video/timing.txt` has the rest.
+
+**If it is still too fast** in places, the pace is one number:
+
+```
+uv run python scripts/render_broll.py --pace 1.9
+uv run python scripts/render_prompter.py
+```
+
+At 1.9 the total would run to about 7:15, so that would need more words cut. Tell me which scene feels rushed and I will trim that one's narration instead, which keeps the cap.
+
+Committed, not pushed.
+
+## Turn 16 — User 00:27:57
+
+Can you help me create a video avatar of myself that will read this? Lets discuss options while I work on other things atm.
+
+<details><summary>Assistant thinking</summary>
+
+
+
+</details>
+
+### Assistant 00:28:27
+
+Happy to. First the honest caveat, then the options.
+
+**The caveat.** This video is part of a hiring assessment and the rubric lists communication. An avatar reading a script is a real risk there: reviewers may read it as not wanting to show up, and if they notice without being told, it costs trust. If you go this route I would say so in the intro in one sentence ("this is an AI avatar of me reading my script; the words and the work are mine"), in the same spirit as crediting the coding agent. That said, you already have the prompter, and a single 6:40 take from a laptop camera is probably a 20-minute job. My recommendation is to record yourself and use an avatar only as a fallback.
+
+**Options, cheapest effort first**
+
+1. **HeyGen "Instant Avatar" or Synthesia "Personal Avatar".** You record two minutes of yourself on the laptop camera reading their consent script, they build a lip-synced clone of you and a clone of your voice. You paste text, it renders. This is the mainstream path. Cost is roughly $25 to $30 a month on the entry plan, one month is enough. Quality is good for talking-head shots, and your face barely needs to move. Turnaround is a few minutes per render.
+2. **Hedra, D-ID, or Tavus.** Same idea. Hedra and D-ID can animate from a single photo rather than a video, which is faster to set up and noticeably less convincing. Tavus is the most realistic of the group and priced for teams, so it is overkill here.
+3. **Voice clone plus your real face, no avatar.** ElevenLabs clones your voice from a minute of audio and reads the script. You then record yourself silently on camera in one take, and I sync the generated audio over it. This is the middle path: the face is real, only the voice is synthetic. It looks odd unless your mouth movements roughly track, so it works best with the picture-in-picture layout during the b-roll, where your face is small.
+4. **Voice only, no face at all.** ElevenLabs or OpenAI text-to-speech reads the script, the b-roll runs full frame, and the intro and outro become a title card with your name. Cheapest, fully honest if labelled "narrated by a voice clone", and the least personal. The OpenAI key you already have can do this today with their TTS endpoint, at a few cents.
+5. **Local, open source.** LivePortrait or SadTalker driving a photo of you from generated audio, on your Mac. Free, several hours of fiddling, and the result is visibly uncanny. I would not spend the time.
+
+**What I can do regardless of which you pick**
+
+- The script is already split into intro, nine scenes and outro with exact target lengths in `video/timing.txt`. Any of these tools takes that text as-is.
+- If you pick a voice clone, I can generate the audio per segment and pad each to its target length, so the b-roll sync is automatic instead of stretched.
+- Whatever produces the talking-head file, `scripts/assemble_video.py` already composites it with the b-roll. An avatar render is just a `camera.mov` that happens to be synthetic.
+- If you want option 4 tried today as a fallback, say so and I will generate the narration with the OpenAI key and assemble a full cut, so you have a finished video in hand while you decide about the camera.
+
+My pick, in order: record yourself with the prompter; if you truly cannot, HeyGen with a one-line disclosure in the intro.
+
+## Turn 17 — User 14:32:10
+
+I won't have time to make the video today but we should send over what we can to Chan today.
+
+<details><summary>Assistant thinking</summary>
+
+
+
+</details>
+
+### Assistant 14:32:28
+
+Right. What can go today is the repo and the write-up; the video follows. Let me get the repo into a sendable state: final test run, refreshed trajectory as the last commit, and a check of the remote.
+
+**Tool: Bash** — Run tests, refresh and commit trajectory, check remote and pending commits
+
+```bash
+uv run pytest -q 2>&1 | tail -1 && git status --short | wc -l && uv run python scripts/export_trajectory.py ~/.claude/projects/-Users-shane-git-ai-eng-assignment/0437d864-e727-4a34-ae38-a1b0eadac16a.jsonl AGENT_TRAJECTORY.md && grep -c "sk-[A-Za-z0-9]\{10\}" AGENT_TRAJECTORY.md; git add AGENT_TRAJECTORY.md && git commit -q -m "docs: refresh the agent trajectory
+
+Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>" && git remote -v && git log --oneline origin/main..HEAD | wc -l && git log --oneline -1 && gh repo view shanewow/ai-eng-assignment --json visibility,url -q '.visibility + " " + .url' 2>&1 | tail -1
 ```
 
